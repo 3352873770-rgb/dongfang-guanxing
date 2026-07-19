@@ -23,6 +23,6 @@ const response = await worker.fetch(new Request("https://preview.example/"), { A
 assert.equal(response.status, 200);
 const html = await response.text();
 assert.match(html, /<title>东方观星｜东方易理 · 一事一问<\/title>/);
-assert.match(html, /https:\/\/preview\.example\/og\.png/);
+assert.match(html, /https:\/\/dongfang-guanxing\.dainty-lemon-8005\.chatgpt\.site\/og\.png/);
 assert.doesNotMatch(html, /__SITE_ORIGIN__/);
 console.log("Sites build verified");
