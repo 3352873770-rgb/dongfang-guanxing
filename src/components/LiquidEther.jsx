@@ -12,6 +12,8 @@ export default function LiquidEther({
   dt = 0.014,
   BFECC = true,
   resolution = 0.5,
+  maxDpr = 2,
+  targetFps = 60,
   isBounce = false,
   colors = ['#5227FF', '#FF9FFC', '#B497CF'],
   style = {},
@@ -85,9 +87,9 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        this.pixelRatio = Math.min(window.devicePixelRatio || 1, maxDpr);
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ antialias: maxDpr > 1, alpha: true });
         this.renderer.autoClear = false;
         this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
@@ -944,6 +946,8 @@ export default function LiquidEther({
         this.init();
         this._loop = this.loop.bind(this);
         this._resize = this.resize.bind(this);
+        this.frameInterval = 1000 / Math.max(1, props.targetFps);
+        this.lastFrameTime = 0;
         window.addEventListener('resize', this._resize);
         this._onVisibility = () => {
           const hidden = document.hidden;
@@ -970,15 +974,19 @@ export default function LiquidEther({
         Common.update();
         this.output.update();
       }
-      loop() {
+      loop(time) {
         if (!this.running) return; // safety
-        this.render();
+        if (time - this.lastFrameTime >= this.frameInterval) {
+          this.lastFrameTime = time;
+          this.render();
+        }
         rafRef.current = requestAnimationFrame(this._loop);
       }
       start() {
         if (this.running) return;
         this.running = true;
-        this._loop();
+        this.lastFrameTime = 0;
+        rafRef.current = requestAnimationFrame(this._loop);
       }
       pause() {
         this.running = false;
@@ -1015,7 +1023,8 @@ export default function LiquidEther({
       autoIntensity,
       takeoverDuration,
       autoResumeDelay,
-      autoRampDuration
+      autoRampDuration,
+      targetFps
     });
     webglRef.current = webgl;
 
@@ -1104,6 +1113,8 @@ export default function LiquidEther({
     iterationsViscous,
     mouseForce,
     resolution,
+    maxDpr,
+    targetFps,
     viscous,
     colors,
     autoDemo,

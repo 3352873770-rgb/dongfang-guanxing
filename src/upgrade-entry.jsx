@@ -1,10 +1,10 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
-import LiquidEther from "./components/LiquidEther.jsx";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
+const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -51,9 +51,22 @@ const BORDER_GLOW_THEMES = {
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function getRenderProfile() {
+  const isMobile = window.matchMedia("(max-width: 720px)").matches;
+  const saveData = navigator.connection?.saveData === true;
+  const lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4;
+  const lowCoreCount = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4;
+
+  return {
+    isMobile,
+    isConstrained: isMobile && (saveData || lowMemory || lowCoreCount),
+  };
+}
+
 function UpgradeHero() {
   const [sloganIndex, setSloganIndex] = useState(0);
   const [activeSection, setActiveSection] = useState("dfgx-top");
+  const [renderProfile, setRenderProfile] = useState(getRenderProfile);
   const [theme, setTheme] = useState(() => {
     try {
       const storedTheme = window.localStorage.getItem("dfgx-theme");
@@ -63,6 +76,18 @@ function UpgradeHero() {
     }
   });
   const borderGlowTheme = BORDER_GLOW_THEMES[theme];
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 720px)");
+    const updateRenderProfile = () => setRenderProfile(getRenderProfile());
+    mobileQuery.addEventListener("change", updateRenderProfile);
+    navigator.connection?.addEventListener?.("change", updateRenderProfile);
+
+    return () => {
+      mobileQuery.removeEventListener("change", updateRenderProfile);
+      navigator.connection?.removeEventListener?.("change", updateRenderProfile);
+    };
+  }, []);
 
   useEffect(() => {
     if (prefersReducedMotion) return undefined;
@@ -146,22 +171,26 @@ function UpgradeHero() {
       <section className="dfgx-upgrade" id="dfgx-top">
       {theme === "night" && !prefersReducedMotion ? (
         <div className="dfgx-ether" aria-hidden="true">
-          <LiquidEther
-            colors={NIGHT_ETHER_COLORS}
-            mouseForce={15}
-            cursorSize={132}
-            isViscous
-            viscous={48}
-            iterationsViscous={40}
-            iterationsPoisson={30}
-            dt={0.011}
-            resolution={0.48}
-            autoSpeed={0.2}
-            autoIntensity={1.9}
-            takeoverDuration={0.8}
-            autoResumeDelay={2600}
-            autoRampDuration={1.8}
-          />
+          <Suspense fallback={null}>
+            <LiquidEther
+              colors={NIGHT_ETHER_COLORS}
+              mouseForce={renderProfile.isMobile ? 10 : 15}
+              cursorSize={renderProfile.isMobile ? 112 : 132}
+              isViscous
+              viscous={48}
+              iterationsViscous={renderProfile.isMobile ? 20 : 40}
+              iterationsPoisson={renderProfile.isMobile ? 16 : 30}
+              dt={0.011}
+              resolution={renderProfile.isConstrained ? 0.28 : renderProfile.isMobile ? 0.34 : 0.48}
+              maxDpr={renderProfile.isMobile ? 1 : 2}
+              targetFps={renderProfile.isMobile ? 30 : 60}
+              autoSpeed={0.2}
+              autoIntensity={1.9}
+              takeoverDuration={0.8}
+              autoResumeDelay={2600}
+              autoRampDuration={1.8}
+            />
+          </Suspense>
         </div>
       ) : null}
 
@@ -182,6 +211,8 @@ function UpgradeHero() {
               mouseInfluence={prefersReducedMotion ? 0 : 0.08}
               noiseAmount={0.08}
               distortion={prefersReducedMotion ? 0 : 0.14}
+              maxDpr={renderProfile.isMobile ? 1 : 2}
+              targetFps={renderProfile.isMobile ? 30 : 60}
             />
           </Suspense>
         </div>
