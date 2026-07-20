@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="night">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#090f10" />
+    <title>东方观星 · 向星河深处</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090f10;
+        --text: #f1f0eb;
+        --muted: rgba(228, 229, 222, 0.65);
+        --quiet: rgba(217, 218, 211, 0.42);
+        --gold: #d3aa45;
+        --gold-bright: #efd98d;
+        --nav: rgba(7, 13, 14, 0.64);
+        --nav-border: rgba(232, 215, 169, 0.17);
+        --button-text: #11191a;
+      }
+
+      html[data-theme="day"] {
+        color-scheme: light;
+        --bg: #e8dfd1;
+        --text: #182521;
+        --muted: rgba(34, 49, 44, 0.66);
+        --quiet: rgba(41, 53, 48, 0.46);
+        --gold: #b7832d;
+        --gold-bright: #8b651f;
+        --nav: rgba(239, 233, 221, 0.7);
+        --nav-border: rgba(91, 73, 43, 0.17);
+        --button-text: #f6f0e5;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--text);
+        background: var(--bg);
+        font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+        transition: color 700ms ease, background-color 700ms ease;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .journey {
+        position: relative;
+        isolation: isolate;
+        min-height: 100svh;
+        overflow: hidden;
+      }
+
+      #journey-canvas {
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .depth-veil {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 43%, transparent 0 17%, rgba(6, 12, 13, 0.13) 48%, rgba(2, 6, 7, 0.54) 100%),
+          linear-gradient(180deg, rgba(4, 9, 10, 0.2), transparent 30%, rgba(3, 8, 9, 0.18));
+        transition: background 700ms ease;
+      }
+
+      html[data-theme="day"] .depth-veil {
+        background:
+          radial-gradient(circle at 50% 43%, transparent 0 18%, rgba(227, 217, 197, 0.05) 48%, rgba(118, 100, 67, 0.14) 100%),
+          linear-gradient(180deg, rgba(255, 252, 244, 0.2), transparent 34%, rgba(117, 96, 61, 0.05));
+      }
+
+      .floating-nav {
+        position: fixed;
+        z-index: 20;
+        top: 16px;
+        left: 50%;
+        width: min(calc(100% - 32px), 1160px);
+        min-height: 60px;
+        padding: 8px 10px 8px 18px;
+        display: grid;
+        grid-template-columns: minmax(168px, 1fr) auto minmax(168px, 1fr);
+        align-items: center;
+        gap: clamp(16px, 2.5vw, 38px);
+        color: var(--muted);
+        background: var(--nav);
+        border: 1px solid var(--nav-border);
+        border-radius: 16px;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 18px 44px rgba(2, 8, 9, 0.14);
+        -webkit-backdrop-filter: blur(22px) saturate(126%);
+        backdrop-filter: blur(22px) saturate(126%);
+        translate: -50% 0;
+        animation: nav-in 820ms 80ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .nav-brand {
+        width: max-content;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .nav-brand span {
+        color: var(--gold-bright);
+        font-family: "Songti SC", "STSong", serif;
+        font-size: 15px;
+        letter-spacing: 0.18em;
+        white-space: nowrap;
+      }
+
+      .nav-brand small {
+        color: var(--quiet);
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(15px, 2vw, 28px);
+      }
+
+      .nav-links a {
+        position: relative;
+        padding: 8px 0;
+        color: var(--muted);
+        font-family: "Songti SC", "STSong", serif;
+        font-size: 13px;
+        letter-spacing: 0.13em;
+        text-decoration: none;
+        transition: color 220ms ease, translate 220ms ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--gold-bright);
+        translate: 0 -1px;
+      }
+
+      .theme-toggle {
+        position: relative;
+        isolation: isolate;
+        justify-self: end;
+        width: 104px;
+        height: 42px;
+        padding: 4px;
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        color: var(--quiet);
+        background: color-mix(in srgb, var(--bg) 62%, transparent);
+        border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+        border-radius: 11px;
+        font-family: "Songti SC", "STSong", serif;
+        cursor: pointer;
+      }
+
+      .theme-toggle::before {
+        position: absolute;
+        z-index: -1;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        content: "";
+        background: var(--gold);
+        border-radius: 7px;
+        box-shadow: 0 5px 16px color-mix(in srgb, var(--gold) 24%, transparent);
+        transform: translateX(100%);
+        transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      html[data-theme="day"] .theme-toggle::before {
+        transform: translateX(0);
+      }
+
+      .theme-toggle span {
+        height: 32px;
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-indent: 0.12em;
+        transition: color 260ms ease;
+      }
+
+      html[data-theme="night"] .theme-toggle span:last-child,
+      html[data-theme="day"] .theme-toggle span:first-child {
+        color: var(--button-text);
+        font-weight: 700;
+      }
+
+      .editorial {
+        position: relative;
+        z-index: 3;
+        width: min(100% - 40px, 760px);
+        min-height: 100svh;
+        margin-inline: auto;
+        padding: clamp(112px, 13vh, 138px) 0 clamp(44px, 7vh, 74px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .editorial > * {
+        pointer-events: auto;
+      }
+
+      .brandline,
+      h1,
+      .english,
+      .philosophy,
+      .actions,
+      .explore {
+        opacity: 0;
+        animation: stage-in 980ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .brandline { animation-delay: 100ms; }
+      h1 { animation-delay: 320ms; }
+      .english { animation-delay: 570ms; }
+      .philosophy { animation-delay: 800ms; }
+      .actions { animation-delay: 1030ms; }
+      .explore { animation-delay: 1240ms; }
+
+      .brandline {
+        margin: 0 0 clamp(42px, 6.3vh, 68px);
+        color: var(--muted);
+        font-size: clamp(10px, 1vw, 14px);
+        font-weight: 500;
+        letter-spacing: 0.42em;
+        line-height: 1.5;
+      }
+
+      h1 {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2px, 0.8vh, 10px);
+        color: var(--text);
+        font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", serif;
+        font-size: clamp(52px, 7.1vw, 100px);
+        font-weight: 400;
+        line-height: 1.02;
+        letter-spacing: 0.18em;
+        text-indent: 0.18em;
+        text-shadow: 0 2px 30px color-mix(in srgb, var(--gold) 10%, transparent);
+      }
+
+      h1 span:last-child {
+        transform: translateX(0.12em);
+      }
+
+      .english {
+        margin: clamp(36px, 5.2vh, 58px) 0 0;
+        color: var(--muted);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(9px, 1vw, 14px);
+        font-weight: 500;
+        letter-spacing: 0.4em;
+        line-height: 1.7;
+      }
+
+      .philosophy {
+        min-height: 68px;
+        margin-top: clamp(24px, 3.2vh, 38px);
+        color: var(--muted);
+        font-family: "Songti SC", "STSong", serif;
+        font-size: clamp(13px, 1.3vw, 17px);
+        letter-spacing: 0.12em;
+        line-height: 1.8;
+      }
+
+      .philosophy p {
+        margin: 0;
+      }
+
+      .philosophy p:last-child {
+        margin-top: 4px;
+        color: var(--quiet);
+      }
+
+      .actions {
+        margin-top: clamp(28px, 4vh, 46px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(22px, 4vw, 52px);
+      }
+
+      .primary,
+      .secondary,
+      .explore {
+        font-family: "Songti SC", "STSong", serif;
+        text-decoration: none;
+      }
+
+      .primary {
+        min-width: 220px;
+        min-height: 60px;
+        padding: 18px 34px;
+        color: var(--button-text);
+        background: var(--gold);
+        border: 1px solid var(--gold);
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        transition: transform 240ms ease, box-shadow 240ms ease, filter 240ms ease;
+      }
+
+      .primary:hover {
+        box-shadow: 0 16px 44px color-mix(in srgb, var(--gold) 24%, transparent);
+        filter: brightness(1.08);
+        transform: translateY(-3px) scale(1.01);
+      }
+
+      .secondary {
+        padding: 12px 0;
+        color: var(--muted);
+        border-bottom: 1px solid color-mix(in srgb, var(--text) 38%, transparent);
+        font-size: 15px;
+        letter-spacing: 0.14em;
+        transition: color 220ms ease, border-color 220ms ease, transform 220ms ease;
+      }
+
+      .secondary:hover {
+        color: var(--gold-bright);
+        border-color: var(--gold);
+        transform: translateX(3px);
+      }
+
+      .explore {
+        position: relative;
+        margin-top: clamp(24px, 3.2vh, 38px);
+        padding-bottom: 30px;
+        color: var(--quiet);
+        font-size: 11px;
+        letter-spacing: 0.36em;
+      }
+
+      .explore::after {
+        position: absolute;
+        top: 24px;
+        left: calc(50% - 0.18em);
+        width: 1px;
+        height: 18px;
+        content: "";
+        background: currentColor;
+        animation: forward-cue 2100ms ease-in-out infinite;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 1px solid var(--gold-bright);
+        outline-offset: 5px;
+      }
+
+      @keyframes stage-in {
+        from { opacity: 0; filter: blur(10px); transform: translateY(24px); }
+        to { opacity: 1; filter: blur(0); transform: translateY(0); }
+      }
+
+      @keyframes nav-in {
+        from { opacity: 0; filter: blur(8px); translate: -50% -14px; }
+        to { opacity: 1; filter: blur(0); translate: -50% 0; }
+      }
+
+      @keyframes forward-cue {
+        0% { opacity: 0; transform: translateY(-4px) scaleY(0.4); transform-origin: top; }
+        38% { opacity: 0.65; }
+        100% { opacity: 0; transform: translateY(10px) scaleY(1.1); transform-origin: top; }
+      }
+
+      @media (max-width: 820px) {
+        .floating-nav {
+          grid-template-columns: 1fr auto;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .editorial {
+          width: min(100% - 34px, 430px);
+          padding-top: max(112px, 13vh);
+          padding-bottom: max(34px, 4.8vh);
+        }
+
+        .brandline {
+          max-width: 320px;
+          margin-bottom: max(36px, 5vh);
+          font-size: 9px;
+          letter-spacing: 0.3em;
+        }
+
+        h1 {
+          font-size: clamp(44px, 13.5vw, 56px);
+          letter-spacing: 0.16em;
+        }
+
+        .english {
+          max-width: 310px;
+          margin-top: max(32px, 4.5vh);
+          font-size: 8px;
+          letter-spacing: 0.26em;
+        }
+
+        .philosophy {
+          min-height: 60px;
+          margin-top: max(20px, 2.7vh);
+          font-size: 13px;
+        }
+
+        .actions {
+          width: 100%;
+          margin-top: max(22px, 3.1vh);
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .primary {
+          min-width: min(260px, 78vw);
+          min-height: 54px;
+          padding-block: 15px;
+          font-size: 15px;
+        }
+
+        .secondary {
+          font-size: 13px;
+        }
+
+        .explore {
+          margin-top: max(16px, 2.2vh);
+        }
+      }
+
+      @media (max-width: 430px) {
+        .floating-nav {
+          top: 10px;
+          width: calc(100% - 20px);
+          min-height: 54px;
+          padding: 6px 7px 6px 14px;
+          border-radius: 14px;
+        }
+
+        .nav-brand small {
+          display: none;
+        }
+
+        .theme-toggle {
+          width: 90px;
+          height: 40px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        .brandline,
+        h1,
+        .english,
+        .philosophy,
+        .actions,
+        .explore {
+          opacity: 1;
+          filter: none;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="floating-nav">
+      <a class="nav-brand" href="/" aria-label="返回东方观星首页">
+        <span>东方观星</span>
+        <small>ORIENTAL ASTROLOGY</small>
+      </a>
+
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="/#ask">问卦</a>
+        <a href="/#daily">日签</a>
+        <a href="/#personality">人格</a>
+        <a href="/#atlas">卦图</a>
+        <a href="/#tools">工具</a>
+        <a href="/#record">记录</a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="切换昼夜主题" aria-pressed="false">
+        <span>昼</span>
+        <span>夜</span>
+      </button>
+    </header>
+
+    <main class="journey">
+      <canvas id="journey-canvas" aria-hidden="true"></canvas>
+      <div class="depth-veil" aria-hidden="true"></div>
+
+      <section class="editorial" aria-labelledby="page-title">
+        <p class="brandline">东方观星 · ORIENTAL ASTROLOGY</p>
+
+        <h1 id="page-title">
+          <span>东方</span>
+          <span>观星</span>
+        </h1>
+
+        <p class="english">READ THE HEAVENS · KNOW THYSELF</p>
+
+        <div class="philosophy">
+          <p id="rotating-slogan">以星为镜，照见本心</p>
+          <p>以《周易》为根，循象观变</p>
+        </div>
+
+        <div class="actions">
+          <a class="primary" href="/#ask">开始观星问卦</a>
+          <a class="secondary" href="/#atlas">浏览六十四卦</a>
+        </div>
+
+        <a class="explore" href="/#ask">探索诸术</a>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const canvas = document.getElementById("journey-canvas");
+        const ctx = canvas.getContext("2d", { alpha: false });
+        const root = document.documentElement;
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        const themeToggle = document.querySelector(".theme-toggle");
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const slogans = ["以星为镜，照见本心", "一问天地，一见自己", "顺时而观，向内而行"];
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let lastTime = performance.now();
+        let elapsed = 0;
+        let theme = "night";
+        let pointerX = 0;
+        let pointerY = 0;
+        let pointerTargetX = 0;
+        let pointerTargetY = 0;
+        let ribbons = [];
+        let motes = [];
+        let animationFrame = 0;
+
+        function randomBetween(min, max) {
+          return min + Math.random() * (max - min);
+        }
+
+        function makeScene() {
+          const ribbonCount = width < 640 ? 14 : 22;
+          const moteCount = width < 640 ? 70 : 120;
+
+          ribbons = Array.from({ length: ribbonCount }, (_, index) => {
+            const angle = (index / ribbonCount) * Math.PI * 2 + randomBetween(-0.2, 0.2);
+            return {
+              angle,
+              radius: randomBetween(0.72, 2.15),
+              bend: randomBetween(0.12, 0.42),
+              phase: randomBetween(0, Math.PI * 2),
+              speed: randomBetween(0.045, 0.078),
+              width: randomBetween(0.55, 1.5),
+              color: index % 5 === 0 ? "white" : index % 3 === 0 ? "pale" : "gold",
+            };
+          });
+
+          motes = Array.from({ length: moteCount }, () => ({
+            x: randomBetween(-3.6, 3.6),
+            y: randomBetween(-2.4, 2.8),
+            z: randomBetween(0.8, 10.5),
+            size: randomBetween(0.25, 1.25),
+            speed: randomBetween(0.72, 1.28),
+            tone: Math.random(),
+          }));
+        }
+
+        function resize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          canvas.width = Math.round(width * dpr);
+          canvas.height = Math.round(height * dpr);
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          makeScene();
+          paintBackground(true);
+        }
+
+        function palette() {
+          return theme === "night"
+            ? {
+                background: "rgba(9, 15, 16, 0.072)",
+                solid: "#090f10",
+                gold: [215, 179, 82],
+                pale: [239, 219, 158],
+                white: [255, 255, 249],
+                mote: [235, 220, 173],
+              }
+            : {
+                background: "rgba(232, 223, 209, 0.092)",
+                solid: "#e8dfd1",
+                gold: [173, 119, 36],
+                pale: [110, 102, 82],
+                white: [43, 65, 58],
+                mote: [62, 75, 67],
+              };
+        }
+
+        function paintBackground(solid = false) {
+          const colors = palette();
+          ctx.globalCompositeOperation = "source-over";
+          ctx.fillStyle = solid ? colors.solid : colors.background;
+          ctx.fillRect(0, 0, width, height);
+        }
+
+        function project(x, y, z, vanishX, vanishY) {
+          const focal = Math.min(width, height) * 0.86;
+          return {
+            x: vanishX + (x * focal) / z,
+            y: vanishY + (y * focal) / z,
+            scale: focal / z,
+          };
+        }
+
+        function drawRibbons(vanishX, vanishY) {
+          const colors = palette();
+          const samples = 34;
+          const near = 0.82;
+          const far = 13.5;
+
+          ctx.globalCompositeOperation = theme === "night" ? "lighter" : "multiply";
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+
+          ribbons.forEach((ribbon) => {
+            const rgb = colors[ribbon.color];
+            const pulse = (elapsed * ribbon.speed + ribbon.phase / (Math.PI * 2)) % 1;
+            let previous = null;
+
+            for (let index = 0; index <= samples; index += 1) {
+              const t = index / samples;
+              const z = far - (far - near) * Math.pow(t, 1.55);
+              const sway = Math.sin(z * 0.78 + ribbon.phase + elapsed * 0.13) * ribbon.bend;
+              const lift = Math.cos(z * 0.54 + ribbon.phase * 0.7 - elapsed * 0.09) * ribbon.bend * 0.58;
+              const radial = ribbon.radius + sway;
+              const worldX = Math.cos(ribbon.angle) * radial;
+              const worldY = Math.sin(ribbon.angle) * radial * 0.72 + lift;
+              const point = project(worldX, worldY, z, vanishX, vanishY);
+
+              if (previous) {
+                const middle = (t + previous.t) * 0.5;
+                const distance = Math.abs(middle - pulse);
+                const wrappedDistance = Math.min(distance, 1 - distance);
+                const pulseLight = Math.exp(-(wrappedDistance * wrappedDistance) / 0.0085);
+                const depthAlpha = 0.04 + Math.pow(middle, 1.8) * 0.24;
+                const alpha = Math.min(0.72, depthAlpha + pulseLight * (theme === "night" ? 0.42 : 0.24));
+
+                ctx.beginPath();
+                ctx.moveTo(previous.x, previous.y);
+                ctx.lineTo(point.x, point.y);
+                ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                ctx.lineWidth = Math.max(0.22, ribbon.width * (0.35 + Math.pow(middle, 2.5) * 4.4));
+                ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${theme === "night" ? alpha * 0.75 : alpha * 0.18})`;
+                ctx.shadowBlur = theme === "night" ? 4 + pulseLight * 17 : 2 + pulseLight * 5;
+                ctx.stroke();
+              }
+
+              previous = { ...point, t };
+            }
+          });
+
+          ctx.shadowBlur = 0;
+          ctx.globalCompositeOperation = "source-over";
+        }
+
+        function resetMote(mote, atFar = true) {
+          mote.x = randomBetween(-3.8, 3.8);
+          mote.y = randomBetween(-2.6, 3);
+          mote.z = atFar ? randomBetween(9.4, 11.2) : randomBetween(0.8, 10.5);
+          mote.size = randomBetween(0.25, 1.25);
+          mote.speed = randomBetween(0.72, 1.28);
+        }
+
+        function drawMotes(vanishX, vanishY, delta) {
+          const colors = palette();
+          const baseSpeed = reducedMotion ? 0 : 0.39;
+          ctx.globalCompositeOperation = theme === "night" ? "lighter" : "multiply";
+
+          motes.forEach((mote) => {
+            const before = project(mote.x, mote.y, mote.z, vanishX, vanishY);
+            mote.z -= baseSpeed * mote.speed * delta;
+            if (mote.z < 0.62) resetMote(mote, true);
+            const after = project(mote.x, mote.y, mote.z, vanishX, vanishY);
+            const alpha = Math.min(0.56, 0.06 + (1 / mote.z) * 0.32);
+            const rgb = mote.tone > 0.82 ? colors.white : colors.mote;
+
+            ctx.beginPath();
+            ctx.moveTo(before.x, before.y);
+            ctx.lineTo(after.x, after.y);
+            ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+            ctx.lineWidth = Math.max(0.3, mote.size * (0.42 + 1.3 / mote.z));
+            ctx.stroke();
+          });
+
+          ctx.globalCompositeOperation = "source-over";
+        }
+
+        function render(now) {
+          const rawDelta = Math.min(0.04, Math.max(0, (now - lastTime) / 1000));
+          lastTime = now;
+          const delta = reducedMotion ? 0 : rawDelta;
+          elapsed += delta;
+
+          pointerX += (pointerTargetX - pointerX) * 0.018;
+          pointerY += (pointerTargetY - pointerY) * 0.018;
+
+          const autoX = reducedMotion ? 0 : Math.sin(elapsed * 0.12) * width * 0.012;
+          const autoY = reducedMotion ? 0 : Math.cos(elapsed * 0.1) * height * 0.008;
+          const vanishX = width * 0.5 + pointerX * width * 0.035 + autoX;
+          const vanishY = height * 0.43 + pointerY * height * 0.026 + autoY;
+
+          paintBackground(false);
+          drawRibbons(vanishX, vanishY);
+          drawMotes(vanishX, vanishY, delta);
+
+          if (!reducedMotion) animationFrame = requestAnimationFrame(render);
+        }
+
+        function setTheme(nextTheme) {
+          theme = nextTheme;
+          root.dataset.theme = theme;
+          themeToggle.setAttribute("aria-pressed", String(theme === "day"));
+          metaTheme.setAttribute("content", theme === "day" ? "#e8dfd1" : "#090f10");
+          try {
+            localStorage.setItem("dfgx-forward-theme", theme);
+          } catch {
+            // Theme switching remains available without storage.
+          }
+          paintBackground(true);
+        }
+
+        window.addEventListener("pointermove", (event) => {
+          pointerTargetX = (event.clientX / Math.max(1, width) - 0.5) * 2;
+          pointerTargetY = (event.clientY / Math.max(1, height) - 0.5) * 2;
+        }, { passive: true });
+
+        window.addEventListener("pointerleave", () => {
+          pointerTargetX = 0;
+          pointerTargetY = 0;
+        });
+
+        window.addEventListener("resize", resize, { passive: true });
+
+        themeToggle.addEventListener("click", () => {
+          setTheme(theme === "night" ? "day" : "night");
+        });
+
+        try {
+          const storedTheme = localStorage.getItem("dfgx-forward-theme");
+          if (storedTheme === "day" || storedTheme === "night") theme = storedTheme;
+        } catch {
+          theme = "night";
+        }
+
+        setTheme(theme);
+        resize();
+        render(performance.now());
+
+        if (!reducedMotion) {
+          let sloganIndex = 0;
+          window.setInterval(() => {
+            sloganIndex = (sloganIndex + 1) % slogans.length;
+            const slogan = document.getElementById("rotating-slogan");
+            slogan.animate(
+              [
+                { opacity: 0, filter: "blur(4px)", transform: "translateY(8px)" },
+                { opacity: 1, filter: "blur(0)", transform: "translateY(0)" },
+              ],
+              { duration: 760, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+            );
+            slogan.textContent = slogans[sloganIndex];
+          }, 4600);
+        }
+
+        window.addEventListener("pagehide", () => cancelAnimationFrame(animationFrame), { once: true });
+      })();
+    </script>
+  </body>
+</html>

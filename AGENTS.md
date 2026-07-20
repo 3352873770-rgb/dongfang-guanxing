@@ -6,20 +6,12 @@ Before making substantial visual changes, use the Product Design plugin's `get-c
 
 When implementing from a selected generated mock, treat that image as the source of truth for layout, component anatomy, density, spacing, color, typography, visible content, and hierarchy.
 
-Keep the long homepage calm and breathable: use a consistent, generous vertical gap between major sections, with a slightly tighter but still spacious mobile rhythm. Do not enlarge card internals just to create page-level breathing room.
+The homepage supports two intentionally related atmosphere modes. Preserve the same centered editorial layout, navigation, slogans, and interactions in both. Night uses LiquidEther with deep ink and antique gold; day uses LightRays on a warm rice-paper field with sunlit old gold. Keep the mode difference concentrated in background motion and contrast tokens, and retain the visible day/night switch.
 
-The recommended-tools controls should read as balanced visual tiles, not long narrow list rows: use four columns on wide screens and two columns on tablet/mobile, with centered icon-and-copy composition.
+For the day-mode LightRays, prefer long volumetric beams entering from above, with slow movement, a broad natural spread, gentle noise, and heavily damped cursor influence. It should feel like sunlight passing through rice paper, not a concert spotlight or a sci-fi effect.
 
-Keep the mobile primary CTA compact rather than nearly full-width: target roughly two-thirds of the viewport with reduced height and type scale, while preserving it as the dominant action.
+Keep the antique-gold rays clearly visible but subordinate to the centered brand typography. The day effect should add depth and motion without reducing text contrast.
 
-## Accepted design direction
+The floating classic-book titles around the homepage hero should remain calm but visibly alive. Keep their staggered vertical and horizontal drift, with varied cycles around 9.4–12.8 seconds; preserve the reduced-motion fallback.
 
-- Latest source of truth: the 2026-07-19 user-supplied long-page “东方观星” screenshot (`codex-clipboard-63ccb551-56d2-466d-98d8-f9f637da2dbf.png`). It supersedes the earlier v2 board when the two differ.
-- Match its long-page composition: centered circular video window, deep teal-black paper texture, antique-gold accents, warm parchment daily card, restrained Song-style typography, compact card internals with generous major-section spacing, and one dominant CTA.
-- Preserve its first-level section order with the approved new feature inserted at the requested point: hero, two-column question panel, daily hexagram, personality map, four-part rationale, hexagram atlas, recommended tools, record/reflection panel, minimal disclaimer footer.
-- The personality-map feature uses an open two-column composition: editorial introduction and three-step explanation on the left, one large clickable personality-test visual on the right; stack it vertically on mobile.
-- Keep prototype motion reproducible in Figma: use component variants, Smart Animate, opacity, translation, scale, hover/press states, and After Delay loops. Avoid web-only scroll listeners, cursor physics, particles, or effects that cannot be handed off as normal Figma layers.
-- Clicking the primary “开始问卦” CTA must trigger the six-dot loading transition before the interface moves to the question-selection panel; preserve its reduced-motion fallback.
-- Build only the responsive first-level homepage. Do not add secondary routes or product flows.
-- Desktop is judged at 1440px wide; mobile is judged at 390px wide and must not horizontally overflow.
-- Use the supplied video as the hero media, with muted playback, a visible play/pause control, and a reduced-motion poster fallback.
+Keep the `#ask` and `#tools` sections restrained and strictly per-button. Night and day share the same individual SpecularButton edge response plus icon, copy, and arrow micro-interactions; day recolors the response to lower-intensity tea brown and sunlit old gold. Never apply one shared glow to a whole section, or add large spotlight gradients behind these controls.
