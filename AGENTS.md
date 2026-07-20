@@ -10,7 +10,7 @@ Keep the long homepage calm and breathable: use a consistent, generous vertical 
 
 The recommended-tools controls should read as balanced visual tiles, not long narrow list rows: use four columns on wide screens and two columns on tablet/mobile, with centered icon-and-copy composition.
 
-Keep the mobile primary CTA compact rather than nearly full-width: target roughly two-thirds of the viewport with reduced height and type scale, while preserving it as the dominant action.
+Keep the mobile primary CTA compact rather than nearly full-width: target roughly three-fifths of the viewport with reduced height and type scale, while preserving it as the dominant action. On fine pointers, hover lifts the whole button by 4px with a restrained ease-out transition.
 
 ## Accepted design direction
 

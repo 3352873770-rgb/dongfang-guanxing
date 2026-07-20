@@ -409,13 +409,15 @@ main {
   transition: transform var(--ease), filter var(--ease);
 }
 
-.primary-cta:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.06);
+@media (hover: hover) and (pointer: fine) {
+  .primary-cta:hover:not(:disabled) {
+    transform: translateY(-4px);
+    filter: brightness(1.06);
+  }
 }
 
 .primary-cta:active {
-  transform: scale(0.985);
+  transform: translateY(-1px) scale(0.985);
 }
 
 .primary-cta:disabled {
@@ -1427,10 +1429,11 @@ footer p {
   }
 
   .primary-cta {
-    width: clamp(240px, 68vw, 296px);
-    min-height: 46px;
+    width: clamp(208px, 60vw, 248px);
+    min-height: 42px;
     border-radius: 8px;
-    font-size: 21px;
+    font-size: 19px;
+    letter-spacing: 0.16em;
   }
 
   .guide-link { font-size: 11px; }
