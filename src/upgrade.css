@@ -585,6 +585,12 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   opacity: 1;
   translate: 0 0;
   filter: blur(0);
+  will-change: auto;
+}
+
+#root .section-shell {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 
 #root .tool-card {
@@ -986,6 +992,8 @@ body,
     grid-template-rows: 36px 30px;
     gap: 5px 12px;
     border-radius: 14px;
+    -webkit-backdrop-filter: blur(10px) saturate(116%);
+    backdrop-filter: blur(10px) saturate(116%);
   }
 
   .dfgx-nav-brand {
@@ -1048,6 +1056,7 @@ body,
   .dfgx-classics span {
     font-size: 17px;
     letter-spacing: 0.2em;
+    will-change: auto;
   }
 
   .dfgx-classics span:nth-child(1) { top: 23%; left: 9%; }
@@ -1112,6 +1121,7 @@ body,
 
   #root .dfgx-reveal {
     translate: 0 22px;
+    filter: none;
     transition-delay: calc(var(--dfgx-reveal-order, 0) * 65ms);
   }
 

@@ -173,6 +173,8 @@ export default function LightRays({
   mouseInfluence = 0.1,
   noiseAmount = 0,
   distortion = 0,
+  maxDpr = 2,
+  targetFps = 60,
   className = "",
 }) {
   const containerRef = useRef(null);
@@ -185,7 +187,7 @@ export default function LightRays({
 
     const renderer = new Renderer({
       alpha: true,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      dpr: Math.min(window.devicePixelRatio || 1, maxDpr),
     });
     const { gl } = renderer;
     gl.canvas.style.width = "100%";
@@ -241,27 +243,63 @@ export default function LightRays({
       };
     };
 
+    const usePointerTracking = followMouse && window.matchMedia("(pointer: fine)").matches;
+    const frameInterval = 1000 / Math.max(1, targetFps);
     let frameId = 0;
+    let lastFrameTime = 0;
+    let isInView = true;
+    let isRunning = false;
+
     const render = (time) => {
+      if (!isRunning) return;
+      frameId = window.requestAnimationFrame(render);
+      if (time - lastFrameTime < frameInterval) return;
+      lastFrameTime = time;
       uniforms.iTime.value = time * 0.001;
-      if (followMouse && mouseInfluence > 0) {
+      if (usePointerTracking && mouseInfluence > 0) {
         smoothMouseRef.current.x = smoothMouseRef.current.x * 0.92 + mouseRef.current.x * 0.08;
         smoothMouseRef.current.y = smoothMouseRef.current.y * 0.92 + mouseRef.current.y * 0.08;
         uniforms.mousePos.value = [smoothMouseRef.current.x, smoothMouseRef.current.y];
       }
       renderer.render({ scene: mesh });
+    };
+
+    const start = () => {
+      if (isRunning || document.hidden || !isInView) return;
+      isRunning = true;
+      lastFrameTime = 0;
       frameId = window.requestAnimationFrame(render);
     };
 
+    const pause = () => {
+      isRunning = false;
+      window.cancelAnimationFrame(frameId);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) pause();
+      else start();
+    };
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isInView = entry.isIntersecting && entry.intersectionRatio > 0;
+      if (isInView) start();
+      else pause();
+    }, { threshold: [0, 0.01] });
+
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-    if (followMouse) window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    intersectionObserver.observe(container);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (usePointerTracking) window.addEventListener("mousemove", handleMouseMove, { passive: true });
     resize();
-    frameId = window.requestAnimationFrame(render);
+    start();
 
     return () => {
-      window.cancelAnimationFrame(frameId);
+      pause();
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("mousemove", handleMouseMove);
       const loseContext = gl.getExtension("WEBGL_lose_context");
       loseContext?.loseContext();
@@ -280,6 +318,8 @@ export default function LightRays({
     mouseInfluence,
     noiseAmount,
     distortion,
+    maxDpr,
+    targetFps,
   ]);
 
   return (
