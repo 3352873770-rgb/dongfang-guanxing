@@ -1,0 +1,35 @@
+name: Bug
+description: 记录可复现的问题和回归信息
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: symptom
+    attributes:
+      label: 问题表现
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      placeholder: "1. 打开…\n2. 点击…\n3. 观察…"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境
+      placeholder: 浏览器、设备、视口和主题
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 截图、日志或链接

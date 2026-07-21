@@ -1,0 +1,33 @@
+name: 功能需求
+description: 记录一个可独立交付的功能或体验改进
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 用户问题
+      description: 用户当前遇到什么问题，为什么值得解决？
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 交付范围
+      description: 明确包含和不包含的内容。
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 使用可验证的结果描述完成条件。
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 优先级
+      options: [P0, P1, P2, P3]
+    validations:
+      required: true
