@@ -2,6 +2,11 @@
 
 东方易理问卦一级首页原型，包含昼夜双主题、首页经典书名漂移动效、长期问卦、六十四卦图谱、推荐工具与记录入口。
 
+- 公网地址：https://3352873770-rgb.github.io/dongfang-guanxing/
+- 当前状态：[PROJECT_STATE.md](./PROJECT_STATE.md)
+- 产品与维护文档：[docs/](./docs/)
+- 版本记录：[CHANGELOG.md](./CHANGELOG.md)
+
 ## 本地运行
 
 ```bash
@@ -14,6 +19,12 @@ npm run dev
 ```bash
 npm run build
 npm run preview
+```
+
+提交前统一执行：
+
+```bash
+npm run check
 ```
 
 ## 主要实现

@@ -1,0 +1,94 @@
+import assert from "node:assert/strict";
+import { readFile, stat } from "node:fs/promises";
+import test from "node:test";
+
+const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("long-term project documents exist", async () => {
+  const paths = [
+    "AGENTS.md",
+    "PROJECT_STATE.md",
+    "CHANGELOG.md",
+    "docs/PRD.md",
+    "docs/ROADMAP.md",
+    "docs/DESIGN_SYSTEM.md",
+    "docs/ARCHITECTURE.md",
+    "docs/COMPONENT_MAP.md",
+    "docs/QUALITY.md",
+    "docs/RELEASE.md",
+  ];
+
+  for (const path of paths) {
+    const info = await stat(new URL(`../${path}`, import.meta.url));
+    assert.ok(info.isFile(), `${path} must be a file`);
+  }
+});
+
+test("HTML mounts the upgraded hero and base-aware legacy assets", async () => {
+  const html = await read("index.html");
+
+  assert.match(html, /id="dfgx-upgrade-root"/);
+  assert.match(html, /id="root"/);
+  assert.match(html, /src="\/src\/upgrade-entry\.jsx"/);
+  assert.match(html, /%BASE_URL%legacy\/legacy-app\.js/);
+  assert.match(html, /%BASE_URL%legacy\/legacy-styles\.css/);
+});
+
+test("GitHub Pages build keeps the repository subpath", async () => {
+  const config = await read("vite.config.mjs");
+
+  assert.match(config, /GITHUB_PAGES/);
+  assert.match(config, /\/dongfang-guanxing\//);
+});
+
+test("day and night atmosphere components remain wired", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+
+  assert.match(entry, /LightRays/);
+  assert.match(entry, /LiquidEther/);
+  assert.match(entry, /dfgx-theme-toggle/);
+  assert.match(entry, /prefers-reduced-motion/);
+});
+
+test("classic title motion remains within the approved range", async () => {
+  const css = await read("src/upgrade.css");
+  const start = css.indexOf(".dfgx-classics span {");
+  const end = css.indexOf('html[data-dfgx-theme="day"] .dfgx-classics');
+  const classicCss = css.slice(start, end);
+  const durations = [...classicCss.matchAll(/animation(?:-duration)?:\s*[^;]*?([0-9]+(?:\.[0-9]+)?)s/g)]
+    .map((match) => Number(match[1]));
+
+  assert.ok(durations.length >= 12, "expected staggered classic title durations");
+  assert.ok(durations.every((duration) => duration >= 9.4 && duration <= 12.8));
+});
+
+test("question and tool effects stay scoped to individual buttons", async () => {
+  const css = await read("src/upgrade.css");
+
+  assert.match(css, /\.question-row:is\(:hover, :focus-visible\)/);
+  assert.match(css, /\.tool-card:is\(:hover, :focus-visible\)/);
+  assert.match(css, /\.question-row \.specular-button__fx/);
+  assert.match(css, /\.tool-card \.specular-button__fx/);
+});
+
+test("legacy compatibility bundles stay externalized and reviewable", async () => {
+  const app = await stat(new URL("../public/legacy/legacy-app.js", import.meta.url));
+  const styles = await stat(new URL("../public/legacy/legacy-styles.css", import.meta.url));
+
+  assert.ok(app.size < 2_000_000, "legacy app bundle should remain below 2 MB");
+  assert.ok(styles.size < 500_000, "legacy stylesheet should remain below 500 KB");
+});
+
+test("runtime entry files do not contain local absolute paths", async () => {
+  const paths = [
+    "index.html",
+    "vite.config.mjs",
+    "src/upgrade-entry.jsx",
+    "src/upgrade.css",
+    "public/forward-journey.html",
+  ];
+
+  for (const path of paths) {
+    assert.doesNotMatch(await read(path), /\/Users\/|file:\/\//, `${path} contains a local path`);
+  }
+});
