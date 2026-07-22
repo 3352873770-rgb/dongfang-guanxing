@@ -29,3 +29,5 @@ Do not scan or hand-edit `public/legacy/legacy-app.js` or `public/legacy/legacy-
 After a material change, run `npm run check`. Update `PROJECT_STATE.md` when current status, risks, or next steps change; update `CHANGELOG.md` for user-visible or operational changes; add a short record under `docs/decisions/` for durable product, design, architecture, or deployment decisions.
 
 Use one GitHub Issue per independently deliverable task and one `agent/<description>` branch per change. Keep `main` deployable. Pull requests must state scope, impact, checks, and rollback notes. GitHub Pages is the production delivery path.
+
+The default completion boundary for each task is local verification plus a draft pull request. Do not merge into `main`, trigger a GitHub Pages production update, push a release tag, or create a GitHub Release until the user explicitly confirms publication for that specific task. A publication confirmation applies only to the current task and never carries forward to later tasks.
