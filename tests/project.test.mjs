@@ -71,6 +71,26 @@ test("question and tool effects stay scoped to individual buttons", async () => 
   assert.match(css, /\.tool-card \.specular-button__fx/);
 });
 
+test("daily hexagram CTA keeps its accessible label and 44px touch target", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const css = await read("src/upgrade.css");
+
+  assert.match(entry, /button\.textContent = "今日卦象"/);
+  assert.match(entry, /查看今日卦象详细解析/);
+  assert.match(css, /#root #daily \.daily-button \{/);
+  assert.match(css, /min-height:\s*44px/);
+  assert.match(css, /border-radius:\s*12px/);
+});
+
+test("daily hexagram date follows the visitor's local calendar date", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+
+  assert.match(entry, /function formatDailyDate\(date\)/);
+  assert.match(entry, /new Intl\.DateTimeFormat\("zh-CN"/);
+  assert.match(entry, /time\.dateTime = toLocalIsoDate\(now\)/);
+  assert.match(entry, /nextMidnight/);
+});
+
 test("legacy compatibility bundles stay externalized and reviewable", async () => {
   const app = await stat(new URL("../public/legacy/legacy-app.js", import.meta.url));
   const styles = await stat(new URL("../public/legacy/legacy-styles.css", import.meta.url));

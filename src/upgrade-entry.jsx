@@ -376,8 +376,63 @@ function initializeSectionNavigation() {
   update();
 }
 
+function formatDailyDate(date) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
+function toLocalIsoDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function updateDailyDate() {
+  const time = document.querySelector("#root #daily time");
+  if (!time) return false;
+
+  const now = new Date();
+  time.textContent = formatDailyDate(now);
+  time.dateTime = toLocalIsoDate(now);
+  return true;
+}
+
+function scheduleDailyDateRefresh() {
+  updateDailyDate();
+  const now = new Date();
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  window.setTimeout(scheduleDailyDateRefresh, nextMidnight.getTime() - now.getTime() + 1000);
+}
+
+function initializeDailySection() {
+  const root = document.getElementById("root");
+  const button = document.querySelector("#root #daily .daily-button");
+  const time = document.querySelector("#root #daily time");
+  if (!root || !button || !time) return false;
+
+  if (button.dataset.dfgxDailyCtaReady !== "true") {
+    button.dataset.dfgxDailyCtaReady = "true";
+    button.textContent = "今日卦象";
+    button.setAttribute("aria-label", "查看今日卦象详细解析");
+    button.setAttribute("title", "查看今日卦象详细解析");
+  }
+
+  if (root.dataset.dfgxDailyDateReady !== "true") {
+    root.dataset.dfgxDailyDateReady = "true";
+    scheduleDailyDateRefresh();
+  } else {
+    updateDailyDate();
+  }
+  return true;
+}
+
 function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
+  if (!initializeDailySection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
   return true;
