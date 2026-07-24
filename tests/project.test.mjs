@@ -71,9 +71,12 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.doesNotMatch(brand, /cormorant-garamond/);
   assert.match(brand, /showMark = true/);
   assert.match(entry, /<BrandLockup decorative \/>/);
-  assert.match(brand, /BRAND_DESCRIPTOR = "Fate"/);
-  assert.match(entry, /<div className="dfgx-brandline">\s*<span>\{BRAND_DESCRIPTOR\}<\/span>/);
-  assert.match(entry, /<BrandLockup decorative showMark=\{false\} \/>/);
+  assert.match(entry, /@fontsource\/cormorant-garamond\/latin-600\.css/);
+  assert.match(entry, /@fontsource\/cormorant-garamond\/latin-600-italic\.css/);
+  assert.match(entry, /<h1 className="dfgx-hero-wordmark" aria-label="MMEETT Fate">/);
+  assert.match(entry, /className="dfgx-hero-wordmark__mmeett">MMEETT<\/span>/);
+  assert.match(entry, /className="dfgx-hero-wordmark__fate">Fate<\/span>/);
+  assert.doesNotMatch(entry, /dfgx-brandline|BrandLockup decorative showMark=\{false\}|东方观星/);
   assert.match(entry, /dfgx-wordmark-rule/);
   assert.match(entry, /READ THE SIGNS · MEET YOURSELF/);
   assert.match(entry, /观象知变，向内而行/);
@@ -81,12 +84,33 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(chrome, /<BrandLockup decorative \/>/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
+  assert.match(css, /font-family:\s*"Cormorant Garamond", serif/);
+  assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?font-weight:\s*600/);
+  assert.match(css, /\.dfgx-hero-wordmark__fate\s*\{[\s\S]*?font-style:\s*italic[\s\S]*?font-weight:\s*600/);
+  assert.doesNotMatch(css, /MMEETT Fate Bodoni|bodoni-moda|-webkit-text-stroke/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-editorial h1\s*\{\s*color:\s*#000000/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-nav-brand \.mmeett-brand-lockup\s*\{\s*color:\s*#000000/);
-  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*clamp\(420px,\s*42vw,\s*860px\)/);
-  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*min\(86vw,\s*360px\)/);
+  assert.match(css, /\.dfgx-hero-wordmark__fate\s*\{[\s\S]*?font-style:\s*italic/);
+  assert.doesNotMatch(css, /\.dfgx-brandline/);
   assert.match(css, /\.mmeett-brand-lockup__mark[\s\S]*?width:\s*var\(--mmeett-mark-width/);
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
+});
+
+test("desktop hero performs one CTA-aligned background mouse pass", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+
+  assert.match(entry, /atmosphereActive[\s\S]*?!renderProfile\.isMobile[\s\S]*?!prefersReducedMotion[\s\S]*?window\.matchMedia\("\(pointer: fine\)"\)\.matches/);
+  assert.match(entry, /const duration = 900/);
+  assert.match(entry, /window\.setTimeout\(start, 920\)/);
+  assert.match(entry, /progress <= 0\.5 \? progress \* 2 : \(1 - progress\) \* 2/);
+  assert.match(entry, /heroRect\.left \+ heroRect\.width \* \(0\.08 \+ horizontalProgress \* 0\.84\)/);
+  assert.match(entry, /ctaRect\.top \+ ctaRect\.height \/ 2/);
+  assert.match(entry, /new MouseEvent\("mousemove", \{ clientX, clientY, bubbles: true \}\)/);
+  assert.match(entry, /backgroundPointerPassPlayed\.current = true/);
+  assert.match(entry, /window\.clearTimeout\(timeoutId\)/);
+  assert.match(entry, /cancelAnimationFrame\(frameId\)/);
+  assert.match(entry, /animated=\{!prefersReducedMotion\}/);
+  assert.doesNotMatch(entry, /sweepDelay|sweepDuration/);
 });
 
 test("long secondary pages keep one sticky exit navigation within reach", async () => {

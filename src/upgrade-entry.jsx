@@ -1,7 +1,9 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
-import BrandLockup, { BRAND_DESCRIPTOR, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
+import BrandLockup, { DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
+import "@fontsource/cormorant-garamond/latin-600.css";
+import "@fontsource/cormorant-garamond/latin-600-italic.css";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
 import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";
@@ -94,6 +96,8 @@ function getRenderProfile() {
 
 function UpgradeHero() {
   const heroRef = useRef(null);
+  const primaryCtaRef = useRef(null);
+  const backgroundPointerPassPlayed = useRef(false);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
   const [theme, setTheme] = useState(() => {
@@ -141,6 +145,52 @@ function UpgradeHero() {
       // The theme still works when storage is unavailable.
     }
   }, [theme]);
+
+  useEffect(() => {
+    const canRunBackgroundPointerPass = (
+      atmosphereActive
+      && !renderProfile.isMobile
+      && !prefersReducedMotion
+      && window.matchMedia("(pointer: fine)").matches
+    );
+    if (!canRunBackgroundPointerPass || backgroundPointerPassPlayed.current) return undefined;
+
+    let frameId = 0;
+    let timeoutId = 0;
+    let cancelled = false;
+    const duration = 900;
+
+    const start = () => {
+      if (cancelled || backgroundPointerPassPlayed.current) return;
+      backgroundPointerPassPlayed.current = true;
+      const startTime = performance.now();
+
+      const tick = (time) => {
+        if (cancelled) return;
+        const heroRect = heroRef.current?.getBoundingClientRect();
+        const ctaRect = primaryCtaRef.current?.getBoundingClientRect();
+        if (!heroRect || !ctaRect) return;
+
+        const progress = Math.min((time - startTime) / duration, 1);
+        const horizontalProgress = progress <= 0.5 ? progress * 2 : (1 - progress) * 2;
+        const clientX = heroRect.left + heroRect.width * (0.08 + horizontalProgress * 0.84);
+        const clientY = ctaRect.top + ctaRect.height / 2;
+        window.dispatchEvent(new MouseEvent("mousemove", { clientX, clientY, bubbles: true }));
+
+        if (progress < 1) frameId = requestAnimationFrame(tick);
+      };
+
+      frameId = requestAnimationFrame(tick);
+    };
+
+    timeoutId = window.setTimeout(start, 920);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+      cancelAnimationFrame(frameId);
+    };
+  }, [atmosphereActive, renderProfile.isMobile]);
 
   function scrollToSection(selector, block = "center") {
     document.querySelector(selector)?.scrollIntoView({
@@ -255,11 +305,10 @@ function UpgradeHero() {
       </div>
 
       <div className="dfgx-editorial">
-        <div className="dfgx-brandline">
-          <span>{BRAND_DESCRIPTOR}</span>
-        </div>
-
-        <h1 aria-label="MMEETT Fate"><BrandLockup decorative showMark={false} /></h1>
+        <h1 className="dfgx-hero-wordmark" aria-label="MMEETT Fate">
+          <span className="dfgx-hero-wordmark__mmeett">MMEETT</span>
+          <span className="dfgx-hero-wordmark__fate">Fate</span>
+        </h1>
 
         <hr className="dfgx-wordmark-rule" aria-hidden="true" />
 
@@ -284,7 +333,7 @@ function UpgradeHero() {
             colors={borderGlowTheme.colors}
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
-            <button className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
+            <button ref={primaryCtaRef} className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
               开始问卦
             </button>
           </BorderGlow>
