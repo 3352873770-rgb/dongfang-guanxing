@@ -480,6 +480,8 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 
 .dfgx-editorial h1 {
   margin: 0;
+  opacity: 1;
+  animation: none;
   color: #d8b568;
   font-family: "Cormorant Garamond", serif;
   font-size: clamp(92px, 12.2vw, 184px);
@@ -497,6 +499,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 
 .dfgx-hero-wordmark__mmeett {
   font-style: normal;
+  animation: dfgx-wordmark-reveal-from-left 2000ms cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 .dfgx-hero-wordmark__fate {
@@ -505,6 +508,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   font-style: italic;
   font-weight: 600;
   letter-spacing: -0.06em;
+  animation: dfgx-wordmark-reveal-from-right 2000ms cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 .dfgx-wordmark-rule {
@@ -1172,6 +1176,26 @@ body,
   to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 
+@keyframes dfgx-wordmark-reveal-from-left {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes dfgx-wordmark-reveal-from-right {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 @keyframes dfgx-slogan-swap {
   from { opacity: 0; filter: blur(3px); transform: translateY(9px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1414,6 +1438,12 @@ body,
     opacity: 1;
     filter: none;
     transform: none;
+  }
+
+  .dfgx-hero-wordmark__mmeett,
+  .dfgx-hero-wordmark__fate {
+    animation: none;
+    clip-path: none;
   }
 
   .dfgx-classics span {
