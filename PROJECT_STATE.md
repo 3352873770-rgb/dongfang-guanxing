@@ -35,7 +35,8 @@
 - GitHub Pages 公网发布
 - 根目录唯一源码、长期项目文档与自动质量检查基线
 - 逐任务明确确认的公网发布门禁，避免完成任务后自动更新线上版本
-- 已验证的问卦、灵签信、六十四卦、今日卦象和人物档案置顶功能已收拢到 `agent/prototype-current`
+- 已验证的问卦、灵签信、六十四卦、今日卦象、人物档案、三枚铜钱和人格偏好探索已收拢到 `agent/prototype-current`
+- 用户已于 2026-07-24 确认将当前统一版本通过 PR #30 发布到 `main`
 
 ## 当前架构边界
 
@@ -46,27 +47,21 @@
 ## 已知问题
 
 - Legacy 兼容内容仍以生成后的 Bundle 交付，缺少从 React 源码自动生成该 Bundle 的正式脚本。
-- LiquidEther 依赖的 Three.js Clock 存在弃用警告，但不影响当前渲染。
 - 当前自动检查覆盖结构、关键交互契约和生产构建，尚未覆盖真实浏览器端到端截图回归。
 - 人物档案与问卦前置流程已在 `agent/interactive-reading-flow` 分支本地实现，使用浏览器本地存储；尚未接入账号同步、全国行政区划、真实排卦算法和结果解读。
 - 灵签信五工具与问卦记录当前只保存在浏览器本地；AI 解读报告尚未接入真实大模型服务。
-- 灵签信五工具的人物档案置顶规则已在 `agent/oracle-profile-first` 分支完成，尚未获得公网发布确认。
-- 六十四卦知识页及 Banner 动效性能收敛已合入当前本地集成分支，尚未获得公网发布确认。
-- 今日卦象二级结果页已在 `agent/daily-hexagram-detail` 分支本地完成，尚未获得公网发布确认。
-- 三枚铜钱单页工具流程已合入 `agent/prototype-current`，待当前任务的发布确认。
 - 人格偏好结果基于本地简化偏好问卷，用于自我探索，不是官方 MBTI 测评、心理诊断或招聘评估。
-- 人格偏好探索二级页已合入 `agent/prototype-current`，待当前任务的发布确认。
 
 ## 下一步
 
 1. [#5](https://github.com/3352873770-rgb/dongfang-guanxing/issues/5)：建立 Legacy Bundle 的可重复构建或逐段迁移到正常 React 组件。
 2. [#6](https://github.com/3352873770-rgb/dongfang-guanxing/issues/6)：增加桌面端、390px 移动端、昼夜切换和核心按钮的浏览器端到端测试。
-3. [#7](https://github.com/3352873770-rgb/dongfang-guanxing/issues/7)：处理 Three.js Clock 弃用警告并记录性能基线。
+3. [#7](https://github.com/3352873770-rgb/dongfang-guanxing/issues/7)：记录 LightRays / LiquidEther 性能基线并持续监测移动端表现。
 4. [#8](https://github.com/3352873770-rgb/dongfang-guanxing/issues/8)：基于当前主线重建离线单文件分享版。
-5. 验证已合入集成分支的 Issue #25 三枚铜钱单页交互，并将同一页面骨架逐项复用到其他推荐工具。
-6. 审核 Issue #19 的五个灵签信二级工具，并在确认后决定 AI 模型接入与全国地区数据范围。
-7. 审核已合入集成分支的 [Issue #28](https://github.com/3352873770-rgb/dongfang-guanxing/issues/28) 人格偏好探索页，通过后再单独确认是否发布。
-8. 按 `docs/ROADMAP.md` 通过 GitHub Issues 推进其他二级页面，而不扩大当前一级首页范围。
+5. 将三枚铜钱的同页任务骨架逐项复用到其他推荐工具。
+6. 评估 AI 模型接入与全国地区数据范围。
+7. 为人格偏好探索补充浏览器端到端测试和可访问性回归。
+8. 按 `docs/ROADMAP.md` 通过 GitHub Issues 推进其他二级页面。
 
 ## 接手规则
 

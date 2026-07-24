@@ -571,14 +571,17 @@ function initializePersonalityEntry() {
   if (!root || !personalitySection) return false;
   if (root.dataset.dfgxPersonalityEntryReady === "true") return true;
 
-  const entries = personalitySection.querySelectorAll(
-    ".personality-test-card, .personality-guide",
+  root.addEventListener(
+    "click",
+    (event) => {
+      const entry = event.target.closest(
+        "#personality .personality-test-card, #personality .personality-guide",
+      );
+      if (!entry) return;
+      openPersonalityPreference(event);
+    },
+    true,
   );
-  if (!entries.length) return false;
-
-  entries.forEach((entry) => {
-    entry.addEventListener("click", openPersonalityPreference, true);
-  });
   root.dataset.dfgxPersonalityEntryReady = "true";
   return true;
 }
@@ -589,7 +592,6 @@ function prepareOriginalContent() {
   if (!initializeReadingEntryPoints()) return false;
   if (!initializePersonalityEntry()) return false;
   if (!initializeToolEntryPoints()) return false;
-  if (!initializePersonalityEntry()) return false;
   if (!initializeAtlasSection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
@@ -602,12 +604,8 @@ function UpgradeApp() {
   useEffect(() => {
     const updateRoute = () => setRoute(getAppRoute());
     window.addEventListener("hashchange", updateRoute);
-    window.addEventListener("popstate", updateRoute);
-    window.addEventListener("resize", updateRoute);
     return () => {
       window.removeEventListener("hashchange", updateRoute);
-      window.removeEventListener("popstate", updateRoute);
-      window.removeEventListener("resize", updateRoute);
     };
   }, []);
 

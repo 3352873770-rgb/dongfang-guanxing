@@ -65,6 +65,7 @@ test("GitHub Pages build keeps the repository subpath", async () => {
 test("day and night atmosphere components remain wired", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const visibilityHook = await read("src/use-atmosphere-visibility.js");
+  const liquidEther = await read("src/components/LiquidEther.jsx");
 
   assert.match(entry, /LightRays/);
   assert.match(entry, /LiquidEther/);
@@ -75,6 +76,22 @@ test("day and night atmosphere components remain wired", async () => {
   assert.match(visibilityHook, /IntersectionObserver/);
   assert.match(visibilityHook, /visibilitychange/);
   assert.match(visibilityHook, /document\.visibilityState !== "hidden"/);
+  assert.match(liquidEther, /new THREE\.Timer\(\)/);
+  assert.match(liquidEther, /this\.timer\.connect\(document\)/);
+  assert.match(liquidEther, /Common\.timer\?\.dispose\(\)/);
+  assert.doesNotMatch(liquidEther, /new THREE\.Clock\(\)/);
+});
+
+test("route and legacy entry setup avoid redundant work", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const prepareStart = entry.indexOf("function prepareOriginalContent()");
+  const prepareEnd = entry.indexOf("function UpgradeApp()", prepareStart);
+  const prepareBody = entry.slice(prepareStart, prepareEnd);
+  const personalityInitializers = prepareBody.match(/initializePersonalityEntry\(\)/g) ?? [];
+
+  assert.equal(personalityInitializers.length, 1);
+  assert.doesNotMatch(entry, /addEventListener\("resize", updateRoute\)/);
+  assert.doesNotMatch(entry, /addEventListener\("popstate", updateRoute\)/);
 });
 
 test("classic title motion remains within the approved range", async () => {
@@ -167,9 +184,17 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   const entry = await read("src/upgrade-entry.jsx");
   const page = await read("src/personality-preference-page.jsx");
   const css = await read("src/personality-preference-page.css");
+  const upgradeCss = await read("src/upgrade.css");
 
   assert.match(entry, /#\/personality/);
-  assert.match(entry, /\.personality-test-card, \.personality-guide/);
+  assert.match(
+    entry,
+    /root\.addEventListener\([\s\S]*?#personality \.personality-test-card,[\s\S]*?#personality \.personality-guide/,
+  );
+  assert.doesNotMatch(
+    entry,
+    /entries\.forEach\([\s\S]*?addEventListener\("click", openPersonalityPreference/,
+  );
   assert.match(entry, /<PersonalityPreferencePage \/>/);
   assert.match(page, /SecondaryPageHeader/);
   assert.match(page, /useAtmosphereVisibility\(bannerRef\)/);
@@ -180,6 +205,10 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   assert.match(page, /PersonalityResultCard/);
   assert.match(page, /人格介绍/);
   assert.match(css, /\.personality-banner-stage/);
+  assert.match(
+    upgradeCss,
+    /#root \.personality-test-card \{[\s\S]*?aspect-ratio:\s*1132 \/ 696/,
+  );
   assert.match(css, /contain:\s*layout paint/);
   assert.match(css, /@media \(max-width: 360px\)/);
 });
