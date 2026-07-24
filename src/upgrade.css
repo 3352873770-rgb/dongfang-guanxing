@@ -502,6 +502,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   font-weight: 400;
   line-height: 0.78;
   letter-spacing: -0.035em;
+  -webkit-text-stroke: 0.45px currentColor;
   text-shadow: 0 2px 28px rgba(239, 218, 157, 0.08);
   white-space: nowrap;
 }
@@ -1332,6 +1333,7 @@ body,
   .dfgx-editorial h1 {
     font-size: clamp(48px, 17.4vw, 74px);
     letter-spacing: -0.045em;
+    -webkit-text-stroke: 0.3px currentColor;
   }
 
   .dfgx-hero-wordmark__fate {
