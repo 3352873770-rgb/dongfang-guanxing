@@ -16,6 +16,22 @@ const ThreeCoinPage = lazy(() => import("./three-coin-page.jsx"));
 const PersonalityPreferencePage = lazy(() => import("./personality-preference-page.jsx"));
 const PERSONALITY_PREVIEW_SRC = `${import.meta.env.BASE_URL}media/legacy/personality-preference-v2.webp`;
 
+function LocalIdentityBadge() {
+  const port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
+  const label = `本地预览：分支 ${__MMEETT_WORKSPACE_BRANCH__}，提交 ${__MMEETT_WORKSPACE_SHA__}，端口 ${port}`;
+
+  return (
+    <aside className="dfgx-local-identity" aria-label={label} role="status">
+      <span className="dfgx-local-identity__label">LOCAL</span>
+      <span>{__MMEETT_WORKSPACE_BRANCH__}</span>
+      <span aria-hidden="true">·</span>
+      <span>{__MMEETT_WORKSPACE_SHA__}</span>
+      <span aria-hidden="true">·</span>
+      <span>:{port}</span>
+    </aside>
+  );
+}
+
 const CLASSIC_TITLES = [
   "《周易》",
   "《易传》",
@@ -679,6 +695,7 @@ const upgradeRoot = upgradeRootContainer.__dfgxUpgradeRoot
 upgradeRootContainer.__dfgxUpgradeRoot = upgradeRoot;
 upgradeRoot.render(
   <React.StrictMode>
+    {import.meta.env.DEV ? <LocalIdentityBadge /> : null}
     <UpgradeApp />
   </React.StrictMode>,
 );

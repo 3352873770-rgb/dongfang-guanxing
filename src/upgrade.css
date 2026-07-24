@@ -57,6 +57,41 @@ html[data-dfgx-route="personality"] body {
   box-sizing: border-box;
 }
 
+.dfgx-local-identity {
+  position: fixed;
+  z-index: 100;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  max-width: calc(100vw - 24px);
+  padding: 6px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  overflow-wrap: anywhere;
+  color: rgba(255, 250, 237, 0.84);
+  background: rgba(8, 15, 16, 0.78);
+  border: 1px solid rgba(232, 215, 169, 0.28);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(2, 8, 9, 0.18);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+.dfgx-local-identity__label {
+  padding: 2px 4px;
+  color: #16130c;
+  background: #d8b46d;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 .dfgx-floating-nav {
   position: fixed;
   z-index: 20;
