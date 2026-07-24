@@ -762,6 +762,20 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   scroll-margin-top: 96px;
 }
 
+#root #ask,
+#root #tools {
+  max-width: 100%;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+
+#root #ask .question-row,
+#root #tools .tool-card {
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+
 #root #daily .daily-button {
   appearance: none;
   position: relative;
@@ -1412,6 +1426,18 @@ body,
 
   #root #atlas .hexagram-rail > .dfgx-atlas-entry {
     min-height: 116px;
+  }
+
+  #root #ask .question-row .specular-button__fx,
+  #root #tools .tool-card .specular-button__fx {
+    right: 0;
+    left: 0;
+  }
+
+  #root #ask .question-row .specular-button__fx canvas,
+  #root #tools .tool-card .specular-button__fx canvas {
+    width: 100% !important;
+    height: 100% !important;
   }
 
   #ask,

@@ -3,6 +3,8 @@
   isolation: isolate;
   min-height: 100svh;
   overflow-x: clip;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
   color: #e8e1d1;
   background: #071416;
   font-family: "PingFang SC", "Noto Sans SC", sans-serif;

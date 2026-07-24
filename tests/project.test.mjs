@@ -115,11 +115,21 @@ test("GitHub Pages build keeps the repository subpath", async () => {
 
 test("mobile document roots contain horizontal overflow without disabling local navigation scroll", async () => {
   const css = await read("src/upgrade.css");
+  const personalityCss = await read("src/personality-preference-page.css");
+  const atlasCss = await read("src/hexagram-atlas.css");
+  const dailyCss = await read("src/daily-hexagram-page.css");
+  const threeCoinCss = await read("src/three-coin-page.css");
 
   assert.match(css, /html,\s*body\s*\{[\s\S]*?overflow-x:\s*hidden;[\s\S]*?overscroll-behavior-x:\s*none;/);
   assert.match(css, /#dfgx-upgrade-root,\s*#root\s*\{[\s\S]*?max-width:\s*100%;[\s\S]*?overflow-x:\s*hidden;/);
   assert.match(css, /@supports\s*\(overflow:\s*clip\)[\s\S]*?overflow-x:\s*clip;/);
   assert.match(css, /\.dfgx-nav-links\s*\{[\s\S]*?overflow-x:\s*auto;[\s\S]*?overscroll-behavior-inline:\s*contain;/);
+  assert.match(css, /#root #ask,\s*#root #tools\s*\{[\s\S]*?touch-action:\s*pan-y;/);
+  assert.match(css, /#root #ask \.question-row \.specular-button__fx,[\s\S]*?right:\s*0;[\s\S]*?left:\s*0;/);
+  assert.match(css, /#root #ask \.question-row \.specular-button__fx canvas,[\s\S]*?width:\s*100% !important;[\s\S]*?height:\s*100% !important;/);
+  for (const pageCss of [personalityCss, atlasCss, dailyCss, threeCoinCss]) {
+    assert.match(pageCss, /overflow-x:\s*clip;[\s\S]*?overscroll-behavior-x:\s*none;[\s\S]*?touch-action:\s*pan-y;/);
+  }
 });
 
 test("day and night atmosphere components remain wired", async () => {

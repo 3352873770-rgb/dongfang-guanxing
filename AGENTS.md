@@ -26,6 +26,8 @@ Keep LightRays and LiquidEther strictly scoped to the visible banner container o
 
 Keep the `#ask` and `#tools` sections restrained and strictly per-button. Night and day share the same individual SpecularButton edge response plus icon, copy, and arrow micro-interactions; day recolors the response to lower-intensity tea brown and sunlit old gold. Never apply one shared glow to a whole section, or add large spotlight gradients behind these controls.
 
+Mobile pages must never expose page-level horizontal dragging or rubber-band motion. Keep `#ask`, `#tools`, and every secondary-page shell on vertical touch gestures, and constrain the SpecularButton effect buffer inside each mobile button without replacing the per-button response with a section-wide effect.
+
 Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold CTA labeled “今日卦象”. Maintain a minimum 44px touch height, dark ink text, a short arrow, and localized hover, focus-visible, and active feedback without adding glow to the whole daily card.
 
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
