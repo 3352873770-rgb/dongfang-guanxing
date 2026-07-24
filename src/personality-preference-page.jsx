@@ -328,15 +328,15 @@ export default function PersonalityPreferencePage() {
 
   return (
     <div className="personality-page" style={pageStyle}>
+      <SecondaryPageHeader
+        theme={theme}
+        onThemeChange={setTheme}
+        backHash="personality"
+      />
+
       <div className="personality-banner-stage" ref={bannerRef}>
         {atmosphereActive ? <PersonalityAtmosphere theme={theme} /> : null}
         <div className="personality-banner-art" aria-hidden="true" />
-
-        <SecondaryPageHeader
-          theme={theme}
-          onThemeChange={setTheme}
-          backHash="personality"
-        />
 
         <section className="personality-banner" aria-labelledby="personality-title">
           <p>MMEETT Fate · 自我探索</p>

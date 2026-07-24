@@ -24,7 +24,7 @@
 | 人格偏好数据 | `src/personality-preference-data.js` | 四轴定义、题目、16 类型简介、计分和结果章节组合 |
 | 人格偏好探索样式 | `src/personality-preference-page.css` | Banner 双主题、两行题目、结果卡和 320px 响应式 |
 | 首页人格偏好预览图 | `public/media/legacy/personality-preference-v2.webp` | 四轴偏好印谱、深靛墨纸、旧金 CTA 与非诊断边界 |
-| 二级页共享页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 今日卦象与六十四卦知识页共用返回、品牌和昼夜切换 |
+| 二级页共享固定页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 人格偏好、今日卦象、六十四卦知识和三枚铜钱共用固定导航、退出、品牌与昼夜切换 |
 | 三枚铜钱单页工具 | `src/three-coin-page.jsx` | 同页完成定问、六次三钱记录、结果生成与经典/现代分层解释 |
 | 三枚铜钱工具样式 | `src/three-coin-page.css` | 复用二级页昼夜主题、章节排版、响应式触控和结果阅读层级 |
 | Banner 动效生命周期 | `src/use-atmosphere-visibility.js` | 离开视口或页面后台时卸载 WebGL |
