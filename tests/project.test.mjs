@@ -69,8 +69,11 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(brand, /viewBox="78 44 77 38"/);
   assert.match(brand, /viewBox="66 300 101 20"/);
   assert.doesNotMatch(brand, /cormorant-garamond/);
+  assert.match(brand, /showMark = true/);
   assert.match(entry, /<BrandLockup decorative \/>/);
-  assert.match(brand, /EASTERN SYMBOLS · INNER CLARITY/);
+  assert.match(brand, /BRAND_DESCRIPTOR = "Fate"/);
+  assert.match(entry, /<div className="dfgx-brandline">\s*<span>\{BRAND_DESCRIPTOR\}<\/span>/);
+  assert.match(entry, /<BrandLockup decorative showMark=\{false\} \/>/);
   assert.match(entry, /dfgx-wordmark-rule/);
   assert.match(entry, /READ THE SIGNS · MEET YOURSELF/);
   assert.match(entry, /观象知变，向内而行/);
@@ -78,6 +81,10 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(chrome, /<BrandLockup decorative \/>/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
+  assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-editorial h1\s*\{\s*color:\s*#000000/);
+  assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-nav-brand \.mmeett-brand-lockup\s*\{\s*color:\s*#000000/);
+  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*clamp\(420px,\s*42vw,\s*860px\)/);
+  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*min\(86vw,\s*360px\)/);
   assert.match(css, /\.mmeett-brand-lockup__mark[\s\S]*?width:\s*var\(--mmeett-mark-width/);
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });
@@ -125,8 +132,6 @@ test("mobile document roots contain horizontal overflow without disabling local 
   assert.match(css, /@supports\s*\(overflow:\s*clip\)[\s\S]*?overflow-x:\s*clip;/);
   assert.match(css, /\.dfgx-nav-links\s*\{[\s\S]*?overflow-x:\s*auto;[\s\S]*?overscroll-behavior-inline:\s*contain;/);
   assert.match(css, /#root #ask,\s*#root #tools\s*\{[\s\S]*?touch-action:\s*pan-y;/);
-  assert.match(css, /#root #ask \.question-row \.specular-button__fx,[\s\S]*?right:\s*0;[\s\S]*?left:\s*0;/);
-  assert.match(css, /#root #ask \.question-row \.specular-button__fx canvas,[\s\S]*?width:\s*100% !important;[\s\S]*?height:\s*100% !important;/);
   for (const pageCss of [personalityCss, atlasCss, dailyCss, threeCoinCss]) {
     assert.match(pageCss, /overflow-x:\s*clip;[\s\S]*?overscroll-behavior-x:\s*none;[\s\S]*?touch-action:\s*pan-y;/);
   }
@@ -182,13 +187,15 @@ test("classic title motion remains within the approved range", async () => {
   assert.ok(durations.every((duration) => duration >= 9.4 && duration <= 12.8));
 });
 
-test("question and tool effects stay scoped to individual buttons", async () => {
+test("question and tool controls keep one border without expanded effect layers", async () => {
   const css = await read("src/upgrade.css");
 
+  assert.match(css, /#root \.question-row\s*\{[\s\S]*?border:\s*1px solid/);
+  assert.match(css, /#root \.tool-card\s*\{[\s\S]*?border:\s*1px solid/);
   assert.match(css, /\.question-row:is\(:hover, :focus-visible\)/);
   assert.match(css, /\.tool-card:is\(:hover, :focus-visible\)/);
-  assert.match(css, /\.question-row \.specular-button__fx/);
-  assert.match(css, /\.tool-card \.specular-button__fx/);
+  assert.match(css, /#root #ask \.question-row::before,[\s\S]*?#root #tools \.tool-card > \.specular-button__fx\s*\{[\s\S]*?display:\s*none;/);
+  assert.doesNotMatch(css, /html\[data-dfgx-theme="day"\][^{]*\.specular-button__fx[\s\S]*?display:\s*block;/);
 });
 
 test("daily hexagram CTA keeps its accessible label and 44px touch target", async () => {

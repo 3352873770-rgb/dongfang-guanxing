@@ -110,3 +110,11 @@ Use one GitHub Issue per independently deliverable task and one `agent/<descript
 Use `agent/prototype-current` as the single integration branch for the current unpublished product. New feature branches start from this integration branch and merge back into it after their own verification; do not keep stacking one feature branch on top of another as the long-term workflow. `main` remains the public production branch and only receives the integrated prototype after explicit publication approval.
 
 The default completion boundary for each task is local verification plus a draft pull request. Do not merge into `main`, trigger a GitHub Pages production update, push a release tag, or create a GitHub Release until the user explicitly confirms publication for that specific task. A publication confirmation applies only to the current task and never carries forward to later tasks.
+
+## 日间品牌同色
+
+- 日间首页的导航与 Banner 中心 MMEETT 官方字标必须同用 `#000000`；导航文字仍使用较低对比度，夜间字标继续使用旧金色。
+
+## Hero 字标尺度
+
+- 仅参考用户提供案例的字号比例：桌面端中心 MMEETT 官方字标应占据约四成可用视口宽度，作为首屏唯一主视觉；移动端可提高但必须在容器内完整呈现，不得横向溢出。不要据此改用案例中的字体、`Fate` 字形或其他版式。

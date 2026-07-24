@@ -256,11 +256,10 @@ function UpgradeHero() {
 
       <div className="dfgx-editorial">
         <div className="dfgx-brandline">
-          <BrandLockup decorative />
           <span>{BRAND_DESCRIPTOR}</span>
         </div>
 
-        <h1 aria-label="MMEETT Fate"><BrandLockup decorative /></h1>
+        <h1 aria-label="MMEETT Fate"><BrandLockup decorative showMark={false} /></h1>
 
         <hr className="dfgx-wordmark-rule" aria-hidden="true" />
 
