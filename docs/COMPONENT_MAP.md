@@ -16,6 +16,10 @@
 | 六十四卦知识页 | `src/hexagram-atlas.jsx` | Hash 路由、阅读方法、选中卦象、搜索与完整图谱 |
 | 六十四卦知识数据 | `src/hexagram-data.js` | 通行次序、卦名、Unicode 卦象与学习主题 |
 | 六十四卦知识页样式 | `src/hexagram-atlas.css` | 昼夜主题、网格、响应式与选中状态 |
+| 今日卦象日期数据 | `src/daily-hexagram.js` | 本地日期轮换、首页与结果页共享卦象及文案 |
+| 今日卦象结果页 | `src/daily-hexagram-page.jsx` | 卦象结构、经典依据、现代观察、理性边界与知识页入口 |
+| 今日卦象结果页样式 | `src/daily-hexagram-page.css` | 昼夜主题、连续阅读、响应式和可访问状态 |
+| 二级页共享页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 今日卦象与六十四卦知识页共用返回、品牌和昼夜切换 |
 | Banner 动效生命周期 | `src/use-atmosphere-visibility.js` | 离开视口或页面后台时卸载 WebGL |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |
 | 夜间流体背景 | `src/components/LiquidEther.*` | Three.js LiquidEther |

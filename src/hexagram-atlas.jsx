@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { HEXAGRAMS } from "./hexagram-data.js";
 import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
+import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
 import "./hexagram-atlas.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
@@ -9,31 +10,8 @@ const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
 const NIGHT_ETHER_COLORS = ["#070d0e", "#756a49", "#d2b357", "#ffffff"];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function getStoredTheme() {
-  try {
-    const storedTheme = window.localStorage.getItem("dfgx-theme");
-    return storedTheme === "night" || storedTheme === "day" ? storedTheme : "day";
-  } catch {
-    return "day";
-  }
-}
-
-function ThemeToggle({ theme, onChange }) {
-  return (
-    <button
-      className="dfgx-theme-toggle"
-      type="button"
-      data-theme={theme}
-      aria-pressed={theme === "day"}
-      aria-label={`切换为${theme === "night" ? "昼" : "夜"}间主题`}
-      title={`当前：${theme === "day" ? "昼" : "夜"}间主题`}
-      onClick={onChange}
-    >
-      <span className={theme === "day" ? "is-active" : ""}>昼</span>
-      <i aria-hidden="true" />
-      <span className={theme === "night" ? "is-active" : ""}>夜</span>
-    </button>
-  );
+function returnToAtlasHomepage() {
+  window.location.hash = "atlas";
 }
 
 function AtlasAtmosphere({ theme }) {
@@ -89,13 +67,9 @@ function AtlasAtmosphere({ theme }) {
   );
 }
 
-function returnToHomepage() {
-  window.location.hash = "atlas";
-}
-
 export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
   const heroStageRef = useRef(null);
-  const [theme, setTheme] = useState(getStoredTheme);
+  const [theme, setTheme] = useDfgxTheme();
   const [query, setQuery] = useState("");
   const atmosphereActive = useAtmosphereVisibility(heroStageRef);
   const selected = HEXAGRAMS[initialHexagramNumber - 1] ?? HEXAGRAMS[0];
@@ -107,20 +81,6 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
       || String(hexagram.number) === normalizedQuery
     ))
     : HEXAGRAMS;
-
-  useEffect(() => {
-    document.documentElement.dataset.dfgxTheme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute(
-      "content",
-      theme === "day" ? "#e8dfd1" : "#0b1112",
-    );
-
-    try {
-      window.localStorage.setItem("dfgx-theme", theme);
-    } catch {
-      // The theme remains usable when local storage is unavailable.
-    }
-  }, [theme]);
 
   useEffect(() => {
     document.title = `${selected.name}｜六十四卦图谱｜东方观星`;
@@ -146,19 +106,7 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
       <div className="dfgx-atlas-hero-stage" ref={heroStageRef}>
         {atmosphereActive ? <AtlasAtmosphere theme={theme} /> : null}
 
-        <header className="dfgx-atlas-header">
-          <button className="dfgx-atlas-brand" type="button" onClick={returnToHomepage}>
-            <span>东方观星</span>
-            <small>ORIENTAL ASTROLOGY</small>
-          </button>
-          <button className="dfgx-atlas-back" type="button" onClick={returnToHomepage}>
-            返回首页
-          </button>
-          <ThemeToggle
-            theme={theme}
-            onChange={() => setTheme((current) => (current === "night" ? "day" : "night"))}
-          />
-        </header>
+        <SecondaryPageHeader theme={theme} onThemeChange={setTheme} backHash="atlas" />
 
         <section className="dfgx-atlas-intro" aria-labelledby="atlas-title">
           <p>东方观星 · 易学知识</p>
@@ -280,7 +228,7 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
 
         <footer className="dfgx-atlas-footer">
           <p>知象，是为了更清醒地看见变化。</p>
-          <button type="button" onClick={returnToHomepage}>返回六十四卦入口</button>
+          <button type="button" onClick={returnToAtlasHomepage}>返回六十四卦入口</button>
         </footer>
       </main>
     </div>

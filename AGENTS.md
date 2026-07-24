@@ -22,6 +22,10 @@ Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold C
 
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
 
+The “今日卦象” journey uses exactly two page states: homepage daily entry -> one complete daily result page. Organize the result as continuous vertical sections on that single page; do not add steps, “下一步”, separate interpretation pages, or a profile/form gate.
+
+The homepage card and result page must derive from the same local-date daily-hexagram function, so date, hexagram name, theme, and symbol always agree and refresh after local midnight. Disclose that the product uses a stable local-calendar rotation for cultural reading rather than presenting it as a traditional casting method. Separate verified classic text from modern reflection prompts, keep all interpretation non-deterministic, and provide one path into the matching six-four-hexagram knowledge page.
+
 ## 灵签信二级工具
 
 “云签解惑”“事业灵签”“流年运势”“时辰运势”“AI 解读报告”统一复用“长期问卦”的完整表单排版、页眉、宣纸容器、章节节奏和唯一主操作，不为每个工具另造一套视觉版式。

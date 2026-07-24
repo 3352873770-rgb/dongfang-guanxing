@@ -1673,6 +1673,12 @@ export const HEXAGRAMS = Object.fromEntries(
   DATA.map((hexagram) => [hexagram.bits.join(""), hexagram]),
 );
 
+/** Read-only lookup in the verified classic-text collection. */
+export function getHexagramByNumber(number) {
+  if (!Number.isInteger(number) || number < 1 || number > DATA.length) return null;
+  return DATA[number - 1] ?? null;
+}
+
 export function lineValueFromRoll(roll) {
   if (!Number.isInteger(roll) || roll < 1 || roll > 16) {
     throw new RangeError("roll must be an integer from 1 to 16");
