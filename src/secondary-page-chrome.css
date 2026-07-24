@@ -22,8 +22,7 @@
 .dfgx-secondary-brand,
 .dfgx-secondary-back { appearance: none; border: 0; color: inherit; background: transparent; cursor: pointer; }
 .dfgx-secondary-brand { width: max-content; min-height: 44px; padding: 8px 0; display: flex; align-items: center; text-align: left; }
-.dfgx-secondary-brand .mmeett-brand-lockup { display: inline-flex; align-items: baseline; gap: .12em; color: #e0bc77; font-family: "Cormorant Garamond", "Songti SC", "STSong", serif; font-size: 24px; font-weight: 600; letter-spacing: .075em; line-height: 1; white-space: nowrap; }
-.dfgx-secondary-brand .mmeett-brand-lockup__fate { font-style: italic; letter-spacing: .02em; }
+.dfgx-secondary-brand .mmeett-brand-lockup { --mmeett-mark-width: 20px; --mmeett-wordmark-width: 76px; display: inline-flex; align-items: center; gap: 7px; color: #e0bc77; line-height: 1; white-space: nowrap; }
 .dfgx-secondary-back { min-height: 44px; padding: 0 4px; display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(226, 190, 112, .34); font-family: "Songti SC", "STSong", serif; font-size: 13px; letter-spacing: .12em; transition: color 220ms ease, border-color 220ms ease, translate 220ms ease; }
 .dfgx-secondary-back > span:first-child { font-family: "PingFang SC", "Noto Sans SC", sans-serif; font-size: 16px; letter-spacing: 0; }
 .dfgx-secondary-header .dfgx-theme-toggle { min-height: 44px; height: 44px; }
@@ -37,7 +36,7 @@ html[data-dfgx-theme="day"] .dfgx-secondary-back { color: #604622; border-color:
 @media (max-width: 560px) {
   .dfgx-secondary-header { top: max(6px, env(safe-area-inset-top)); width: calc(100% - 20px); min-height: 112px; margin-top: 10px; padding: 10px; grid-template-columns: minmax(0,1fr) auto; grid-template-rows: 44px 44px; gap: 6px 12px; }
   .dfgx-secondary-brand { min-width: 0; overflow: hidden; }
-  .dfgx-secondary-brand .mmeett-brand-lockup { flex: 0 0 auto; font-size: 20px; }
+  .dfgx-secondary-brand .mmeett-brand-lockup { --mmeett-mark-width: 18px; --mmeett-wordmark-width: 68px; flex: 0 0 auto; gap: 6px; }
   .dfgx-secondary-back { grid-row: 2; justify-self: start; min-height: 44px; font-size: 12px; }
   .dfgx-secondary-header .dfgx-theme-toggle { grid-column: 2; grid-row: 1 / -1; }
 }
