@@ -91,6 +91,38 @@ test("daily hexagram date follows the visitor's local calendar date", async () =
   assert.match(entry, /nextMidnight/);
 });
 
+test("hexagram atlas preview is a static grid with accessible page entry", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const css = await read("src/upgrade.css");
+
+  assert.match(entry, /function initializeAtlasSection\(\)/);
+  assert.match(entry, /openHexagramAtlas\(number\)/);
+  assert.match(entry, /了解第 \$\{number\} 卦/);
+  assert.match(css, /#root #atlas \.hexagram-rail \{/);
+  assert.match(css, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(css, /overflow:\s*visible !important/);
+  assert.match(css, /#root #atlas \.atlas-next/);
+});
+
+test("hexagram knowledge route includes all 64 hexagrams and both themes", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const page = await read("src/hexagram-atlas.jsx");
+  const data = await read("src/hexagram-data.js");
+  const css = await read("src/hexagram-atlas.css");
+
+  assert.match(entry, /#\\\/hexagrams/);
+  assert.match(entry, /initialHexagramNumber=\{route\.number\}/);
+  assert.match(page, /六十四卦总览/);
+  assert.match(page, /查找卦名、序号或主题/);
+  assert.match(page, /LightRays/);
+  assert.match(page, /LiquidEther/);
+  assert.match(css, /data-dfgx-theme="day"/);
+  assert.match(css, /@media \(max-width:\s*340px\)/);
+
+  const namesAndThemes = data.match(/^\s{2}"[^"]+",$/gm) ?? [];
+  assert.equal(namesAndThemes.length, 128, "expected 64 names and 64 learning themes");
+});
+
 test("legacy compatibility bundles stay externalized and reviewable", async () => {
   const app = await stat(new URL("../public/legacy/legacy-app.js", import.meta.url));
   const styles = await stat(new URL("../public/legacy/legacy-styles.css", import.meta.url));
@@ -105,6 +137,9 @@ test("runtime entry files do not contain local absolute paths", async () => {
     "vite.config.mjs",
     "src/upgrade-entry.jsx",
     "src/upgrade.css",
+    "src/hexagram-atlas.jsx",
+    "src/hexagram-atlas.css",
+    "src/hexagram-data.js",
     "public/forward-journey.html",
   ];
 

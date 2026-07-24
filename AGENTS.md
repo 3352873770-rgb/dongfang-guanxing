@@ -20,6 +20,8 @@ Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold C
 
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
 
+Keep the homepage `#atlas` preview as a static responsive grid with no horizontal scrolling, carousel arrows, or pagination dots. Every visible hexagram entry must be keyboard, mouse, and touch accessible and open the hash-routed six-four-hexagram knowledge page focused on that entry. The knowledge page must preserve the shared day/night structure and theme toggle, remain educational rather than predictive, and avoid horizontal overflow down to 320px.
+
 ## Long-term project workflow
 
 Treat `/Users/leon/Documents/算卦` as the only source of truth. Do not create or maintain a second nested project copy. Start each task by reading `PROJECT_STATE.md` and only the relevant files under `docs/`, then inspect `git status` before editing.
