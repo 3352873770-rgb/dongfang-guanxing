@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
+import { HEXAGRAMS, createIChingReading, lineValueFromRoll } from "../src/iching.js";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -91,7 +92,7 @@ test("daily hexagram date follows the visitor's local calendar date", async () =
   assert.match(entry, /nextMidnight/);
 });
 
-test("reading flow connects question, profile, and casting preparation", async () => {
+test("reading flow connects question, profile, and generated result", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const flow = await read("src/reading-flow.jsx");
   const css = await read("src/reading-flow.css");
@@ -103,13 +104,41 @@ test("reading flow connects question, profile, and casting preparation", async (
   assert.match(flow, /写下你真正想问的事/);
   assert.ok(flow.indexOf("选择档案") < flow.indexOf("基本信息"));
   assert.match(flow, /PROFILE_STORAGE_KEY/);
-  assert.match(flow, /使用此档案开始问卦/);
-  assert.match(flow, /选择起卦方式/);
+  assert.match(flow, /保存档案并起卦/);
+  assert.match(flow, /卦象已成/);
+  assert.doesNotMatch(flow, /选择起卦方式/);
+  assert.match(await read("src/iching.js"), /crypto/);
   assert.match(flow, /越秀区/);
   assert.match(flow, /增城区/);
   assert.match(css, /\.reading-primary-action/);
   assert.match(css, /min-height:\s*62px/);
   assert.ok(paper.size < 500_000, "reading paper texture should remain lightweight");
+});
+
+test("I Ching data and four-value casting algorithm remain complete", () => {
+  const hexagrams = Object.values(HEXAGRAMS);
+  assert.equal(hexagrams.length, 64);
+  assert.equal(new Set(hexagrams.map((hexagram) => hexagram.number)).size, 64);
+  assert.ok(hexagrams.every((hexagram) => hexagram.yao.length === 6));
+  assert.equal(HEXAGRAMS["777777"].name, "乾");
+  assert.equal(HEXAGRAMS["888888"].name, "坤");
+  assert.equal(HEXAGRAMS["787878"].name, "既济");
+  assert.equal(HEXAGRAMS["878787"].name, "未济");
+  assert.deepEqual([1, 2, 6, 7, 13, 14, 16].map(lineValueFromRoll), [6, 7, 7, 8, 8, 9, 9]);
+  const rolls = [1, 2, 7, 14, 6, 16];
+  const reading = createIChingReading(() => rolls.shift());
+  assert.deepEqual(reading.lines, [6, 7, 8, 9, 7, 9]);
+  assert.deepEqual(reading.changingLines, [0, 3, 5]);
+  assert.equal(reading.primary.number, 6);
+  assert.equal(reading.changed.number, 60);
+  const allOldYin = createIChingReading(() => 1);
+  assert.equal(allOldYin.primary.name, "坤");
+  assert.equal(allOldYin.changed.name, "乾");
+  assert.match(allOldYin.primary.extra, /用六/);
+  const allOldYang = createIChingReading(() => 16);
+  assert.equal(allOldYang.primary.name, "乾");
+  assert.equal(allOldYang.changed.name, "坤");
+  assert.match(allOldYang.primary.extra, /用九/);
 });
 
 test("legacy compatibility bundles stay externalized and reviewable", async () => {

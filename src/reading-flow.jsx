@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createIChingReading } from "./iching.js";
 import "./reading-flow.css";
 
 const PROFILE_STORAGE_KEY = "dfgx-profiles-v1";
@@ -143,10 +144,8 @@ export default function ReadingFlow() {
   const [selectedProfileId, setSelectedProfileId] = useState("new");
   const [profile, setProfile] = useState(EMPTY_PROFILE);
   const [manualLongitude, setManualLongitude] = useState(false);
-  const [castingMethod, setCastingMethod] = useState("coins");
   const [notice, setNotice] = useState("");
-  const [isLaunching, setIsLaunching] = useState(false);
-  const castingTimerRef = useRef(null);
+  const [reading, setReading] = useState(null);
   const dialogRef = useRef(null);
   const returnFocusRef = useRef(null);
 
@@ -160,16 +159,7 @@ export default function ReadingFlow() {
     return Array.from({ length: 100 }, (_, index) => String(currentYear - index));
   }, []);
 
-  const clearCastingTimer = () => {
-    if (castingTimerRef.current !== null) {
-      window.clearTimeout(castingTimerRef.current);
-      castingTimerRef.current = null;
-    }
-  };
-
   const closeFlow = () => {
-    clearCastingTimer();
-    setIsLaunching(false);
     setIsOpen(false);
   };
 
@@ -195,10 +185,8 @@ export default function ReadingFlow() {
       setCategoryId(matchedCategory?.id || "");
       setQuestion("");
       setStep(matchedCategory ? 1 : 0);
-      setCastingMethod("coins");
       setNotice("");
-      clearCastingTimer();
-      setIsLaunching(false);
+      setReading(null);
       setIsOpen(true);
     };
 
@@ -245,8 +233,6 @@ export default function ReadingFlow() {
       returnFocusRef.current = null;
     };
   }, [isOpen]);
-
-  useEffect(() => () => clearCastingTimer(), []);
 
   useEffect(() => {
     if (!notice) return undefined;
@@ -346,8 +332,13 @@ export default function ReadingFlow() {
     setSelectedProfileId(savedProfile.id);
     setProfile(savedProfile);
     if (continueFlow) {
-      setStep(3);
-      setNotice("");
+      try {
+        setReading(createIChingReading());
+        setStep(3);
+        setNotice("");
+      } catch {
+        setNotice("无法取得安全随机数，暂不能起卦");
+      }
     } else {
       setNotice("档案已保存在本设备");
     }
@@ -362,14 +353,11 @@ export default function ReadingFlow() {
     }));
   };
 
-  const launchCasting = () => {
-    clearCastingTimer();
-    setIsLaunching(true);
-    castingTimerRef.current = window.setTimeout(() => {
-      castingTimerRef.current = null;
-      setIsLaunching(false);
-      setNotice("所问与档案已带入起卦环节");
-    }, 1200);
+  const resetReading = () => {
+    setCategoryId("");
+    setQuestion("");
+    setReading(null);
+    setStep(0);
   };
 
   return (
@@ -581,7 +569,7 @@ export default function ReadingFlow() {
 
               <p className="reading-local-note">档案仅保存在本设备，可随时删除</p>
               <button className="reading-primary-action" type="button" onClick={() => saveProfile({ continueFlow: true })}>
-                使用此档案开始问卦
+                保存档案并起卦
               </button>
               <button className="reading-secondary-action" type="button" onClick={() => saveProfile()}>
                 仅保存档案
@@ -590,49 +578,30 @@ export default function ReadingFlow() {
           ) : null}
 
           {step === 3 ? (
-            <section className="reading-screen reading-casting-screen">
-              <p className="reading-kicker">观星问卦 · 起卦准备</p>
-              <h2>静心，所问已定</h2>
-              <p className="reading-intro">确认所问与人物档案，选择一种方式进入起卦。</p>
-
-              <article className="reading-summary-card">
-                <p><span>所问方向</span><strong>{selectedCategory?.name}</strong></p>
-                <p><span>所问之事</span><strong>{question}</strong></p>
-                <p><span>人物档案</span><strong>{profile.name} · {getEarthlyBranch(profile.birthTime).split(" · ")[0]}</strong></p>
-                <button type="button" onClick={() => setStep(1)}>修改所问</button>
-              </article>
-
-              <fieldset className="reading-fieldset reading-methods">
-                <legend>选择起卦方式</legend>
-                <button
-                  type="button"
-                  className={castingMethod === "coins" ? "is-selected" : ""}
-                  onClick={() => setCastingMethod("coins")}
-                >
-                  <strong>三枚铜钱</strong>
-                  <span>专注所问，依次完成六次投掷</span>
-                </button>
-                <button
-                  type="button"
-                  className={castingMethod === "time" ? "is-selected" : ""}
-                  onClick={() => setCastingMethod("time")}
-                >
-                  <strong>按时起卦</strong>
-                  <span>以当前年月日时推演卦象</span>
-                </button>
-              </fieldset>
-
-              <aside className="reading-guidance">
-                <strong>一事一问</strong>
-                <p>问卦是整理当下处境的方法，不替代医疗、法律、投资或现实决策。</p>
-              </aside>
-
-              <button className="reading-primary-action" type="button" disabled={isLaunching} onClick={launchCasting}>
-                {isLaunching ? "正在进入起卦…" : castingMethod === "coins" ? "开始投掷铜钱" : "按当前时辰起卦"}
-              </button>
-              <button className="reading-secondary-action" type="button" onClick={() => setStep(2)}>
-                返回修改档案
-              </button>
+            <section className="reading-screen reading-result-screen">
+              <p className="reading-kicker">观星问卦 · 卦象结果</p>
+              <h2>卦象已成</h2>
+              {reading ? <>
+                <article className="reading-summary-card">
+                  <p><span>所问</span><strong>{question}</strong></p>
+                  <p><span>说明</span><strong>人物档案用于记录本次所问，不参与卦象生成。</strong></p>
+                </article>
+                <section className="reading-classics" aria-label="古籍原文">
+                  <p className="reading-classics-label">古籍原文</p>
+                  <article className="reading-hexagram">
+                    <span>{String.fromCodePoint(0x4dc0 + reading.primary.number - 1)}</span>
+                    <p>第{reading.primary.number}卦 · 上{reading.primary.upper}下{reading.primary.lower}</p>
+                    <h3>{reading.primary.fullName}</h3><h4>卦辞</h4><p>{reading.primary.judgement}</p><h4>大象</h4><p>{reading.primary.daxiang}</p>
+                  </article>
+                  <section className="reading-line-record"><h3>六爻记录</h3><p>自上而下显示，上爻至初爻。</p>{[...reading.lines].map((line, index) => ({ line, index })).reverse().map(({ line, index }) => <p key={index}>第{index + 1}爻 · {line} · {line === 6 ? "老阴" : line === 7 ? "少阳" : line === 8 ? "少阴" : "老阳"} · {line === 6 || line === 9 ? "动" : "静"}</p>)}</section>
+                  {reading.changingLines.length ? <section className="reading-changing-lines"><h3>动爻与之卦</h3>{reading.changingLines.map((index) => <p key={index}>第{index + 1}爻：{reading.primary.yao[index]}</p>)}{reading.changingLines.length === 6 && reading.primary.extra ? <p>专用爻辞：{reading.primary.extra}</p> : null}<p>之卦：{String.fromCodePoint(0x4dc0 + reading.changed.number - 1)} 第{reading.changed.number}卦《{reading.changed.fullName}》· 上{reading.changed.upper}下{reading.changed.lower}</p><p>卦辞：{reading.changed.judgement}</p><p>大象：{reading.changed.daxiang}</p></section> : <p className="reading-static-note">六爻皆静，以本卦卦辞与大象为主。</p>}
+                </section>
+                <section className="reading-reading-logic"><h3>阅读逻辑</h3><p>本卦＝当前结构；动爻＝变化位置；之卦＝变化后结构。</p></section>
+                <details><summary>起卦依据</summary><p>依据《系辞》“大衍之数五十，其用四十有九”；本实现以传统四值概率完成数字化模拟。</p></details>
+              </> : null}
+              <p className="reading-local-note">问卦用于整理处境，不替代医疗、法律、投资或现实决策。</p>
+              <button className="reading-primary-action" type="button" onClick={resetReading}>再问一事</button>
+              <button className="reading-secondary-action" type="button" onClick={() => setStep(2)}>返回修改档案</button>
             </section>
           ) : null}
         </main>
