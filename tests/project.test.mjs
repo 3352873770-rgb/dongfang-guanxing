@@ -96,6 +96,20 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });
 
+test("desktop hero CTA performs one delayed horizontal BorderGlow pass", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const glow = await read("src/components/BorderGlow.jsx");
+
+  assert.match(entry, /animated=\{!prefersReducedMotion && !renderProfile\.isMobile\}/);
+  assert.match(entry, /sweepDelay=\{920\}/);
+  assert.match(entry, /sweepDuration=\{900\}/);
+  assert.match(glow, /\{ delay = 0, duration = 900 \} = \{\}/);
+  assert.match(glow, /progress <= 0\.5 \? progress \* 2 : \(1 - progress\) \* 2/);
+  assert.match(glow, /getPointerMetrics\(element, clientX, clientY\)/);
+  assert.match(glow, /window\.clearTimeout\(timeoutId\)/);
+  assert.match(glow, /cancelAnimationFrame\(frameId\)/);
+});
+
 test("long secondary pages keep one sticky exit navigation within reach", async () => {
   const chrome = await read("src/secondary-page-chrome.jsx");
   const chromeCss = await read("src/secondary-page-chrome.css");

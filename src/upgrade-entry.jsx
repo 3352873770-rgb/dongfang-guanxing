@@ -281,7 +281,9 @@ function UpgradeHero() {
             glowRadius={10}
             glowIntensity={theme === "day" ? 0.3 : 0.42}
             coneSpread={18}
-            animated={!prefersReducedMotion}
+            animated={!prefersReducedMotion && !renderProfile.isMobile}
+            sweepDelay={920}
+            sweepDuration={900}
             colors={borderGlowTheme.colors}
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
