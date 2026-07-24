@@ -43,11 +43,17 @@ test("GitHub Pages build keeps the repository subpath", async () => {
 
 test("day and night atmosphere components remain wired", async () => {
   const entry = await read("src/upgrade-entry.jsx");
+  const visibilityHook = await read("src/use-atmosphere-visibility.js");
 
   assert.match(entry, /LightRays/);
   assert.match(entry, /LiquidEther/);
   assert.match(entry, /dfgx-theme-toggle/);
   assert.match(entry, /prefers-reduced-motion/);
+  assert.match(entry, /useAtmosphereVisibility\(heroRef\)/);
+  assert.match(entry, /atmosphereActive && theme/);
+  assert.match(visibilityHook, /IntersectionObserver/);
+  assert.match(visibilityHook, /visibilitychange/);
+  assert.match(visibilityHook, /document\.visibilityState !== "hidden"/);
 });
 
 test("classic title motion remains within the approved range", async () => {
@@ -116,6 +122,11 @@ test("hexagram knowledge route includes all 64 hexagrams and both themes", async
   assert.match(page, /查找卦名、序号或主题/);
   assert.match(page, /LightRays/);
   assert.match(page, /LiquidEther/);
+  assert.match(page, /useAtmosphereVisibility\(heroStageRef\)/);
+  assert.match(page, /dfgx-atlas-hero-stage/);
+  assert.match(page, /atmosphereActive \? <AtlasAtmosphere/);
+  assert.match(css, /\.dfgx-atlas-atmosphere \{\s*position:\s*absolute/);
+  assert.doesNotMatch(css, /\.dfgx-atlas-atmosphere \{\s*position:\s*fixed/);
   assert.match(css, /data-dfgx-theme="day"/);
   assert.match(css, /@media \(max-width:\s*340px\)/);
 

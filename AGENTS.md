@@ -14,6 +14,8 @@ Keep the antique-gold rays clearly visible but subordinate to the centered brand
 
 The floating classic-book titles around the homepage hero should remain calm but visibly alive. Keep their staggered vertical and horizontal drift, with varied cycles around 9.4–12.8 seconds; preserve the reduced-motion fallback.
 
+Keep LightRays and LiquidEther strictly scoped to the visible banner container on both the homepage and the six-four-hexagram knowledge page. Unmount the WebGL atmosphere when its banner leaves the viewport or the document becomes hidden; content below the banner uses only static theme backgrounds.
+
 Keep the `#ask` and `#tools` sections restrained and strictly per-button. Night and day share the same individual SpecularButton edge response plus icon, copy, and arrow micro-interactions; day recolors the response to lower-intensity tea brown and sunlit old gold. Never apply one shared glow to a whole section, or add large spotlight gradients behind these controls.
 
 Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold CTA labeled “今日卦象”. Maintain a minimum 44px touch height, dark ink text, a short arrow, and localized hover, focus-visible, and active feedback without adding glow to the whole daily card.

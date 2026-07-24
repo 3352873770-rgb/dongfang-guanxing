@@ -1,5 +1,6 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { HEXAGRAMS } from "./hexagram-data.js";
+import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import "./hexagram-atlas.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
@@ -93,8 +94,10 @@ function returnToHomepage() {
 }
 
 export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
+  const heroStageRef = useRef(null);
   const [theme, setTheme] = useState(getStoredTheme);
   const [query, setQuery] = useState("");
+  const atmosphereActive = useAtmosphereVisibility(heroStageRef);
   const selected = HEXAGRAMS[initialHexagramNumber - 1] ?? HEXAGRAMS[0];
   const normalizedQuery = query.trim().toLowerCase();
   const visibleHexagrams = normalizedQuery
@@ -140,23 +143,23 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
 
   return (
     <div className="dfgx-atlas-page">
-      <AtlasAtmosphere theme={theme} />
+      <div className="dfgx-atlas-hero-stage" ref={heroStageRef}>
+        {atmosphereActive ? <AtlasAtmosphere theme={theme} /> : null}
 
-      <header className="dfgx-atlas-header">
-        <button className="dfgx-atlas-brand" type="button" onClick={returnToHomepage}>
-          <span>东方观星</span>
-          <small>ORIENTAL ASTROLOGY</small>
-        </button>
-        <button className="dfgx-atlas-back" type="button" onClick={returnToHomepage}>
-          返回首页
-        </button>
-        <ThemeToggle
-          theme={theme}
-          onChange={() => setTheme((current) => (current === "night" ? "day" : "night"))}
-        />
-      </header>
+        <header className="dfgx-atlas-header">
+          <button className="dfgx-atlas-brand" type="button" onClick={returnToHomepage}>
+            <span>东方观星</span>
+            <small>ORIENTAL ASTROLOGY</small>
+          </button>
+          <button className="dfgx-atlas-back" type="button" onClick={returnToHomepage}>
+            返回首页
+          </button>
+          <ThemeToggle
+            theme={theme}
+            onChange={() => setTheme((current) => (current === "night" ? "day" : "night"))}
+          />
+        </header>
 
-      <main className="dfgx-atlas-main">
         <section className="dfgx-atlas-intro" aria-labelledby="atlas-title">
           <p>东方观星 · 易学知识</p>
           <h1 id="atlas-title">六十四卦图谱</h1>
@@ -166,7 +169,9 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
             这里提供的是文化知识与阅读线索，不把卦象当作绝对结论。
           </p>
         </section>
+      </div>
 
+      <main className="dfgx-atlas-main">
         <section className="dfgx-atlas-guide" aria-labelledby="atlas-guide-title">
           <div className="dfgx-atlas-section-heading">
             <span>阅读方法</span>

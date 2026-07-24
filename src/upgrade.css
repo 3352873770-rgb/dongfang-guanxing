@@ -203,6 +203,7 @@ html[data-dfgx-route="hexagrams"] #root {
   isolation: isolate;
   min-height: 100svh;
   overflow: hidden;
+  contain: layout paint;
   color: #e8e8e4;
   background: #0b1112;
   font-family: "PingFang SC", "Noto Sans SC", sans-serif;
@@ -214,6 +215,8 @@ html[data-dfgx-route="hexagrams"] #root {
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
+  contain: strict;
   pointer-events: none;
 }
 

@@ -29,6 +29,7 @@ index.html
 - 当前原型不包含服务端数据库、登录或业务 API。
 - 六十四卦知识页使用 Hash 路由，避免 GitHub Pages 刷新二级路径时产生 404。
 - 卦象知识数据位于 `src/hexagram-data.js`，二级页按需加载，不增加首页首次渲染负担。
+- `src/use-atmosphere-visibility.js` 统一观察 Banner 可见性和文档前后台状态，仅在需要时挂载 WebGL 场景。
 
 ## 技术债边界
 

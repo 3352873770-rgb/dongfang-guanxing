@@ -8,6 +8,7 @@
 | 六十四卦知识页 | `src/hexagram-atlas.jsx` | Hash 路由、阅读方法、选中卦象、搜索与完整图谱 |
 | 六十四卦知识数据 | `src/hexagram-data.js` | 通行次序、卦名、Unicode 卦象与学习主题 |
 | 六十四卦知识页样式 | `src/hexagram-atlas.css` | 昼夜主题、网格、响应式与选中状态 |
+| Banner 动效生命周期 | `src/use-atmosphere-visibility.js` | 离开视口或页面后台时卸载 WebGL |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |
 | 夜间流体背景 | `src/components/LiquidEther.*` | Three.js LiquidEther |
 | 主按钮描边 | `src/components/BorderGlow.*` | Hero 主要按钮高光 |

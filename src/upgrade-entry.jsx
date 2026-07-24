@@ -1,6 +1,7 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
+import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
@@ -80,6 +81,7 @@ function getRenderProfile() {
 }
 
 function UpgradeHero() {
+  const heroRef = useRef(null);
   const [sloganIndex, setSloganIndex] = useState(0);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
@@ -91,6 +93,7 @@ function UpgradeHero() {
       return "day";
     }
   });
+  const atmosphereActive = useAtmosphereVisibility(heroRef);
   const borderGlowTheme = BORDER_GLOW_THEMES[theme];
 
   useEffect(() => {
@@ -184,8 +187,8 @@ function UpgradeHero() {
         </button>
       </header>
 
-      <section className="dfgx-upgrade" id="dfgx-top">
-      {theme === "night" && !prefersReducedMotion ? (
+      <section className="dfgx-upgrade" id="dfgx-top" ref={heroRef}>
+      {atmosphereActive && theme === "night" && !prefersReducedMotion ? (
         <div className="dfgx-ether" aria-hidden="true">
           <Suspense fallback={null}>
             <LiquidEther
@@ -210,7 +213,7 @@ function UpgradeHero() {
         </div>
       ) : null}
 
-      {theme === "day" ? (
+      {atmosphereActive && theme === "day" ? (
         <div className="dfgx-light-rays" aria-hidden="true">
           <Suspense fallback={null}>
             <LightRays
