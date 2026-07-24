@@ -1,3 +1,29 @@
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+#dfgx-upgrade-root,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html,
+  body,
+  #dfgx-upgrade-root,
+  #root {
+    overflow-x: clip;
+  }
+}
+
 #root .site-header,
 #root .hero {
   display: none !important;

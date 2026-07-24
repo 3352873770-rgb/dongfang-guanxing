@@ -86,6 +86,15 @@ test("GitHub Pages build keeps the repository subpath", async () => {
   assert.match(config, /\/mmeett-fate\//);
 });
 
+test("mobile document roots contain horizontal overflow without disabling local navigation scroll", async () => {
+  const css = await read("src/upgrade.css");
+
+  assert.match(css, /html,\s*body\s*\{[\s\S]*?overflow-x:\s*hidden;[\s\S]*?overscroll-behavior-x:\s*none;/);
+  assert.match(css, /#dfgx-upgrade-root,\s*#root\s*\{[\s\S]*?max-width:\s*100%;[\s\S]*?overflow-x:\s*hidden;/);
+  assert.match(css, /@supports\s*\(overflow:\s*clip\)[\s\S]*?overflow-x:\s*clip;/);
+  assert.match(css, /\.dfgx-nav-links\s*\{[\s\S]*?overflow-x:\s*auto;[\s\S]*?overscroll-behavior-inline:\s*contain;/);
+});
+
 test("day and night atmosphere components remain wired", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const visibilityHook = await read("src/use-atmosphere-visibility.js");
