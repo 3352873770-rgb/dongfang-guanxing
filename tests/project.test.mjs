@@ -125,8 +125,6 @@ test("mobile document roots contain horizontal overflow without disabling local 
   assert.match(css, /@supports\s*\(overflow:\s*clip\)[\s\S]*?overflow-x:\s*clip;/);
   assert.match(css, /\.dfgx-nav-links\s*\{[\s\S]*?overflow-x:\s*auto;[\s\S]*?overscroll-behavior-inline:\s*contain;/);
   assert.match(css, /#root #ask,\s*#root #tools\s*\{[\s\S]*?touch-action:\s*pan-y;/);
-  assert.match(css, /#root #ask \.question-row \.specular-button__fx,[\s\S]*?right:\s*0;[\s\S]*?left:\s*0;/);
-  assert.match(css, /#root #ask \.question-row \.specular-button__fx canvas,[\s\S]*?width:\s*100% !important;[\s\S]*?height:\s*100% !important;/);
   for (const pageCss of [personalityCss, atlasCss, dailyCss, threeCoinCss]) {
     assert.match(pageCss, /overflow-x:\s*clip;[\s\S]*?overscroll-behavior-x:\s*none;[\s\S]*?touch-action:\s*pan-y;/);
   }
@@ -182,13 +180,15 @@ test("classic title motion remains within the approved range", async () => {
   assert.ok(durations.every((duration) => duration >= 9.4 && duration <= 12.8));
 });
 
-test("question and tool effects stay scoped to individual buttons", async () => {
+test("question and tool controls keep one border without expanded effect layers", async () => {
   const css = await read("src/upgrade.css");
 
+  assert.match(css, /#root \.question-row\s*\{[\s\S]*?border:\s*1px solid/);
+  assert.match(css, /#root \.tool-card\s*\{[\s\S]*?border:\s*1px solid/);
   assert.match(css, /\.question-row:is\(:hover, :focus-visible\)/);
   assert.match(css, /\.tool-card:is\(:hover, :focus-visible\)/);
-  assert.match(css, /\.question-row \.specular-button__fx/);
-  assert.match(css, /\.tool-card \.specular-button__fx/);
+  assert.match(css, /#root #ask \.question-row::before,[\s\S]*?#root #tools \.tool-card > \.specular-button__fx\s*\{[\s\S]*?display:\s*none;/);
+  assert.doesNotMatch(css, /html\[data-dfgx-theme="day"\][^{]*\.specular-button__fx[\s\S]*?display:\s*block;/);
 });
 
 test("daily hexagram CTA keeps its accessible label and 44px touch target", async () => {
