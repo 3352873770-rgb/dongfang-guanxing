@@ -48,8 +48,7 @@
   background: linear-gradient(180deg, transparent, var(--personality-stage-fade));
 }
 
-.personality-banner-art,
-.personality-atmosphere {
+.personality-banner-art {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -59,23 +58,11 @@
   z-index: -1;
   background-color: var(--personality-page-base);
   background-image: var(--personality-banner-image);
-  background-position: center;
+  background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
-  filter: grayscale(0.68) brightness(0.19) sepia(0.16);
-  opacity: 0.24;
-}
-
-.personality-atmosphere {
-  z-index: 0;
-  overflow: hidden;
-  contain: strict;
-  opacity: 0.62;
-}
-
-.personality-rays {
-  width: 100%;
-  height: 100%;
+  filter: grayscale(0.9) sepia(0.24) hue-rotate(108deg) saturate(0.72) brightness(0.23) contrast(1.08);
+  opacity: 0.82;
 }
 
 .personality-banner {
@@ -722,12 +709,8 @@ html[data-dfgx-theme="day"] .personality-banner-stage {
 
 html[data-dfgx-theme="day"] .personality-banner-art {
   background-color: var(--personality-page-base);
-  filter: none;
-  opacity: 0.56;
-}
-
-html[data-dfgx-theme="day"] .personality-atmosphere {
-  opacity: 0.54;
+  filter: saturate(0.58) sepia(0.08) brightness(0.98) contrast(0.94);
+  opacity: 0.76;
 }
 
 html[data-dfgx-theme="day"] .personality-banner > p:first-child,

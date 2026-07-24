@@ -305,9 +305,8 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   assert.match(entry, /开始人格偏好探索，12题，约3分钟/);
   assert.match(entry, /<PersonalityPreferencePage \/>/);
   assert.match(page, /SecondaryPageHeader/);
-  assert.match(page, /useAtmosphereVisibility\(bannerRef\)/);
-  assert.match(page, /LightRays/);
-  assert.match(page, /LiquidEther/);
+  assert.doesNotMatch(page, /useAtmosphereVisibility|LightRays|LiquidEther|PersonalityAtmosphere/);
+  assert.match(page, /media\/personality\/personality-banner-ink-landscape-v1\.jpg/);
   assert.match(page, /<form[\s\S]*id="personality-questionnaire"/);
   assert.match(page, /提交并生成偏好印谱/);
   assert.match(page, /PersonalityResultCard/);
