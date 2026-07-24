@@ -287,6 +287,31 @@ test("five oracle entries share one accessible paper flow with adaptive fields a
   assert.match(css, /@media \(max-width: 640px\)/);
 });
 
+test("every oracle tool places one shared profile archive before adaptive fields and saves its context", async () => {
+  const flow = await read("src/oracle-tool-flow.jsx");
+  const inputScreenStart = flow.indexOf("const inputScreen = () => {");
+  const profileUsage = flow.indexOf("{profileArchive}", inputScreenStart);
+  const firstAdaptiveField = flow.indexOf('{tool.id === "cloud"', inputScreenStart);
+
+  assert.equal((flow.match(/<ProfileArchiveForm\b/g) || []).length, 1);
+  assert.ok(profileUsage > inputScreenStart);
+  assert.ok(profileUsage < firstAdaptiveField);
+  assert.match(
+    flow,
+    /tool\.id === "report" && !records\.length[\s\S]*?<p className="reading-intro">\{tool\.intro\}<\/p>[\s\S]*?\{profileArchive\}/,
+  );
+  assert.match(flow, /const saveCurrentProfile = \(\) => \s*\{[\s\S]*?saveProfileArchive\(/);
+  assert.match(
+    flow,
+    /const generate = \(\) => \s*\{[\s\S]*?if \(!profile\.name\.trim\(\)\)[\s\S]*?tool\.id === "cloud"/,
+  );
+  assert.match(flow, /savedProfile = saveCurrentProfile\(\);[\s\S]*?profileSummary: savedProfile \? formatProfileSummary\(savedProfile\) : ""/);
+  assert.match(flow, /profileSummary: inputs\.profileSummary/);
+  assert.match(flow, /function ProfileContext\(/);
+  assert.match(flow, /onClick=\{openReadingFromEmpty\}/);
+  assert.match(flow, /const openReadingFromEmpty = \(\) => \{[\s\S]*?saveCurrentProfile\(\);[\s\S]*?dfgx:reading-open/);
+});
+
 test("reading storage keeps usable local records and supports lookup", () => {
   const values = new Map();
   const storage = {
@@ -325,7 +350,7 @@ test("reading storage keeps usable local records and supports lookup", () => {
   assert.ok(values.get(READING_STORAGE_KEY));
 });
 
-test("main reading and annual oracle reuse one profile archive component", async () => {
+test("main reading and all oracle tools reuse one profile archive component", async () => {
   const archive = await read("src/profile-archive-form.jsx");
   const reading = await read("src/reading-flow.jsx");
   const oracle = await read("src/oracle-tool-flow.jsx");

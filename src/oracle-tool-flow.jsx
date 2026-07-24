@@ -225,6 +225,15 @@ function ResultPanel({ title, children }) {
   );
 }
 
+function ProfileContext({ summary }) {
+  if (!summary) return null;
+  return (
+    <ResultPanel title="人物档案">
+      <p>{summary}</p>
+    </ResultPanel>
+  );
+}
+
 function ResultScreen({ tool, result, onEdit }) {
   const { reading, inputs, sourceRecord } = result;
   const lineText = reading.changingLines
@@ -246,6 +255,7 @@ function ResultScreen({ tool, result, onEdit }) {
             {inputs.focus} · {inputs.question}
           </p>
         </ResultPanel>
+        <ProfileContext summary={inputs.profileSummary} />
         <ClassicEvidence reading={reading} />
         <ResultPanel title="当下提醒">
           <p>
@@ -273,6 +283,7 @@ function ResultScreen({ tool, result, onEdit }) {
             {inputs.situation} · {inputs.question}
           </p>
         </ResultPanel>
+        <ProfileContext summary={inputs.profileSummary} />
         <ResultPanel title="变化位置">
           <p>{lineText || "六爻皆静，以本卦卦辞与大象为主。"}</p>
         </ResultPanel>
@@ -309,8 +320,8 @@ function ResultScreen({ tool, result, onEdit }) {
           <p>
             {inputs.year}年 · {inputs.range} · {inputs.focus}
           </p>
-          <p>{inputs.profileSummary}</p>
         </ResultPanel>
+        <ProfileContext summary={inputs.profileSummary} />
         <ResultPanel title="年度主象">
           <p>
             本卦《{reading.primary.fullName}》：{reading.primary.judgement}
@@ -361,6 +372,7 @@ function ResultScreen({ tool, result, onEdit }) {
             {timeContext.lunarDay}日 · {timeContext.branchName}
           </p>
         </ResultPanel>
+        <ProfileContext summary={inputs.profileSummary} />
         <ResultPanel title="时间卦">
           <p>
             本卦《{reading.primary.fullName}》：{reading.primary.judgement}
@@ -407,6 +419,7 @@ function ResultScreen({ tool, result, onEdit }) {
         <p>{sourceRecord?.question || "已保存记录"}</p>
         <p>解读重点：{inputs.focus}</p>
       </ResultPanel>
+      <ProfileContext summary={inputs.profileSummary} />
       <ResultPanel title="本卦、动爻、之卦">
         <p>
           本卦《{reading.primary.fullName}》；动爻：{lineText}；之卦《
@@ -576,7 +589,7 @@ export default function OracleToolFlow() {
         ? current.longitude
         : getGuangzhouLongitude(district, current.longitude),
     }));
-  const saveAnnualProfile = () => {
+  const saveCurrentProfile = () => {
     const archive = saveProfileArchive({
       profile,
       selectedProfileId,
@@ -589,6 +602,15 @@ export default function OracleToolFlow() {
     return archive.savedProfile;
   };
   const openReadingFromEmpty = () => {
+    if (!profile.name.trim()) {
+      setNotice("请先填写人物档案姓名，再开始问卦");
+      return;
+    }
+    const savedProfile = saveCurrentProfile();
+    if (!savedProfile) {
+      setNotice("档案本地保存失败，请稍后重试");
+      return;
+    }
     closeFlow();
     window.setTimeout(
       () =>
@@ -602,6 +624,10 @@ export default function OracleToolFlow() {
     let reading;
     let savedProfile = null;
     let sourceRecord = null;
+    if (!profile.name.trim()) {
+      setNotice("请先填写人物档案姓名");
+      return;
+    }
     if (tool.id === "cloud" && (!focus || question.trim().length < 6)) {
       setNotice("请选择方向，并把所问写得更具体一些");
       return;
@@ -613,15 +639,6 @@ export default function OracleToolFlow() {
     if (tool.id === "annual") {
       if (!year || !annualRange || !focus || question.trim().length < 6) {
         setNotice("请补全年份、范围、关注方向和具体问题");
-        return;
-      }
-      if (!profile.name.trim()) {
-        setNotice("流年运势需要先填写人物档案姓名");
-        return;
-      }
-      savedProfile = saveAnnualProfile();
-      if (!savedProfile) {
-        setNotice("档案本地保存失败，请稍后重试");
         return;
       }
     }
@@ -647,6 +664,11 @@ export default function OracleToolFlow() {
         return;
       }
       reading = sourceRecord.reading;
+    }
+    savedProfile = saveCurrentProfile();
+    if (!savedProfile) {
+      setNotice("档案本地保存失败，请稍后重试");
+      return;
     }
     try {
       reading ||= createIChingReading();
@@ -692,11 +714,27 @@ export default function OracleToolFlow() {
   };
 
   const inputScreen = () => {
+    const profileArchive = (
+      <ProfileArchiveForm
+        profiles={profiles}
+        selectedProfileId={selectedProfileId}
+        profile={profile}
+        manualLongitude={profileManualLongitude}
+        onSelectedProfileIdChange={setSelectedProfileId}
+        onProfileChange={setProfile}
+        onManualLongitudeChange={setProfileManualLongitude}
+        onNewArchive={() => setNotice("已切换为新建档案")}
+        heading="人物档案"
+        intro="档案仅保存在当前设备；选择后可继续编辑，并作为本次阅读的背景信息。"
+      />
+    );
     if (tool.id === "report" && !records.length) {
       return (
         <section className="reading-screen oracle-input-screen oracle-empty-state">
           <p className="reading-kicker">·AI解读报告 ·</p>
           <h2>结构化解读报告</h2>
+          <p className="reading-intro">{tool.intro}</p>
+          {profileArchive}
           <p className="reading-static-note">
             暂无已保存问卦记录。请先完成一次问卦，再回来查看结构化解读。
           </p>
@@ -718,6 +756,7 @@ export default function OracleToolFlow() {
         <p className="reading-kicker">·{tool.name} ·</p>
         <h2>{tool.title}</h2>
         <p className="reading-intro">{tool.intro}</p>
+        {profileArchive}
         {tool.id === "cloud" ? (
           <>
             <fieldset className="reading-fieldset">
@@ -809,18 +848,6 @@ export default function OracleToolFlow() {
               onChange={setQuestion}
               label="具体问题"
               placeholder="写下这一年最希望看清的变化。"
-            />
-            <ProfileArchiveForm
-              profiles={profiles}
-              selectedProfileId={selectedProfileId}
-              profile={profile}
-              manualLongitude={profileManualLongitude}
-              onSelectedProfileIdChange={setSelectedProfileId}
-              onProfileChange={setProfile}
-              onManualLongitudeChange={setProfileManualLongitude}
-              onNewArchive={() => setNotice("已切换为新建档案")}
-              heading="人物档案"
-              intro="档案仅保存在当前设备；选择后可继续编辑并用于本次流年背景。"
             />
           </>
         ) : null}
