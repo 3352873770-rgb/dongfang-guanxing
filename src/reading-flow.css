@@ -129,13 +129,13 @@
 
 .reading-category-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
 .reading-category-grid button {
-  min-height: 148px;
-  padding: 24px;
+  min-height: 118px;
+  padding: 18px;
   display: grid;
   align-content: space-between;
   gap: 12px;
@@ -226,7 +226,6 @@
   box-shadow: none;
 }
 
-.reading-selected-category,
 .reading-summary-card,
 .reading-guidance {
   background: rgba(255, 253, 248, 0.56);
@@ -234,28 +233,6 @@
   border-radius: 10px;
 }
 
-.reading-selected-category {
-  margin-bottom: 18px;
-  padding: 20px 22px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 18px;
-}
-
-.reading-selected-category span {
-  color: #8b8377;
-  font-size: 13px;
-}
-
-.reading-selected-category strong {
-  font-family: "Songti SC", "STSong", serif;
-  font-size: 19px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-}
-
-.reading-selected-category button,
 .reading-summary-card button {
   min-height: 40px;
   padding: 0;
@@ -270,6 +247,20 @@
   position: relative;
   display: grid;
   gap: 11px;
+}
+
+.reading-question-screen,
+.reading-profile-screen {
+  margin-top: 52px;
+}
+
+.reading-form-section-title {
+  margin: 0;
+  color: #282722;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 .reading-question-field > span {
@@ -685,12 +676,16 @@
   }
 
   .reading-category-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .reading-category-grid button {
-    min-height: 126px;
-    padding: 20px;
+    min-height: 112px;
+    padding: 16px;
+  }
+
+  .reading-category-grid button:last-child {
+    grid-column: 1 / -1;
   }
 
   .reading-primary-action {
@@ -732,129 +727,106 @@
     align-items: center;
   }
 
-  .reading-selected-category {
-    grid-template-columns: 1fr auto;
-  }
-
-  .reading-selected-category span {
-    grid-column: 1 / -1;
-  }
-
   .reading-summary-card p {
     grid-template-columns: 1fr;
     gap: 7px;
   }
 
-  .reading-flow[data-step="2"] .reading-content {
+  .reading-profile-screen {
     padding-top: 22px;
     padding-bottom: 44px;
   }
 
-  .reading-flow[data-step="2"] .reading-kicker {
-    margin-bottom: 10px;
-  }
-
-  .reading-flow[data-step="2"] .reading-screen h2 {
-    font-size: 34px;
-  }
-
-  .reading-flow[data-step="2"] .reading-screen h2::after {
-    margin-top: 18px;
-  }
-
-  .reading-flow[data-step="2"] .reading-intro {
+  .reading-profile-screen .reading-intro {
     margin: 14px auto 24px;
     font-size: 12px;
   }
 
-  .reading-flow[data-step="2"] .reading-fieldset {
+  .reading-profile-screen .reading-fieldset {
     padding-bottom: 18px;
   }
 
-  .reading-flow[data-step="2"] .reading-fieldset + .reading-fieldset {
+  .reading-profile-screen .reading-fieldset + .reading-fieldset {
     margin-top: 20px;
   }
 
-  .reading-flow[data-step="2"] .reading-fieldset legend {
+  .reading-profile-screen .reading-fieldset legend {
     margin-bottom: 14px;
     font-size: 21px;
   }
 
-  .reading-flow[data-step="2"] .reading-fieldset legend::before {
+  .reading-profile-screen .reading-fieldset legend::before {
     width: 5px;
     height: 20px;
     margin-right: 10px;
   }
 
-  .reading-flow[data-step="2"] .reading-select-card {
+  .reading-profile-screen .reading-select-card {
     padding: 14px 16px;
   }
 
-  .reading-flow[data-step="2"] .reading-select-card select {
+  .reading-profile-screen .reading-select-card select {
     font-size: 19px;
   }
 
-  .reading-flow[data-step="2"] .reading-picker-meta {
+  .reading-profile-screen .reading-picker-meta {
     margin-top: 6px;
     font-size: 11px;
   }
 
-  .reading-flow[data-step="2"] .reading-picker-meta button {
-    min-height: 32px;
+  .reading-profile-screen .reading-picker-meta button {
+    min-height: 44px;
   }
 
-  .reading-flow[data-step="2"] .reading-row,
-  .reading-flow[data-step="2"] .reading-row:has(.reading-inline-action) {
+  .reading-profile-screen .reading-row,
+  .reading-profile-screen .reading-row:has(.reading-inline-action) {
     grid-template-columns: 82px minmax(0, 1fr);
     gap: 10px;
   }
 
-  .reading-flow[data-step="2"] .reading-row:has(.reading-inline-action) {
+  .reading-profile-screen .reading-row:has(.reading-inline-action) {
     grid-template-columns: 82px minmax(0, 1fr) auto;
   }
 
-  .reading-flow[data-step="2"] .reading-row + .reading-row {
+  .reading-profile-screen .reading-row + .reading-row {
     margin-top: 10px;
   }
 
-  .reading-flow[data-step="2"] .reading-row > span {
+  .reading-profile-screen .reading-row > span {
     font-size: 15px;
   }
 
-  .reading-flow[data-step="2"] .reading-row > input,
-  .reading-flow[data-step="2"] .reading-row > output,
-  .reading-flow[data-step="2"] .reading-segmented button,
-  .reading-flow[data-step="2"] .reading-date-fields select,
-  .reading-flow[data-step="2"] .reading-location-fields select {
+  .reading-profile-screen .reading-row > input,
+  .reading-profile-screen .reading-row > output,
+  .reading-profile-screen .reading-segmented button,
+  .reading-profile-screen .reading-date-fields select,
+  .reading-profile-screen .reading-location-fields select {
     min-height: 44px;
     font-size: 14px;
   }
 
-  .reading-flow[data-step="2"] .reading-row:has(.reading-inline-action) .reading-inline-action {
+  .reading-profile-screen .reading-row:has(.reading-inline-action) .reading-inline-action {
     margin: 0;
     justify-self: auto;
     min-height: 44px;
     font-size: 12px;
   }
 
-  .reading-flow[data-step="2"] .reading-location-note {
+  .reading-profile-screen .reading-location-note {
     margin: 5px 0 0 92px;
     font-size: 10px;
   }
 
-  .reading-flow[data-step="2"] .reading-local-note {
+  .reading-profile-screen .reading-local-note {
     margin-top: 16px;
     font-size: 11px;
   }
 
-  .reading-flow[data-step="2"] .reading-primary-action {
+  .reading-profile-screen .reading-primary-action {
     min-height: 54px;
     margin-top: 18px;
   }
 
-  .reading-flow[data-step="2"] .reading-secondary-action {
-    margin-top: 4px;
-  }
 }
 
 @media (max-width: 390px) {

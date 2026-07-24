@@ -184,7 +184,7 @@ export default function ReadingFlow() {
       }
       setCategoryId(matchedCategory?.id || "");
       setQuestion("");
-      setStep(matchedCategory ? 1 : 0);
+      setStep(0);
       setNotice("");
       setReading(null);
       setIsOpen(true);
@@ -266,22 +266,6 @@ export default function ReadingFlow() {
     setNotice("");
   };
 
-  const continueFromCategory = () => {
-    if (!categoryId) {
-      setNotice("请先选择一类所问之事");
-      return;
-    }
-    setStep(1);
-  };
-
-  const continueFromQuestion = () => {
-    if (question.trim().length < 6) {
-      setNotice("请把问题写得更具体一些");
-      return;
-    }
-    setStep(2);
-  };
-
   const selectProfile = (id) => {
     setSelectedProfileId(id);
     if (id === "new") {
@@ -303,7 +287,15 @@ export default function ReadingFlow() {
     setNotice("已切换为新建档案");
   };
 
-  const saveProfile = ({ continueFlow = false } = {}) => {
+  const saveProfile = () => {
+    if (!categoryId) {
+      setNotice("请先选择一类所问之事");
+      return;
+    }
+    if (question.trim().length < 6) {
+      setNotice("请把问题写得更具体一些");
+      return;
+    }
     if (!profile.name.trim()) {
       setNotice("请填写姓名");
       return;
@@ -331,16 +323,12 @@ export default function ReadingFlow() {
     setProfiles(nextProfiles);
     setSelectedProfileId(savedProfile.id);
     setProfile(savedProfile);
-    if (continueFlow) {
-      try {
-        setReading(createIChingReading());
-        setStep(3);
-        setNotice("");
-      } catch {
-        setNotice("无法取得安全随机数，暂不能起卦");
-      }
-    } else {
-      setNotice("档案已保存在本设备");
+    try {
+      setReading(createIChingReading());
+      setStep(1);
+      setNotice("");
+    } catch {
+      setNotice("无法取得安全随机数，暂不能起卦");
     }
   };
 
@@ -392,23 +380,13 @@ export default function ReadingFlow() {
                 ))}
               </div>
 
-              <button className="reading-primary-action" type="button" onClick={continueFromCategory}>
-                下一步，写下问题
-              </button>
             </section>
           ) : null}
 
-          {step === 1 ? (
+          {step === 0 ? (
             <section className="reading-screen reading-question-screen">
-              <p className="reading-kicker">·观星问卦 ·</p>
-              <h2>写下你真正想问的事</h2>
+              <h3 className="reading-form-section-title">所问之事</h3>
               <p className="reading-intro">问题越具体，后续的卦象解读越容易落到你的真实处境。</p>
-
-              <div className="reading-selected-category">
-                <span>当前方向</span>
-                <strong>{selectedCategory?.name || "其他所问"}</strong>
-                <button type="button" onClick={() => setStep(0)}>重新选择</button>
-              </div>
 
               <label className="reading-question-field">
                 <span>所问之事</span>
@@ -418,7 +396,6 @@ export default function ReadingFlow() {
                   maxLength="180"
                   placeholder={selectedCategory?.prompt || "请写下此刻最想看清的一件事。"}
                   onChange={(event) => setQuestion(event.target.value)}
-                  autoFocus
                 />
                 <small>{question.length} / 180</small>
               </label>
@@ -428,16 +405,12 @@ export default function ReadingFlow() {
                 <p>少问“会不会”，多说明当下处境、你的选择，以及最想看清的变化。</p>
               </aside>
 
-              <button className="reading-primary-action" type="button" onClick={continueFromQuestion}>
-                下一步，确认档案
-              </button>
             </section>
           ) : null}
 
-          {step === 2 ? (
+          {step === 0 ? (
             <section className="reading-screen reading-profile-screen">
-              <p className="reading-kicker">·观星问卦 ·</p>
-              <h2>确认出生信息</h2>
+              <h3 className="reading-form-section-title">人物档案</h3>
               <p className="reading-intro">档案只保存在当前设备，可随时修改或删除。</p>
 
               <fieldset className="reading-fieldset reading-profile-picker">
@@ -568,16 +541,13 @@ export default function ReadingFlow() {
               </fieldset>
 
               <p className="reading-local-note">档案仅保存在本设备，可随时删除</p>
-              <button className="reading-primary-action" type="button" onClick={() => saveProfile({ continueFlow: true })}>
+              <button className="reading-primary-action" type="button" onClick={saveProfile}>
                 保存档案并起卦
-              </button>
-              <button className="reading-secondary-action" type="button" onClick={() => saveProfile()}>
-                仅保存档案
               </button>
             </section>
           ) : null}
 
-          {step === 3 ? (
+          {step === 1 ? (
             <section className="reading-screen reading-result-screen">
               <p className="reading-kicker">·观星问卦 ·</p>
               <h2>卦象已成</h2>
@@ -601,7 +571,7 @@ export default function ReadingFlow() {
               </> : null}
               <p className="reading-local-note">问卦用于整理处境，不替代医疗、法律、投资或现实决策。</p>
               <button className="reading-primary-action" type="button" onClick={resetReading}>再问一事</button>
-              <button className="reading-secondary-action" type="button" onClick={() => setStep(2)}>返回修改档案</button>
+              <button className="reading-secondary-action" type="button" onClick={() => setStep(0)}>返回修改信息</button>
             </section>
           ) : null}
         </main>
