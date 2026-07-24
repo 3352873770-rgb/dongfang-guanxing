@@ -14,10 +14,10 @@
 
 ## 当前品牌
 
-- 当前产品品牌：MMEETT Fate；英文说明为 “EASTERN SYMBOLS · INNER CLARITY”。
+- 当前产品品牌：MMEETT Fate；首页品牌说明为 “Fate”。
 - GitHub 仓库与 Pages 子路径已同步更名为 `mmeett-fate`，仓库地址为 `https://github.com/3352873770-rgb/mmeett-fate`。
-- 首页 Hero 使用单行 MMEETT Fate 字标、`READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”，但保持原有昼夜氛围、导航与问卦业务流程。
-- 品牌字标由 `src/brand-lockup.jsx` 统一提供，使用仅含所需字重的自托管 Cormorant Garamond；首页、二级页和页面标题不再使用旧品牌名。
+- 首页 Hero 使用独立的 MMEETT 官方字标、`Fate`、`READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”，但保持原有昼夜氛围、导航与问卦业务流程。
+- 品牌字标由 `src/brand-lockup.jsx` 统一提供，使用用户提供 PDF 提取的官方 SVG 路径；首页、二级页和页面标题不再使用旧品牌名。
 
 ## 已完成
 

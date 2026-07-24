@@ -891,6 +891,10 @@ html[data-dfgx-theme="day"] .dfgx-theme-toggle span.is-active {
   color: #795a31;
 }
 
+html[data-dfgx-theme="day"] .dfgx-nav-brand .mmeett-brand-lockup {
+  color: #000000;
+}
+
 html[data-dfgx-theme="day"] .dfgx-nav-brand small,
 html[data-dfgx-theme="day"] .dfgx-nav-links a {
   color: rgba(40, 37, 32, 0.68);
@@ -919,7 +923,7 @@ html[data-dfgx-theme="day"] .dfgx-theme-toggle span.is-active {
 }
 
 html[data-dfgx-theme="day"] .dfgx-editorial h1 {
-  color: #262b28;
+  color: #000000;
   text-shadow: 0 2px 26px rgba(101, 76, 41, 0.1);
 }
 
