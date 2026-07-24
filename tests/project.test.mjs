@@ -83,7 +83,8 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-editorial h1\s*\{\s*color:\s*#000000/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-nav-brand \.mmeett-brand-lockup\s*\{\s*color:\s*#000000/);
-  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*clamp\(320px,\s*27vw,\s*430px\)/);
+  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*clamp\(420px,\s*42vw,\s*860px\)/);
+  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*min\(86vw,\s*360px\)/);
   assert.match(css, /\.mmeett-brand-lockup__mark[\s\S]*?width:\s*var\(--mmeett-mark-width/);
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });

@@ -511,7 +511,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
-  --mmeett-wordmark-width: clamp(320px, 27vw, 430px);
+  --mmeett-wordmark-width: clamp(420px, 42vw, 860px);
   gap: 0;
 }
 
@@ -1348,7 +1348,7 @@ body,
   }
 
   .dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
-    --mmeett-wordmark-width: min(84vw, 300px);
+    --mmeett-wordmark-width: min(86vw, 360px);
   }
 
   .dfgx-wordmark-rule {

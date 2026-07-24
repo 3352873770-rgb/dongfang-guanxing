@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- 放大首页 Banner 的 MMEETT 官方字标：桌面端解除过低宽度上限并按视口扩大，手机端同步增加上限但保持容器内完整显示。
 - 统一日间首页品牌对比：导航与 Banner 中的 MMEETT 官方字标均改为纯黑；导航文字和夜间旧金色保持不变。
 - 调整首页 Banner 品牌层级：顶部导航保留完整 Logo，品牌说明改为“Fate”；中心只保留放大的 MMEETT 字标，成为首屏视觉焦点。
 - 同步用户提供的 MMEETT 官方 Logo：首页导航、Hero 与二级页页眉统一改用图形标和自定义字标 SVG，移除不符合品牌稿的 Cormorant Garamond 字标依赖。
