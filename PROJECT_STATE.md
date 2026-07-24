@@ -7,6 +7,7 @@
 - 正式源码：仓库根目录 `/Users/leon/Documents/算卦`
 - 线上地址：https://3352873770-rgb.github.io/dongfang-guanxing/
 - 正式分支：`main`
+- 当前原型集成分支：`agent/prototype-current`
 - 当前版本：`1.0.0`
 - 技术栈：React 19、Vite 6、OGL、Three.js
 - 发布方式：任务默认停在本地验证与草稿 PR；用户逐次确认发布后才合并 `main`，再由 GitHub Actions 发布 GitHub Pages
@@ -32,6 +33,7 @@
 - GitHub Pages 公网发布
 - 根目录唯一源码、长期项目文档与自动质量检查基线
 - 逐任务明确确认的公网发布门禁，避免完成任务后自动更新线上版本
+- 已验证的问卦、灵签信、六十四卦、今日卦象和人物档案置顶功能已收拢到 `agent/prototype-current`
 
 ## 当前架构边界
 
@@ -63,3 +65,5 @@
 ## 接手规则
 
 新任务先读取 `AGENTS.md`、本文件和任务相关的 `docs/` 文档。不要扫描依赖、构建产物或 Legacy Bundle；通过 `docs/COMPONENT_MAP.md` 定位代码。
+
+新功能从 `agent/prototype-current` 创建独立任务分支；验证完成后合回该集成分支。只有用户针对当前任务明确确认发布时，才把集成版本合入 `main`。

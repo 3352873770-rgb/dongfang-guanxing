@@ -71,4 +71,6 @@ After a material change, run `npm run check`. Update `PROJECT_STATE.md` when cur
 
 Use one GitHub Issue per independently deliverable task and one `agent/<description>` branch per change. Keep `main` deployable. Pull requests must state scope, impact, checks, and rollback notes. GitHub Pages is the production delivery path.
 
+Use `agent/prototype-current` as the single integration branch for the current unpublished product. New feature branches start from this integration branch and merge back into it after their own verification; do not keep stacking one feature branch on top of another as the long-term workflow. `main` remains the public production branch and only receives the integrated prototype after explicit publication approval.
+
 The default completion boundary for each task is local verification plus a draft pull request. Do not merge into `main`, trigger a GitHub Pages production update, push a release tag, or create a GitHub Release until the user explicitly confirms publication for that specific task. A publication confirmation applies only to the current task and never carries forward to later tasks.
