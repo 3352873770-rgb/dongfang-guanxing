@@ -7,7 +7,7 @@
 
 公开仓库的 `main` 是生产源。GitHub Actions 构建 Vite 并发布到：
 
-https://3352873770-rgb.github.io/dongfang-guanxing/
+https://3352873770-rgb.github.io/mmeett-fate/
 
 ## 原因
 

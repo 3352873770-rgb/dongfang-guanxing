@@ -5,7 +5,7 @@
 ## 当前基线
 
 - 正式源码：仓库根目录 `/Users/leon/Documents/算卦`
-- 线上地址：https://3352873770-rgb.github.io/dongfang-guanxing/
+- 线上地址：https://3352873770-rgb.github.io/mmeett-fate/
 - 正式分支：`main`
 - 当前原型集成分支：`agent/prototype-current`
 - 当前版本：`1.0.0`
@@ -15,6 +15,7 @@
 ## 当前品牌
 
 - 当前产品品牌：MMEETT Fate；英文说明为 “EASTERN SYMBOLS · INNER CLARITY”。
+- GitHub 仓库与 Pages 子路径已同步更名为 `mmeett-fate`，仓库地址为 `https://github.com/3352873770-rgb/mmeett-fate`。
 - 首页 Hero 使用单行 MMEETT Fate 字标、`READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”，但保持原有昼夜氛围、导航与问卦业务流程。
 - 品牌字标由 `src/brand-lockup.jsx` 统一提供，使用仅含所需字重的自托管 Cormorant Garamond；首页、二级页和页面标题不再使用旧品牌名。
 
@@ -61,10 +62,10 @@
 
 ## 下一步
 
-1. [#5](https://github.com/3352873770-rgb/dongfang-guanxing/issues/5)：建立 Legacy Bundle 的可重复构建或逐段迁移到正常 React 组件。
-2. [#6](https://github.com/3352873770-rgb/dongfang-guanxing/issues/6)：增加桌面端、390px 移动端、昼夜切换和核心按钮的浏览器端到端测试。
-3. [#7](https://github.com/3352873770-rgb/dongfang-guanxing/issues/7)：记录 LightRays / LiquidEther 性能基线并持续监测移动端表现。
-4. [#8](https://github.com/3352873770-rgb/dongfang-guanxing/issues/8)：基于当前主线重建离线单文件分享版。
+1. [#5](https://github.com/3352873770-rgb/mmeett-fate/issues/5)：建立 Legacy Bundle 的可重复构建或逐段迁移到正常 React 组件。
+2. [#6](https://github.com/3352873770-rgb/mmeett-fate/issues/6)：增加桌面端、390px 移动端、昼夜切换和核心按钮的浏览器端到端测试。
+3. [#7](https://github.com/3352873770-rgb/mmeett-fate/issues/7)：记录 LightRays / LiquidEther 性能基线并持续监测移动端表现。
+4. [#8](https://github.com/3352873770-rgb/mmeett-fate/issues/8)：基于当前主线重建离线单文件分享版。
 5. 将三枚铜钱的同页任务骨架逐项复用到其他推荐工具。
 6. 评估 AI 模型接入与全国地区数据范围。
 7. 为人格偏好探索补充浏览器端到端测试和可访问性回归。
