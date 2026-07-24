@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   HEXAGRAMS,
   createIChingReading,
+  createIChingReadingFromLines,
   createTimeIChingReading,
   lineValueFromRoll,
   getHexagramByNumber,
@@ -379,6 +380,50 @@ test("I Ching data and four-value casting algorithm remain complete", () => {
   assert.equal(createTimeIChingReading("2026-07-24"), null);
 });
 
+test("three-coin workspace keeps question, six casts, and inline result on one page", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const page = await read("src/three-coin-page.jsx");
+  const css = await read("src/three-coin-page.css");
+
+  assert.match(entry, /#\/tools\/three-coins/);
+  assert.match(entry, /function initializeToolEntryPoints\(\)/);
+  assert.match(entry, /button\.textContent\?\.includes\("三枚铜钱"\)/);
+  assert.match(page, /01/);
+  assert.match(page, /02/);
+  assert.match(page, /03/);
+  assert.match(page, /定问/);
+  assert.match(page, /六掷/);
+  assert.match(page, /见卦/);
+  assert.match(page, /Array\(6\)\.fill\(null\)/);
+  assert.match(page, /createIChingReadingFromLines\(lines\)/);
+  assert.match(page, /const trimmedQuestion = question\.trim\(\);[\s\S]*?trimmedQuestion\.length < 6/);
+  assert.match(page, /document\.getElementById\("three-coin-result"\)/);
+  assert.doesNotMatch(page, /ProfileArchiveForm/);
+  assert.match(css, /\.three-coin-primary\s*\{[\s\S]*?min-height:\s*56px/);
+  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.three-coin-faces button\s*\{[\s\S]*?width:\s*44px;[\s\S]*?height:\s*44px/);
+  assert.match(css, /@media \(max-width:\s*360px\)/);
+
+  const reading = createIChingReadingFromLines([6, 7, 8, 9, 7, 8]);
+  assert.deepEqual(reading.lines, [6, 7, 8, 9, 7, 8]);
+  assert.deepEqual(reading.changingLines, [0, 3]);
+  assert.equal(reading.primary.number, 47);
+  assert.equal(reading.changed.number, 60);
+  assert.throws(
+    () => createIChingReadingFromLines([6, 7, 8]),
+    /six integers from 6 to 9/,
+  );
+
+  const allOldYin = createIChingReadingFromLines([6, 6, 6, 6, 6, 6]);
+  assert.equal(allOldYin.primary.number, 2);
+  assert.equal(allOldYin.changed.number, 1);
+  assert.deepEqual(allOldYin.changingLines, [0, 1, 2, 3, 4, 5]);
+
+  const allOldYang = createIChingReadingFromLines([9, 9, 9, 9, 9, 9]);
+  assert.equal(allOldYang.primary.number, 1);
+  assert.equal(allOldYang.changed.number, 2);
+  assert.deepEqual(allOldYang.changingLines, [0, 1, 2, 3, 4, 5]);
+});
+
 test("hexagram atlas preview is a static grid with accessible page entry", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const css = await read("src/upgrade.css");
@@ -440,6 +485,8 @@ test("runtime entry files do not contain local absolute paths", async () => {
     "src/hexagram-atlas.jsx",
     "src/hexagram-atlas.css",
     "src/hexagram-data.js",
+    "src/three-coin-page.jsx",
+    "src/three-coin-page.css",
     "public/forward-journey.html",
   ];
 

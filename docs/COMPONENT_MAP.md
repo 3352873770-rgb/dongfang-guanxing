@@ -20,6 +20,8 @@
 | 今日卦象结果页 | `src/daily-hexagram-page.jsx` | 卦象结构、经典依据、现代观察、理性边界与知识页入口 |
 | 今日卦象结果页样式 | `src/daily-hexagram-page.css` | 昼夜主题、连续阅读、响应式和可访问状态 |
 | 二级页共享页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 今日卦象与六十四卦知识页共用返回、品牌和昼夜切换 |
+| 三枚铜钱单页工具 | `src/three-coin-page.jsx` | 同页完成定问、六次三钱记录、结果生成与经典/现代分层解释 |
+| 三枚铜钱工具样式 | `src/three-coin-page.css` | 复用二级页昼夜主题、章节排版、响应式触控和结果阅读层级 |
 | Banner 动效生命周期 | `src/use-atmosphere-visibility.js` | 离开视口或页面后台时卸载 WebGL |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |
 | 夜间流体背景 | `src/components/LiquidEther.*` | Three.js LiquidEther |

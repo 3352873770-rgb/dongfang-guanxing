@@ -4,11 +4,13 @@
 }
 
 html[data-dfgx-route="hexagrams"] #root,
-html[data-dfgx-route="daily"] #root {
+html[data-dfgx-route="daily"] #root,
+html[data-dfgx-route="three-coins"] #root {
   display: none;
 }
 
-html[data-dfgx-route="daily"] body {
+html[data-dfgx-route="daily"] body,
+html[data-dfgx-route="three-coins"] body {
   min-width: 0;
 }
 

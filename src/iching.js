@@ -1701,10 +1701,26 @@ function secureRoll() {
 export function createIChingReading(drawFn = secureRoll) {
   if (typeof drawFn !== "function") throw new TypeError("drawFn must be a function");
   const lines = Array.from({ length: 6 }, () => lineValueFromRoll(drawFn()));
+  return createIChingReadingFromLines(lines);
+}
+
+export function createIChingReadingFromLines(lines) {
+  if (
+    !Array.isArray(lines)
+    || lines.length !== 6
+    || lines.some((line) => !Number.isInteger(line) || line < 6 || line > 9)
+  ) {
+    throw new RangeError("lines must contain six integers from 6 to 9");
+  }
   const primaryBits = lines.map((line) => (line === 7 || line === 9 ? 7 : 8)).join("");
   const changedBits = lines.map((line) => (line === 6 ? 7 : line === 9 ? 8 : line === 7 ? 7 : 8)).join("");
   const changingLines = lines.map((line, index) => (line === 6 || line === 9 ? index : null)).filter(Number.isInteger);
-  return { lines, changingLines, primary: HEXAGRAMS[primaryBits], changed: HEXAGRAMS[changedBits] };
+  return {
+    lines: [...lines],
+    changingLines,
+    primary: HEXAGRAMS[primaryBits],
+    changed: HEXAGRAMS[changedBits],
+  };
 }
 
 const TIME_TRIGRAMS = ["乾", "兑", "离", "震", "巽", "坎", "艮", "坤"];
