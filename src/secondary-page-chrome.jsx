@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import BrandLockup from "./brand-lockup.jsx";
 import "./secondary-page-chrome.css";
 
 export function getStoredTheme() {
@@ -54,9 +55,8 @@ export default function SecondaryPageHeader({ theme, onThemeChange, backHash, ba
 
   return (
     <header className="dfgx-secondary-header">
-      <button className="dfgx-secondary-brand" type="button" onClick={returnToHomepage}>
-        <span>东方观星</span>
-        <small>ORIENTAL ASTROLOGY</small>
+      <button className="dfgx-secondary-brand" type="button" onClick={returnToHomepage} aria-label="返回 MMEETT Fate 首页">
+        <BrandLockup decorative />
       </button>
       <button className="dfgx-secondary-back" type="button" onClick={returnToHomepage}>{backLabel}</button>
       <ThemeToggle

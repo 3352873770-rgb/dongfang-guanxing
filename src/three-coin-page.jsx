@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createIChingReadingFromLines } from "./iching.js";
+import { BRAND_NAME, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import { saveReadingRecord } from "./reading-storage.js";
 import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
 import "./three-coin-page.css";
@@ -152,9 +153,9 @@ export default function ThreeCoinPage() {
   );
 
   useEffect(() => {
-    document.title = "三枚铜钱｜东方观星";
+    document.title = `三枚铜钱｜${BRAND_NAME}`;
     return () => {
-      document.title = "东方观星｜观天象，问内心";
+      document.title = DEFAULT_DOCUMENT_TITLE;
     };
   }, []);
 

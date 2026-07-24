@@ -6,6 +6,12 @@ Before making substantial visual changes, use the Product Design plugin's `get-c
 
 When implementing from a selected generated mock, treat that image as the source of truth for layout, component anatomy, density, spacing, color, typography, visible content, and hierarchy.
 
+## MMEETT Fate 品牌系统
+
+品牌名称统一为 “MMEETT Fate”。英文主字标使用同家族的高对比衬线：`MMEETT` 为直立全大写，`Fate` 为优雅斜体；通过共享 `src/brand-lockup.jsx` 在首页导航、Hero 与二级页页眉中复用，禁止重新手写字标。优先自托管 `Cormorant Garamond` 所需字重，中文继续使用系统宋体与无衬线字体，不引入大型中文网络字体。
+
+Hero 字标必须保持单行并在移动端不换行。英文说明固定为 “EASTERN SYMBOLS · INNER CLARITY”，英文标语固定为 “READ THE SIGNS · MEET YOURSELF”，中文标语固定为“观象知变，向内而行”，支撑文案固定为“以《周易》为根，循象观变”，主 CTA 显示“开始问卦”。保留既有导航标签、昼夜主题、页面布局与业务流程；全站现役页面 title 与 SEO 使用 MMEETT Fate 品牌。
+
 The homepage supports two intentionally related atmosphere modes. Preserve the same centered editorial layout, navigation, slogans, and interactions in both. Night uses LiquidEther with deep ink and antique gold; day uses LightRays on a warm rice-paper field with sunlit old gold. Keep the mode difference concentrated in background motion and contrast tokens, and retain the visible day/night switch.
 
 昼夜主题必须共用同一套页面、路由、组件树、内容数据和交互逻辑；禁止为了主题复制页面或维护两套组件。首页选择的主题是全站唯一主题状态，进入问卦、灵签、日签、卦图或其他二级流程时必须继续呈现同一主题。主题差异通过根级 `data-dfgx-theme` 和共享 CSS 变量完成，优先切换背景氛围及保证可读性所需的前景对比，不在各页面建立独立主题状态。

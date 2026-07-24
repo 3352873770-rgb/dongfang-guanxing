@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { HEXAGRAMS } from "./hexagram-data.js";
+import { BRAND_NAME, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
 import "./hexagram-atlas.css";
@@ -83,9 +84,9 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
     : HEXAGRAMS;
 
   useEffect(() => {
-    document.title = `${selected.name}｜六十四卦图谱｜东方观星`;
+    document.title = `${selected.name}｜六十四卦图谱｜${BRAND_NAME}`;
     return () => {
-      document.title = "东方观星｜观天象，问内心";
+      document.title = DEFAULT_DOCUMENT_TITLE;
     };
   }, [selected.name]);
 
@@ -109,7 +110,7 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
         <SecondaryPageHeader theme={theme} onThemeChange={setTheme} backHash="atlas" />
 
         <section className="dfgx-atlas-intro" aria-labelledby="atlas-title">
-          <p>东方观星 · 易学知识</p>
+          <p>MMEETT Fate · 易学知识</p>
           <h1 id="atlas-title">六十四卦图谱</h1>
           <div className="dfgx-atlas-seal" aria-hidden="true">易</div>
           <p>

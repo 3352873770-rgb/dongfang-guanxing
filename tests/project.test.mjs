@@ -55,6 +55,30 @@ test("HTML mounts the upgraded hero and base-aware legacy assets", async () => {
   assert.match(html, /%BASE_URL%legacy\/legacy-styles\.css/);
 });
 
+test("MMEETT Fate brand system is shared across the active page chrome", async () => {
+  const html = await read("index.html");
+  const brand = await read("src/brand-lockup.jsx");
+  const entry = await read("src/upgrade-entry.jsx");
+  const chrome = await read("src/secondary-page-chrome.jsx");
+  const css = await read("src/upgrade.css");
+
+  assert.match(html, /MMEETT Fate｜观象知变，向内而行/);
+  assert.match(html, /MMEETT Fate——以《周易》为根/);
+  assert.match(brand, /@fontsource\/cormorant-garamond\/latin-600\.css/);
+  assert.match(brand, /@fontsource\/cormorant-garamond\/latin-600-italic\.css/);
+  assert.match(brand, /MMEETT/);
+  assert.match(brand, /Fate/);
+  assert.match(entry, /<BrandLockup decorative \/>/);
+  assert.match(brand, /EASTERN SYMBOLS · INNER CLARITY/);
+  assert.match(entry, /dfgx-wordmark-rule/);
+  assert.match(entry, /READ THE SIGNS · MEET YOURSELF/);
+  assert.match(entry, /观象知变，向内而行/);
+  assert.match(entry, /开始问卦/);
+  assert.match(chrome, /<BrandLockup decorative \/>/);
+  assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
+  assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
+});
+
 test("GitHub Pages build keeps the repository subpath", async () => {
   const config = await read("vite.config.mjs");
 

@@ -1,101 +1,64 @@
-# 三枚铜钱单页二级界面 Design QA
+# MMEETT Fate 品牌字体设计 QA
 
-## Comparison target
+## 对照对象
 
-- Source visual truth: `/Users/leon/.codex/generated_images/019f9239-98f8-73b1-bc4f-117407ff161c/call_sPOG8pW2yJcOF0PU4gCjUxO2.png`
-- Source evidence copy: `/Users/leon/.codex/visualizations/2026/07/24/019f9239-98f8-73b1-bc4f-117407ff161c/source-visual-826x1905.png`
-- Implementation route: `http://127.0.0.1:4173/#/tools/three-coins`
-- Pass 1 implementation: `/Users/leon/.codex/visualizations/2026/07/24/019f9239-98f8-73b1-bc4f-117407ff161c/implementation-pass-1-390-day-complete.png`
-- Pass 1 combined comparison: `/Users/leon/.codex/visualizations/2026/07/24/019f9239-98f8-73b1-bc4f-117407ff161c/comparison-pass-1.png`
-- Pass 2 implementation: `/Users/leon/.codex/visualizations/2026/07/24/019f9239-98f8-73b1-bc4f-117407ff161c/implementation-pass-2-390-day-complete.png`
-- Pass 2 combined comparison: `/Users/leon/.codex/visualizations/2026/07/24/019f9239-98f8-73b1-bc4f-117407ff161c/comparison-pass-2.png`
+- source visual truth path: `docs/design/mmeett-fate-brand-home-v1.png`
+- implementation URL: `http://127.0.0.1:4176/`
+- implementation screenshot path: `docs/qa/mmeett-fate-brand-desktop-night-v1.jpg`
+- full-view comparison evidence: `docs/qa/mmeett-fate-brand-reference-comparison-v1.jpg`
+- responsive evidence:
+  - `docs/qa/mmeett-fate-brand-mobile-night-v1.jpg`
+  - `docs/qa/mmeett-fate-brand-mobile-day-v1.jpg`
+- source pixels: 1487 × 1058 PNG
+- implementation pixels: 1487 × 1058 JPEG
+- CSS viewport: 1487 × 1058
+- device density normalization: source and implementation use the same pixel dimensions and a 1× CSS viewport; no resampling was required before the full-view comparison
+- primary state: homepage, night theme, initial viewport
 
-## Viewport, density, and state
+## Required Fidelity Surfaces
 
-- CSS viewport: `390 × 844`.
-- Theme: day.
-- State: 事业 selected; question is `近期是否适合推进新的项目计划？`; all six casts are complete; the result is expanded on the same page.
-- Deterministic comparison reading: `雷山小过 → 水火既济`; moving lines are 初爻、四爻、五爻.
-- Source pixels: `826 × 1905`.
-- Source normalization: shown at `390px` width, producing `390 × 899.45` displayed pixels. Effective source density is `826 / 390 = 2.118`.
-- Implementation density: browser capture is one output pixel per CSS pixel.
-- Pass 1 implementation pixels: `390 × 2953`.
-- Pass 2 implementation pixels: `390 × 2432`.
-- Browser: Chrome was used because the Codex in-app browser surface was unavailable.
+- Fonts and typography: `Cormorant Garamond` 600 normal renders `MMEETT`; the matching 600 italic renders `Fate`. The single-line relationship, high-contrast strokes, optical hierarchy, letter spacing and mobile wrapping match the selected direction. Chinese display copy remains in the existing restrained Songti stack and utility text remains in the existing sans stack.
+- Spacing and layout rhythm: the centered editorial composition, floating navigation, wordmark scale, separator, copy stack and CTA rhythm remain aligned with the source while preserving the product's existing responsive structure. At 390 × 844 and 320 × 700, the wordmark does not wrap and the document has no horizontal overflow.
+- Colors and visual tokens: night uses antique gold on deep ink; day remaps the same components to tea brown on warm rice paper. Both themes use one component tree and shared token overrides.
+- Image quality and asset fidelity: the selected mock is preserved as the design source. No logo image was rasterized into the product; the wordmark is live, selectable type. Existing LightRays and LiquidEther backgrounds were deliberately retained, so the animated night capture can contain a moving light form that is absent from the static mock.
+- Copy and content: `EASTERN SYMBOLS · INNER CLARITY`, `READ THE SIGNS · MEET YOURSELF`, “观象知变，向内而行”, “以《周易》为根，循象观变” and “开始问卦” match the approved design.
 
-## Full-view comparison evidence
+## Full-view and Focused Comparison
 
-`comparison-pass-1.png` and `comparison-pass-2.png` place the source and browser-rendered implementation together in one image at the same displayed width. Pass 2 shows the corrected spacing, result hierarchy, and CTA copy.
+The native-size side-by-side image verifies the complete frame: navigation, small brand signature, descriptor, main wordmark, rule, English line, Chinese copy and both actions. A separate crop was not needed because all brand-critical typography is legible at the native 1487 × 1058 comparison size. DOM measurement additionally confirmed the final desktop wordmark is 708.4 px wide and the primary CTA remains 220 × 62 px.
 
-The implementation remains taller than the normalized concept image. The remaining difference is intentional and non-actionable:
+## Comparison History
 
-- The source concept depicts two small face controls per line, while the actual three-coin method must expose three independent coin records.
-- The source's normalized controls are below the product's 44px touch-target requirement.
-- The implementation includes the verified classic judgement, `《象》`, all changing-line text, action advice, risk warning, and rational boundary; the source uses abbreviated placeholder copy.
+### Iteration 1
 
-Removing those differences would break the agreed casting model, accessibility requirement, or result-content integrity.
+- [P2] The first implementation rendered the main wordmark in ivory instead of antique gold.
+- [P2] The small `MMEETT Fate` signature above the descriptor and the rule below the main wordmark were missing.
+- [P2] Legacy nested-span rules reduced the navigation wordmark's intended type size.
+- Fixes: changed the night wordmark token to `#d8b568`, added the shared small lockup and semantic rule, and removed the obsolete nested-span overrides.
+- Post-fix evidence: `docs/qa/mmeett-fate-brand-reference-comparison-v1.jpg`.
 
-## Focused-region evidence
+### Iteration 2
 
-Separate crop files were not required. The original-resolution source, both 390px implementation captures, and the combined comparison files preserve readable typography and control detail when opened at original size. There are no photographic, illustrative, or masked raster assets requiring an additional image-quality crop; the important focused regions are the header/form, six cast rows, CTA, hexagram pair, and text sections, all visible in the combined evidence.
+- [P2] The corrected desktop wordmark remained wider and slightly higher than the selected mock.
+- Fixes: reduced the desktop maximum from 132 px to 116 px, brought the measured width to 708.4 px, and shifted the desktop editorial group 24 px lower without changing the mobile layout.
+- Post-fix evidence: `docs/qa/mmeett-fate-brand-desktop-night-v1.jpg`.
 
 ## Findings
 
-### Resolved P1 — avoidable vertical-density drift
+No actionable P0, P1 or P2 differences remain.
 
-- Location: mobile layout in `src/three-coin-page.css`.
-- Evidence: pass 1 was `390 × 2953`, with an oversized textarea, 100px cast rows, and broad chapter/result spacing. The source uses a much tighter editorial rhythm.
-- Impact: the main task felt substantially longer and the cast/result relationship was harder to scan.
-- Fix: reduced mobile page and chapter padding, category/form gaps, textarea height, cast-list gap, cast-row height, result glyph scale, result-section padding, and reset spacing while retaining all 44px controls.
-- Post-fix evidence: pass 2 is `390 × 2432`, a reduction of 521px or 17.6%, with no horizontal overflow.
-- Status: resolved. Remaining height is required by real three-coin controls, 44px targets, and complete verified content.
+- [P3] The source mock includes a tiny diamond at the center of the horizontal rule. The implementation keeps a clean hairline instead of introducing a fabricated ornamental asset.
+- [P3] LiquidEther produces a moving highlight in the night screenshot. This is an intentional retained product behavior rather than a second brand layout.
 
-### Resolved P2 — result name hierarchy differed from the source
+## Interaction, Responsive and Runtime Checks
 
-- Location: `HexagramReading` in `src/three-coin-page.jsx`.
-- Evidence: pass 1 used `雷山小过` and `水火既济` as primary headings with ordinal numbers below. The source uses `小过` and `既济` as the display names, with the full names as secondary context.
-- Impact: the result pair was visually heavier and less faithful to the selected target.
-- Fix: use `name` for the display heading and `fullName` for the supporting line.
-- Post-fix evidence: pass 2 shows `小过 / 雷山小过` and `既济 / 水火既济`.
-- Status: resolved.
+- Day/night toggle updates the same homepage component tree and preserves brand hierarchy.
+- “开始问卦” opens the existing full reading form and retains the selected theme.
+- The daily secondary route renders the shared `MMEETT Fate` header, has the title `小过｜今日卦象｜MMEETT Fate`, and has no horizontal overflow at 390 px or 320 px.
+- Homepage checks passed at 1487 × 1058, 390 × 844 and 320 × 700.
+- Browser logs contain no runtime error or warning. Development-only Vite connection and hot-update debug entries were observed during editing.
+- `npm run check` passes all 28 tests plus normal and GitHub Pages production builds.
 
-### Resolved P2 — completed-state CTA copy drift
-
-- Location: primary result action in `src/three-coin-page.jsx`.
-- Evidence: pass 1 displayed `更新结果`; the source keeps `生成结果`.
-- Impact: copy changed the perceived action model even when no input had changed.
-- Fix: keep the primary action label `生成结果`.
-- Post-fix evidence: pass 2 combined comparison.
-- Status: resolved.
-
-## Required fidelity surfaces
-
-- Fonts and typography: the implementation preserves the source's Kai/Song editorial hierarchy, antique-gold headings, restrained body weight, and readable Chinese line height. Exact source font metadata is unavailable; the project-approved `Kaiti SC`, `STKaiti`, `KaiTi`, `Songti SC`, and `STSong` fallbacks are visually consistent. Result title hierarchy was corrected in pass 2.
-- Spacing and layout rhythm: major avoidable mobile spacing drift was corrected. Three-column category wrapping, three coin controls per row, wider mobile content, and the shared two-row header are intentional responsive/accessibility adaptations.
-- Colors and tokens: warm rice-paper background, tea-brown body copy, antique-gold selected states, fine brown dividers, and low-elevation surfaces match the source direction. Contrast remains stronger than the source where needed for readability.
-- Image quality and asset fidelity: the source contains no body illustration or photographic asset. The implementation adds none. Brand text and standard Unicode hexagram symbols remain sharp and avoid placeholder imagery.
-- Copy and content: category, question, section names, primary action, result names, and rational boundary are coherent. Additional classic text is verified product content rather than prompt leakage or filler.
-- Icons: the only icon-like marks are the short arrow and standard hexagram symbols; both align with the source's restrained treatment.
-- States and interactions: question entry, six sequential casts, per-coin manual adjustment, result generation, same-page expansion, and day theme were exercised in the browser.
-- Responsiveness and accessibility: the 390px capture has no horizontal overflow. Coin buttons remain `44 × 44`, the primary action is 56px high, semantic labels are present, focus styles exist, and reduced-motion handling remains intact.
-- Console: no implementation `error` or `warning` entries were observed during the final browser pass.
-
-## Accepted differences
-
-- `返回工具` remains instead of source copy `返回首页` because the implementation returns users to the originating tools section.
-- The category controls wrap to two rows at 390px instead of compressing six sub-44px controls into one row.
-- Every cast displays three independently adjustable coins instead of the concept image's two small face controls.
-- The shared secondary-page header remains taller than the source concept so brand, back action, and theme toggle each preserve usable touch targets.
-- Result evidence is longer than the source because it uses verified classic content and explicitly separates action advice, risk, and rational boundaries.
-
-## Comparison history
-
-1. Pass 1 found one P1 and two P2 issues: avoidable mobile density, incorrect result-name hierarchy, and completed CTA copy drift.
-2. The implementation was tightened without changing task structure, casting math, content integrity, or accessibility.
-3. Pass 2 re-captured the same viewport, day theme, question, six cast values, and `小过 → 既济` result. All prior P1/P2 issues are resolved; no actionable P0/P1/P2 finding remains.
-
-## Follow-up polish
-
-- P3: add automated screenshot regression when the project's planned browser E2E baseline becomes available.
+## Final Result
 
 final result: passed
