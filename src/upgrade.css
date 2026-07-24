@@ -92,25 +92,28 @@ html[data-dfgx-route="personality"] body {
 }
 
 .dfgx-nav-brand .mmeett-brand-lockup {
+  --mmeett-mark-width: 21px;
+  --mmeett-wordmark-width: 78px;
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.12em;
+  align-items: center;
+  gap: 7px;
   color: #e0bc77;
-  font-family: "Cormorant Garamond", "Songti SC", "STSong", serif;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.075em;
   line-height: 1;
   white-space: nowrap;
 }
 
-.mmeett-brand-lockup__mmeett {
-  font-style: normal;
+.mmeett-brand-lockup__mark,
+.mmeett-brand-lockup__wordmark {
+  display: block;
+  flex: 0 0 auto;
 }
 
-.mmeett-brand-lockup__fate {
-  font-style: italic;
-  letter-spacing: 0.02em;
+.mmeett-brand-lockup__mark {
+  width: var(--mmeett-mark-width, 21px);
+}
+
+.mmeett-brand-lockup__wordmark {
+  width: var(--mmeett-wordmark-width, 78px);
 }
 
 .dfgx-nav-links {
@@ -466,14 +469,12 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-brandline .mmeett-brand-lockup {
+  --mmeett-mark-width: 19px;
+  --mmeett-wordmark-width: 72px;
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.1em;
+  align-items: center;
+  gap: 6px;
   color: #d8b568;
-  font-family: "Cormorant Garamond", "Songti SC", "STSong", serif;
-  font-size: clamp(18px, 1.6vw, 24px);
-  font-weight: 600;
-  letter-spacing: 0.075em;
   line-height: 1;
   white-space: nowrap;
 }
@@ -517,12 +518,11 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-editorial h1 .mmeett-brand-lockup {
+  --mmeett-mark-width: clamp(62px, 5vw, 84px);
+  --mmeett-wordmark-width: clamp(204px, 17vw, 292px);
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.1em;
-  font-family: "Cormorant Garamond", "Songti SC", "STSong", serif;
-  font-weight: 600;
-  letter-spacing: 0.055em;
+  align-items: center;
+  gap: clamp(13px, 1.2vw, 18px);
 }
 
 .dfgx-wordmark-rule {
@@ -1260,7 +1260,9 @@ body,
   }
 
   .dfgx-nav-brand .mmeett-brand-lockup {
-    font-size: 19px;
+    --mmeett-mark-width: 18px;
+    --mmeett-wordmark-width: 68px;
+    gap: 6px;
   }
 
   .dfgx-nav-links {
@@ -1334,7 +1336,8 @@ body,
   }
 
   .dfgx-brandline .mmeett-brand-lockup {
-    font-size: 17px;
+    --mmeett-mark-width: 17px;
+    --mmeett-wordmark-width: 64px;
   }
 
   .dfgx-brandline > span {
@@ -1344,6 +1347,12 @@ body,
 
   .dfgx-editorial h1 {
     font-size: clamp(42px, 12vw, 66px);
+  }
+
+  .dfgx-editorial h1 .mmeett-brand-lockup {
+    --mmeett-mark-width: clamp(50px, 16vw, 64px);
+    --mmeett-wordmark-width: clamp(172px, 55vw, 220px);
+    gap: clamp(10px, 3vw, 14px);
   }
 
   .dfgx-wordmark-rule {

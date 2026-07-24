@@ -64,10 +64,11 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
 
   assert.match(html, /MMEETT Fate｜观象知变，向内而行/);
   assert.match(html, /MMEETT Fate——以《周易》为根/);
-  assert.match(brand, /@fontsource\/cormorant-garamond\/latin-600\.css/);
-  assert.match(brand, /@fontsource\/cormorant-garamond\/latin-600-italic\.css/);
-  assert.match(brand, /MMEETT/);
-  assert.match(brand, /Fate/);
+  assert.match(brand, /function BrandMark/);
+  assert.match(brand, /function BrandWordmark/);
+  assert.match(brand, /viewBox="78 44 77 38"/);
+  assert.match(brand, /viewBox="66 300 101 20"/);
+  assert.doesNotMatch(brand, /cormorant-garamond/);
   assert.match(entry, /<BrandLockup decorative \/>/);
   assert.match(brand, /EASTERN SYMBOLS · INNER CLARITY/);
   assert.match(entry, /dfgx-wordmark-rule/);
@@ -77,6 +78,8 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(chrome, /<BrandLockup decorative \/>/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
+  assert.match(css, /\.mmeett-brand-lockup__mark[\s\S]*?width:\s*var\(--mmeett-mark-width/);
+  assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });
 
 test("long secondary pages keep one sticky exit navigation within reach", async () => {
