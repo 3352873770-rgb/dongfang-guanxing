@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import {
   HEXAGRAMS,
@@ -22,6 +24,7 @@ import {
   buildPersonalitySections,
   calculatePreferenceResult,
 } from "../src/personality-preference-data.js";
+import { getWorkspaceBuildMetadata } from "../scripts/workspace-metadata.mjs";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -120,6 +123,46 @@ test("GitHub Pages build keeps the repository subpath", async () => {
 
   assert.match(config, /GITHUB_PAGES/);
   assert.match(config, /\/mmeett-fate\//);
+});
+
+test("workspace scripts keep local previews identifiable and prevent silent port fallback", async () => {
+  const packageJson = JSON.parse(await read("package.json"));
+  const statusScript = await read("scripts/workspace-status.mjs");
+  const metadataScript = await read("scripts/workspace-metadata.mjs");
+  const entry = await read("src/upgrade-entry.jsx");
+  const css = await read("src/upgrade.css");
+
+  assert.equal(packageJson.scripts["dev:baseline"], "vite --port 4173 --strictPort");
+  assert.equal(packageJson.scripts["preview:baseline"], "vite preview --port 4173 --strictPort");
+  assert.equal(packageJson.scripts["dev:task"], "vite --port 4181 --strictPort");
+  assert.equal(packageJson.scripts["preview:task"], "vite preview --port 4181 --strictPort");
+  assert.equal(packageJson.scripts["workspace:status"], "node scripts/workspace-status.mjs");
+  assert.match(packageJson.scripts["workspace:baseline"], /--baseline/);
+  assert.match(packageJson.scripts["workspace:release"], /--release/);
+  assert.match(statusScript, /MMEETT_CANONICAL_ROOT/);
+  assert.match(statusScript, /MMEETT_EXPECTED_ORIGIN/);
+  assert.match(statusScript, /baseline HEAD must equal origin\/main/);
+  assert.match(statusScript, /release\/PR HEAD must contain origin\/main/);
+  assert.match(statusScript, /fetch", "--quiet", "origin"/);
+  assert.match(metadataScript, /branch: safeValue\(branch, "local"\)/);
+  assert.match(metadataScript, /shortSha: safeValue\(shortSha, "unknown"\)/);
+  assert.match(entry, /function LocalIdentityBadge\(\)/);
+  assert.match(entry, /import\.meta\.env\.DEV \? <LocalIdentityBadge \/> : null/);
+  assert.match(entry, /__MMEETT_WORKSPACE_BRANCH__/);
+  assert.match(entry, /window\.location\.port/);
+  assert.match(css, /\.dfgx-local-identity \{[\s\S]*?max-width:\s*calc\(100vw - 24px\);[\s\S]*?flex-wrap:\s*wrap;/);
+});
+
+test("workspace build metadata has a safe fallback outside Git", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "mmeett-workspace-metadata-"));
+  try {
+    assert.deepEqual(getWorkspaceBuildMetadata(directory), {
+      branch: "local",
+      shortSha: "unknown",
+    });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test("mobile document roots contain horizontal overflow without disabling local navigation scroll", async () => {

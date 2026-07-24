@@ -11,6 +11,7 @@
 - 当前版本：`1.0.0`
 - 技术栈：React 19、Vite 6、OGL、Three.js
 - 发布方式：任务默认停在本地验证与草稿 PR；用户逐次确认发布后才合并 `main`，再由 GitHub Actions 发布 GitHub Pages
+- 本地工作区门禁：`npm run workspace:baseline` 只接受规范根目录的干净 `main === origin/main`；任务分支在 PR 前使用 `npm run workspace:release` 确认干净、远程正确且已包含最新 `origin/main`（Issue #52）
 
 ## 当前品牌
 
@@ -47,6 +48,7 @@
 - 手机端根页面、问卦/工具按钮区及四个现役二级页已限制横向溢出与回弹；移动按钮的 SpecularButton 横向缓冲收进按钮内部，页面只做纵向滚动，同时保留顶部导航自身的局部横向滚动
 - GitHub Pages 公网发布
 - 根目录唯一源码、长期项目文档与自动质量检查基线
+- 本地预览已划分为严格端口：公网基线使用 `dev:baseline` / `preview:baseline` 的 4173，任务 worktree 使用 `dev:task` / `preview:task` 的 4181；开发环境右下角显示分支、短提交与端口，生产与 Pages 不显示（Issue #52）
 - 逐任务明确确认的公网发布门禁，避免完成任务后自动更新线上版本
 - 已验证的问卦、灵签信、六十四卦、今日卦象、人物档案、三枚铜钱和人格偏好探索已收拢到 `agent/prototype-current`
 - 用户已于 2026-07-24 确认将当前统一版本通过 PR #30 发布到 `main`
@@ -77,6 +79,7 @@
 7. 为人格偏好探索补充浏览器端到端测试和可访问性回归。
 8. 按 `docs/ROADMAP.md` 通过 GitHub Issues 推进其他二级页面。
 9. 验证 [Issue #50](https://github.com/3352873770-rgb/mmeett-fate/issues/50) 的三枚铜钱返回首页顶部行为；本地验收后等待单独确认发布。
+10. 使用 [Issue #52](https://github.com/3352873770-rgb/mmeett-fate/issues/52) 的工作区门禁整理并逐步移除已完成的历史 worktree 与分支；清理前保留未合并工作内容。
 
 ## 接手规则
 

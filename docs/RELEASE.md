@@ -10,13 +10,14 @@
 
 ## 发布流程
 
-1. 从最新 `main` 创建 `agent/<description>` 分支。
-2. 完成修改并运行 `npm run check`。
-3. 创建草稿 PR，记录范围、影响、验证和回滚说明；任务默认在此处停止。
-4. 等待用户针对当前任务明确确认发布。
-5. 获得确认后，将 PR 转为可合并状态并合并到 `main`。
-6. 等待 GitHub Pages 工作流成功，验证公网地址和关键静态资源返回 HTTP 200。
-7. 仅在用户确认需要正式版本时，创建 `vMAJOR.MINOR.PATCH` 标签与 GitHub Release。
+1. 在规范根目录的 `main` 执行 `npm run workspace:baseline`。此检查要求路径、分支、工作区和 `origin/main` 完全匹配；CI 或其他机器可用 `MMEETT_CANONICAL_ROOT` 配置规范路径。
+2. 从最新 `main` 创建 `agent/<description>` 分支，并使用 `npm run dev:task`（4181）进行本地预览；Vite 端口冲突必须直接失败，不得静默切换端口。
+3. 完成修改后执行 `npm run workspace:release` 和 `npm run check`。前者会刷新 `origin/main`，并确认任务工作区干净、远程仓库正确、当前 HEAD 已包含最新主线；它可在 PR 合并前的任务分支上通过。
+4. 创建草稿 PR，记录范围、影响、验证和回滚说明；任务默认在此处停止。
+5. 等待用户针对当前任务明确确认发布。
+6. 获得确认后，将 PR 转为可合并状态并合并到 `main`。
+7. 等待 GitHub Pages 工作流成功，验证公网地址和关键静态资源返回 HTTP 200；再在规范根目录执行 `npm run workspace:baseline`，确认新的公网基线。
+8. 仅在用户确认需要正式版本时，创建 `vMAJOR.MINOR.PATCH` 标签与 GitHub Release。
 
 ## 回滚流程
 
