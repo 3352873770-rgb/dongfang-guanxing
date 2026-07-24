@@ -14,6 +14,7 @@ const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
 const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
 const ThreeCoinPage = lazy(() => import("./three-coin-page.jsx"));
 const PersonalityPreferencePage = lazy(() => import("./personality-preference-page.jsx"));
+const PERSONALITY_PREVIEW_SRC = `${import.meta.env.BASE_URL}media/legacy/personality-preference-v2.webp`;
 
 const CLASSIC_TITLES = [
   "《周易》",
@@ -574,6 +575,15 @@ function initializePersonalityEntry() {
     },
     true,
   );
+  const previewCard = personalitySection.querySelector(".personality-test-card");
+  const previewImage = previewCard?.querySelector("img");
+  if (previewImage) {
+    previewImage.src = PERSONALITY_PREVIEW_SRC;
+    previewImage.alt = "";
+    previewImage.loading = "lazy";
+    previewImage.decoding = "async";
+  }
+  previewCard?.setAttribute("aria-label", "开始人格偏好探索，12题，约3分钟");
   root.dataset.dfgxPersonalityEntryReady = "true";
   return true;
 }
