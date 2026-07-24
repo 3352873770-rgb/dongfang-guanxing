@@ -372,7 +372,7 @@ export default function ReadingFlow() {
         <main className="reading-content">
           {step === 0 ? (
             <section className="reading-screen reading-category-screen">
-              <p className="reading-kicker">观星问卦 · 第一步</p>
+              <p className="reading-kicker">·观星问卦 ·</p>
               <h2>此刻，你想问什么</h2>
               <p className="reading-intro">一卦只问一事。先选择方向，再把真正困扰你的问题写下来。</p>
 
@@ -400,7 +400,7 @@ export default function ReadingFlow() {
 
           {step === 1 ? (
             <section className="reading-screen reading-question-screen">
-              <p className="reading-kicker">观星问卦 · 第二步</p>
+              <p className="reading-kicker">·观星问卦 ·</p>
               <h2>写下你真正想问的事</h2>
               <p className="reading-intro">问题越具体，后续的卦象解读越容易落到你的真实处境。</p>
 
@@ -436,7 +436,7 @@ export default function ReadingFlow() {
 
           {step === 2 ? (
             <section className="reading-screen reading-profile-screen">
-              <p className="reading-kicker">档案信息 · 问卦前准备</p>
+              <p className="reading-kicker">·观星问卦 ·</p>
               <h2>确认出生信息</h2>
               <p className="reading-intro">档案只保存在当前设备，可随时修改或删除。</p>
 
@@ -579,7 +579,7 @@ export default function ReadingFlow() {
 
           {step === 3 ? (
             <section className="reading-screen reading-result-screen">
-              <p className="reading-kicker">观星问卦 · 卦象结果</p>
+              <p className="reading-kicker">·观星问卦 ·</p>
               <h2>卦象已成</h2>
               {reading ? <>
                 <article className="reading-summary-card">

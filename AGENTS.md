@@ -22,6 +22,8 @@ Keep the `#daily` date synchronized with the visitor's local calendar date, incl
 
 ## 档案与问卦前置流程
 
+各流程页眉统一使用“·观星问卦 ·”，不显示步骤或阶段说明。
+
 Before a user enters the casting flow, require them to select an existing人物档案 or create a new one. Saved profiles must be reusable so repeat users do not re-enter birth data for every reading.
 
 Treat the profile gate as shared routing logic for every feature that requires birth information:

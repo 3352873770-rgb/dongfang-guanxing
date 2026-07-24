@@ -106,6 +106,8 @@ test("reading flow connects question, profile, and generated result", async () =
   assert.match(flow, /PROFILE_STORAGE_KEY/);
   assert.match(flow, /保存档案并起卦/);
   assert.match(flow, /卦象已成/);
+  assert.equal((flow.match(/·观星问卦 ·/g) || []).length, 4);
+  assert.doesNotMatch(flow, /观星问卦 · 第一步|观星问卦 · 第二步|档案信息 · 问卦前准备|观星问卦 · 卦象结果/);
   assert.doesNotMatch(flow, /选择起卦方式/);
   assert.match(await read("src/iching.js"), /crypto/);
   assert.match(flow, /越秀区/);
