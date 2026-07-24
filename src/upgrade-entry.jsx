@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
+import ReadingFlow from "./reading-flow.jsx";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
@@ -128,6 +129,10 @@ function UpgradeHero() {
     scrollToSection(selector, "start");
   }
 
+  function openReadingFlow(category = "") {
+    window.dispatchEvent(new CustomEvent("dfgx:reading-open", { detail: { category } }));
+  }
+
   return (
     <>
       <header className="dfgx-floating-nav">
@@ -253,7 +258,7 @@ function UpgradeHero() {
             colors={borderGlowTheme.colors}
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
-            <button className="dfgx-primary" type="button" onClick={() => scrollToSection("#ask")}>
+            <button className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
               开始观星问卦
             </button>
           </BorderGlow>
@@ -430,17 +435,48 @@ function initializeDailySection() {
   return true;
 }
 
+function initializeReadingEntryPoints() {
+  const root = document.getElementById("root");
+  const askSection = document.getElementById("ask");
+  if (!root || !askSection) return false;
+  if (root.dataset.dfgxReadingEntryReady === "true") return true;
+
+  const supportedCategories = new Set(["感情发展", "事业发展", "学业考试", "财富运势"]);
+  askSection.addEventListener(
+    "click",
+    (event) => {
+      const button = event.target.closest("button");
+      const category = button?.querySelector("strong")?.textContent?.trim();
+      if (!button || !supportedCategories.has(category)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      window.dispatchEvent(new CustomEvent("dfgx:reading-open", { detail: { category } }));
+    },
+    true,
+  );
+  root.dataset.dfgxReadingEntryReady = "true";
+  return true;
+}
+
 function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
   if (!initializeDailySection()) return false;
+  if (!initializeReadingEntryPoints()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
   return true;
 }
 
-createRoot(document.getElementById("dfgx-upgrade-root")).render(
+const upgradeRootContainer = document.getElementById("dfgx-upgrade-root");
+const upgradeRoot = upgradeRootContainer.__dfgxUpgradeRoot
+  || createRoot(upgradeRootContainer);
+
+upgradeRootContainer.__dfgxUpgradeRoot = upgradeRoot;
+upgradeRoot.render(
   <React.StrictMode>
     <UpgradeHero />
+    <ReadingFlow />
   </React.StrictMode>,
 );
 

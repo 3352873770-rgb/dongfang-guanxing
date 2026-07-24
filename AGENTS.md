@@ -20,6 +20,25 @@ Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold C
 
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
 
+## 档案与问卦前置流程
+
+Before a user enters the casting flow, require them to select an existing人物档案 or create a new one. Saved profiles must be reusable so repeat users do not re-enter birth data for every reading.
+
+Treat the profile gate as shared routing logic for every feature that requires birth information:
+
+- no saved profile -> open the shared profile form with empty fields and an inline “新建档案” state -> save successfully -> return to and continue the originally requested feature;
+- one or more saved profiles -> open the same profile form with a “选择档案” dropdown above “基本信息” -> selecting a profile auto-fills the form -> confirm and continue the originally requested feature.
+
+Do not create a standalone profile-selection page in this flow. Preserve the originating feature and its selected context while the user creates or selects a profile. Do not send the user back to the homepage after profile completion. Even when only one profile exists, show it in the dropdown for confirmation before continuing, and keep an inline “新建档案” entry available.
+
+The primary “开始观星问卦” journey is a four-step full-screen flow: choose one question category -> write one concrete question -> select/create and confirm a人物档案 -> review the context and choose a casting method. The homepage hero starts at the category step; the four “长期问卦” category buttons may enter at the question step with their category preselected. Back navigation must preserve the category, question, and profile context.
+
+The profile form includes姓名、性别、出生日期、历法（公历/农历）、出生时间、对应十二时辰、省/市/区所在地和经度。Treat公历/农历 as one calendar-mode switch for the same birth date, not two independent date fields; store the converted counterpart for later calculation.
+
+Location selection must use a maintainable province/city/district cascade. The first design scope uses广州 as the example and includes its current 11 districts. Auto-fill a longitude from the selected region, clearly label it as an automatic match, and always provide a manual longitude-edit path.
+
+Use `docs/design/profile-archive-form-v2.png` as the current visual source of truth for both the no-profile and existing-profile states. The integrated “选择档案” dropdown sits above “基本信息”; choosing an item auto-fills the editable birth-information form below. `docs/design/profile-archive-form-v1.png` and `docs/design/profile-selector-v1.png` are retained only as historical drafts and must not drive implementation. Preserve the warm rice paper, ink typography, antique-gold controls, restrained section dividers, and one clear continuation action.
+
 ## Long-term project workflow
 
 Treat `/Users/leon/Documents/算卦` as the only source of truth. Do not create or maintain a second nested project copy. Start each task by reading `PROJECT_STATE.md` and only the relevant files under `docs/`, then inspect `git status` before editing.

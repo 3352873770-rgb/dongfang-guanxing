@@ -91,6 +91,27 @@ test("daily hexagram date follows the visitor's local calendar date", async () =
   assert.match(entry, /nextMidnight/);
 });
 
+test("reading flow connects question, profile, and casting preparation", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const flow = await read("src/reading-flow.jsx");
+  const css = await read("src/reading-flow.css");
+  const paper = await stat(new URL("../public/media/reading/rice-paper-bagua-v1.jpg", import.meta.url));
+
+  assert.match(entry, /dfgx:reading-open/);
+  assert.match(entry, /<ReadingFlow \/>/);
+  assert.match(flow, /此刻，你想问什么/);
+  assert.match(flow, /写下你真正想问的事/);
+  assert.ok(flow.indexOf("选择档案") < flow.indexOf("基本信息"));
+  assert.match(flow, /PROFILE_STORAGE_KEY/);
+  assert.match(flow, /使用此档案开始问卦/);
+  assert.match(flow, /选择起卦方式/);
+  assert.match(flow, /越秀区/);
+  assert.match(flow, /增城区/);
+  assert.match(css, /\.reading-primary-action/);
+  assert.match(css, /min-height:\s*62px/);
+  assert.ok(paper.size < 500_000, "reading paper texture should remain lightweight");
+});
+
 test("legacy compatibility bundles stay externalized and reviewable", async () => {
   const app = await stat(new URL("../public/legacy/legacy-app.js", import.meta.url));
   const styles = await stat(new URL("../public/legacy/legacy-styles.css", import.meta.url));

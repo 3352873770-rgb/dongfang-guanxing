@@ -5,6 +5,9 @@
 | 页面入口 | `index.html` | 挂载新版 Hero 与 Legacy 内容 |
 | 新版首页 Hero | `src/upgrade-entry.jsx` | 导航、主题切换、标语、书名、CTA |
 | Hero 与昼夜样式 | `src/upgrade.css` | 视觉 token、响应式和交互覆盖 |
+| 观星问卦四步流程 | `src/reading-flow.jsx` | 所问分类、问题、档案与起卦准备交互 |
+| 问卦流程样式 | `src/reading-flow.css` | 米纸界面、表单、响应式与流程状态 |
+| 问卦米纸素材 | `public/media/reading/rice-paper-bagua-v1.jpg` | 低对比宣纸、八卦与淡墨纹理 |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |
 | 夜间流体背景 | `src/components/LiquidEther.*` | Three.js LiquidEther |
 | 主按钮描边 | `src/components/BorderGlow.*` | Hero 主要按钮高光 |
