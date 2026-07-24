@@ -146,7 +146,11 @@
   border-radius: 10px;
   box-shadow: 0 18px 40px rgba(85, 69, 41, 0.04);
   cursor: pointer;
-  transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    transform 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .reading-category-grid button:hover {
@@ -157,7 +161,9 @@
 .reading-category-grid button.is-selected {
   background: rgba(255, 251, 241, 0.88);
   border-color: #ad7722;
-  box-shadow: inset 0 0 0 1px rgba(173, 119, 34, 0.18), 0 18px 44px rgba(112, 77, 28, 0.09);
+  box-shadow:
+    inset 0 0 0 1px rgba(173, 119, 34, 0.18),
+    0 18px 44px rgba(112, 77, 28, 0.09);
 }
 
 .reading-category-grid strong {
@@ -190,7 +196,10 @@
   letter-spacing: 0.16em;
   text-indent: 0.16em;
   cursor: pointer;
-  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .reading-primary-action {
@@ -436,6 +445,10 @@
   grid-template-columns: 104px minmax(0, 1fr) auto;
 }
 
+.profile-longitude {
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+}
+
 .reading-row input[readonly] {
   color: #585248;
 }
@@ -453,6 +466,10 @@
 
 .reading-segmented {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.profile-calendar-switch {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .reading-fieldset:nth-of-type(3) .reading-segmented {
@@ -805,7 +822,9 @@
     font-size: 14px;
   }
 
-  .reading-profile-screen .reading-row:has(.reading-inline-action) .reading-inline-action {
+  .reading-profile-screen
+    .reading-row:has(.reading-inline-action)
+    .reading-inline-action {
     margin: 0;
     justify-self: auto;
     min-height: 44px;
@@ -826,7 +845,6 @@
     min-height: 54px;
     margin-top: 18px;
   }
-
 }
 
 @media (max-width: 390px) {

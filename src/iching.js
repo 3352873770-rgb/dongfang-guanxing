@@ -1701,3 +1701,56 @@ export function createIChingReading(drawFn = secureRoll) {
   return { lines, changingLines, primary: HEXAGRAMS[primaryBits], changed: HEXAGRAMS[changedBits] };
 }
 
+const TIME_TRIGRAMS = ["乾", "兑", "离", "震", "巽", "坎", "艮", "坤"];
+
+export function createTimeIChingReading(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+  const lunar = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    year: "numeric", month: "numeric", day: "numeric", timeZone: "Asia/Shanghai",
+  }).formatToParts(date);
+  const parseLunarNumber = (text) => {
+    const numeric = Number(text.replace(/[^0-9]/g, ""));
+    if (numeric) return numeric;
+    const digits = { 正: 1, 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10, 廿: 20, 卅: 30 };
+    const chars = [...text].filter((char) => digits[char]);
+    return chars.length === 1 ? digits[chars[0]] : chars.reduce((sum, char) => sum + digits[char], 0) || 1;
+  };
+  const value = (type) => parseLunarNumber(lunar.find((part) => part.type === type)?.value || "");
+  const lunarYear = value("relatedYear");
+  const lunarMonth = value("month");
+  const lunarDay = value("day");
+  const hour = Number(new Intl.DateTimeFormat("en-US", { hour: "2-digit", hourCycle: "h23", timeZone: "Asia/Shanghai" }).format(date));
+  if (!Number.isInteger(hour) || hour < 0 || hour > 23) return null;
+  const timeBranch = hour === 23 ? 1 : Math.floor((hour + 1) / 2) + 1;
+  const stems = "甲乙丙丁戊己庚辛壬癸";
+  const branches = "子丑寅卯辰巳午未申酉戌亥";
+  const yearName = `${stems[(lunarYear - 4) % 10]}${branches[(lunarYear - 4) % 12]}`;
+  const branchIndex = branches.indexOf(yearName.at(-1)) + 1;
+  const sum = branchIndex + lunarMonth + lunarDay;
+  const upper = TIME_TRIGRAMS[(sum - 1) % 8];
+  const lower = TIME_TRIGRAMS[(sum + timeBranch - 1) % 8];
+  const movingLine = (sum + timeBranch - 1) % 6;
+  const primary = DATA.find((hexagram) => hexagram.upper === upper && hexagram.lower === lower);
+  if (!primary) return null;
+  const lines = [...primary.bits];
+  lines[movingLine] = lines[movingLine] === 7 ? 9 : 6;
+  const changedBits = lines.map((line) => (line === 9 ? 8 : line === 6 ? 7 : line)).join("");
+  return {
+    lines,
+    changingLines: [movingLine],
+    primary,
+    changed: HEXAGRAMS[changedBits],
+    context: {
+      lunarYear,
+      lunarMonth,
+      lunarDay,
+      yearName,
+      hour,
+      timeBranch,
+      yearBranchIndex: branchIndex,
+      branchName: `${branches[timeBranch - 1]}时`,
+      timezone: "Asia/Shanghai",
+      formula: "农历年支＋月＋日取上卦；再加时支取下卦与动爻",
+    },
+  };
+}

@@ -7,6 +7,11 @@
 | Hero 与昼夜样式 | `src/upgrade.css` | 视觉 token、响应式和交互覆盖 |
 | 观星问卦单页流程 | `src/reading-flow.jsx` | 单页完成所问分类、问题与档案，提交后直接展示卦象结果 |
 | 问卦流程样式 | `src/reading-flow.css` | 米纸界面、表单、响应式与流程状态 |
+| 人物档案共享组件 | `src/profile-archive-form.jsx` | 档案选择、新建编辑、出生时间、广州 11 区与经度逻辑，供问卦和流年等功能复用 |
+| 灵签信五工具流程 | `src/oracle-tool-flow.jsx` | 云签、事业、流年、时辰与 AI 报告的共享输入容器及差异化结果组合 |
+| 灵签信补充样式 | `src/oracle-tool-flow.css` | 基于问卦流程 token 的自适应字段、结果区和移动端触控尺寸 |
+| 本地问卦记录 | `src/reading-storage.js` | 保存普通问卦与灵签工具结果，供 AI 结构化报告读取 |
+| 易经数据与起卦 | `src/iching.js` | 六十四卦原文、四值数字化起卦与可重算的时间起卦 |
 | 问卦米纸素材 | `public/media/reading/rice-paper-bagua-v1.jpg` | 低对比宣纸、八卦与淡墨纹理 |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |
 | 夜间流体背景 | `src/components/LiquidEther.*` | Three.js LiquidEther |

@@ -20,11 +20,21 @@ Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold C
 
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
 
+## 灵签信二级工具
+
+“云签解惑”“事业灵签”“流年运势”“时辰运势”“AI 解读报告”统一复用“长期问卦”的完整表单排版、页眉、宣纸容器、章节节奏和唯一主操作，不为每个工具另造一套视觉版式。
+
+五个工具只按实际任务自适应增减必要输入；用户完成填写后，结果页再根据工具性质调整元素层级与内容结构。继续遵守“单页填写 → 直接结果”的简化流程，不增加无业务必要的步骤页。
+
+需要人物出生信息的工具使用共享档案逻辑；不依赖出生信息的工具不得强迫用户填写档案。传统术数内容必须标明所用起卦或解释口径，古籍原文与现代解释分层呈现，不虚构经典原文，也不把结果包装成确定性预测或现实决策替代。
+
 ## 档案与问卦前置流程
 
 各流程页眉统一使用“·观星问卦 ·”，不显示步骤或阶段说明。
 
 Before a user enters the casting flow, require them to select an existing人物档案 or create a new one. Saved profiles must be reusable so repeat users do not re-enter birth data for every reading.
+
+Implement the人物档案 selector and editable birth-information form as one shared component. “观星问卦”、流年运势 and future features that require birth information must reuse the same component and storage behavior instead of copying profile markup or maintaining separate field logic.
 
 Treat the profile gate as shared routing logic for every feature that requires birth information:
 

@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
 import ReadingFlow from "./reading-flow.jsx";
+import OracleToolFlow from "./oracle-tool-flow.jsx";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
@@ -442,12 +443,20 @@ function initializeReadingEntryPoints() {
   if (root.dataset.dfgxReadingEntryReady === "true") return true;
 
   const supportedCategories = new Set(["感情发展", "事业发展", "学业考试", "财富运势"]);
+  const supportedTools = new Set(["云签解惑", "事业灵签", "流年运势", "时辰运势", "AI解读报告"]);
   askSection.addEventListener(
     "click",
     (event) => {
       const button = event.target.closest("button");
       const category = button?.querySelector("strong")?.textContent?.trim();
-      if (!button || !supportedCategories.has(category)) return;
+      if (!button) return;
+      if (supportedTools.has(category)) {
+        event.preventDefault();
+        event.stopPropagation();
+        window.dispatchEvent(new CustomEvent("dfgx:oracle-tool-open", { detail: { tool: category } }));
+        return;
+      }
+      if (!supportedCategories.has(category)) return;
 
       event.preventDefault();
       event.stopPropagation();
@@ -477,6 +486,7 @@ upgradeRoot.render(
   <React.StrictMode>
     <UpgradeHero />
     <ReadingFlow />
+    <OracleToolFlow />
   </React.StrictMode>,
 );
 

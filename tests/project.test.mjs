@@ -1,7 +1,18 @@
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
-import { HEXAGRAMS, createIChingReading, lineValueFromRoll } from "../src/iching.js";
+import {
+  HEXAGRAMS,
+  createIChingReading,
+  createTimeIChingReading,
+  lineValueFromRoll,
+} from "../src/iching.js";
+import {
+  READING_STORAGE_KEY,
+  getReadingRecordById,
+  loadReadingRecords,
+  saveReadingRecord,
+} from "../src/reading-storage.js";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -56,10 +67,16 @@ test("classic title motion remains within the approved range", async () => {
   const start = css.indexOf(".dfgx-classics span {");
   const end = css.indexOf('html[data-dfgx-theme="day"] .dfgx-classics');
   const classicCss = css.slice(start, end);
-  const durations = [...classicCss.matchAll(/animation(?:-duration)?:\s*[^;]*?([0-9]+(?:\.[0-9]+)?)s/g)]
-    .map((match) => Number(match[1]));
+  const durations = [
+    ...classicCss.matchAll(
+      /animation(?:-duration)?:\s*[^;]*?([0-9]+(?:\.[0-9]+)?)s/g,
+    ),
+  ].map((match) => Number(match[1]));
 
-  assert.ok(durations.length >= 12, "expected staggered classic title durations");
+  assert.ok(
+    durations.length >= 12,
+    "expected staggered classic title durations",
+  );
   assert.ok(durations.every((duration) => duration >= 9.4 && duration <= 12.8));
 });
 
@@ -95,30 +112,51 @@ test("daily hexagram date follows the visitor's local calendar date", async () =
 test("reading flow connects question, profile, and generated result", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const flow = await read("src/reading-flow.jsx");
+  const archive = await read("src/profile-archive-form.jsx");
   const css = await read("src/reading-flow.css");
-  const paper = await stat(new URL("../public/media/reading/rice-paper-bagua-v1.jpg", import.meta.url));
+  const paper = await stat(
+    new URL("../public/media/reading/rice-paper-bagua-v1.jpg", import.meta.url),
+  );
 
   assert.match(entry, /dfgx:reading-open/);
   assert.match(entry, /<ReadingFlow \/>/);
   assert.match(flow, /此刻，你想问什么/);
   assert.match(flow, /所问之事/);
-  assert.ok(flow.indexOf("选择档案") < flow.indexOf("基本信息"));
-  assert.match(flow, /PROFILE_STORAGE_KEY/);
+  assert.match(flow, /ProfileArchiveForm/);
+  assert.ok(archive.indexOf("选择档案") < archive.indexOf("基本信息"));
+  assert.match(archive, /PROFILE_STORAGE_KEY/);
   assert.match(flow, /保存档案并起卦/);
   assert.match(flow, /卦象已成/);
+  assert.match(flow, /target\.hasAttribute\("inert"\)/);
+  assert.match(flow, /target\.removeAttribute\("inert"\)/);
   assert.equal((flow.match(/·观星问卦 ·/g) || []).length, 2);
-  assert.doesNotMatch(flow, /观星问卦 · 第一步|观星问卦 · 第二步|档案信息 · 问卦前准备|观星问卦 · 卦象结果/);
+  assert.doesNotMatch(
+    flow,
+    /观星问卦 · 第一步|观星问卦 · 第二步|档案信息 · 问卦前准备|观星问卦 · 卦象结果/,
+  );
   assert.doesNotMatch(flow, /选择起卦方式/);
-  assert.doesNotMatch(flow, /下一步，写下问题|下一步，确认档案|仅保存档案|data-step="2"|reading-selected-category/);
-  assert.ok(flow.indexOf("reading-category-grid") < flow.indexOf("reading-question-field"));
-  assert.ok(flow.indexOf("reading-question-field") < flow.indexOf("reading-profile-picker"));
-  assert.match(css, /\.reading-profile-screen \.reading-picker-meta button\s*\{\s*min-height:\s*44px/);
+  assert.doesNotMatch(
+    flow,
+    /下一步，写下问题|下一步，确认档案|仅保存档案|data-step="2"|reading-selected-category/,
+  );
+  assert.ok(
+    flow.indexOf("reading-category-grid") <
+      flow.indexOf("reading-question-field"),
+  );
+  assert.match(archive, /reading-profile-picker/);
+  assert.match(
+    css,
+    /\.reading-profile-screen \.reading-picker-meta button\s*\{\s*min-height:\s*44px/,
+  );
   assert.match(await read("src/iching.js"), /crypto/);
-  assert.match(flow, /越秀区/);
-  assert.match(flow, /增城区/);
+  assert.match(archive, /越秀区/);
+  assert.match(archive, /增城区/);
   assert.match(css, /\.reading-primary-action/);
   assert.match(css, /min-height:\s*62px/);
-  assert.ok(paper.size < 500_000, "reading paper texture should remain lightweight");
+  assert.ok(
+    paper.size < 500_000,
+    "reading paper texture should remain lightweight",
+  );
 });
 
 test("long-term reading entries preselect a category in the same complete form", async () => {
@@ -131,15 +169,128 @@ test("long-term reading entries preselect a category in the same complete form",
     ["wealth", "财富运势"],
   ];
 
-  assert.match(entry, /new Set\(\["感情发展", "事业发展", "学业考试", "财富运势"\]\)/);
-  assert.match(entry, /new CustomEvent\("dfgx:reading-open", \{ detail: \{ category \} \}\)/);
-  assert.match(flow, /category\.id === incomingCategory \|\| category\.name === incomingCategory/);
+  assert.match(
+    entry,
+    /new Set\(\[\s*"感情发展",\s*"事业发展",\s*"学业考试",\s*"财富运势",?\s*\]\)/,
+  );
+  assert.match(
+    entry,
+    /new CustomEvent\(\s*"dfgx:reading-open",\s*\{ detail: \{ category \} \},?\s*\)/,
+  );
+  assert.match(
+    flow,
+    /category\.id === incomingCategory\s*\|\|\s*category\.name === incomingCategory/,
+  );
   assert.match(flow, /setCategoryId\(matchedCategory\?\.id \|\| ""\)/);
-  assert.match(flow, /setStep\(0\)/);
+  assert.match(flow, /setReading\(null\)/);
 
   for (const [id, name] of categories) {
     assert.match(flow, new RegExp(`id: "${id}",[\\s\\S]*?name: "${name}"`));
   }
+});
+
+test("five oracle entries share one accessible paper flow with adaptive fields and result sections", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const flow = await read("src/oracle-tool-flow.jsx");
+  const css = await read("src/oracle-tool-flow.css");
+  assert.match(entry, /dfgx:oracle-tool-open/);
+  assert.match(entry, /云签解惑.*事业灵签.*流年运势.*时辰运势.*AI解读报告/s);
+  assert.match(entry, /<OracleToolFlow \/>/);
+  assert.match(flow, /role="dialog"/);
+  assert.match(flow, /aria-modal="true"/);
+  assert.match(flow, /dialogRef/);
+  assert.match(flow, /target\.inert = true/);
+  assert.match(flow, /target\.hasAttribute\("inert"\)/);
+  assert.match(flow, /target\.removeAttribute\("inert"\)/);
+  assert.match(flow, /aria-hidden/);
+  assert.match(flow, /Escape/);
+  assert.match(flow, /reading-paper/);
+  assert.match(flow, /ToolTopbar/);
+  assert.match(flow, /QuestionField/);
+  assert.match(flow, /所问方向/);
+  assert.match(flow, /事业情境/);
+  assert.match(flow, /年度所观/);
+  assert.match(flow, /人物档案/);
+  assert.match(flow, /所问时刻/);
+  assert.match(flow, /已保存问卦/);
+  assert.match(flow, /广州现辖 11 区/);
+  assert.match(flow, /手动修改/);
+  assert.match(flow, /暂无已保存问卦记录/);
+  assert.match(flow, /结构化解读原型/);
+  assert.match(flow, /createTimeIChingReading/);
+  assert.match(
+    flow,
+    /nextTool\.id === "cloud"[\s\S]*?"迷茫困惑"[\s\S]*?nextTool\.id === "annual"[\s\S]*?"事业发展"[\s\S]*?: ""/,
+  );
+  assert.match(flow, /record\.type !== "oracle-report"/);
+  assert.match(flow, /<option key=\{value\} value=\{value\}>/);
+  assert.match(flow, /getShanghaiDateTimeInputValue\(date\) !== value/);
+  assert.match(flow, /六爻皆静，以本卦卦辞与大象为主/);
+  assert.match(flow, /签象摘要/);
+  assert.match(flow, /现代决策检查/);
+  assert.match(flow, /年度背景/);
+  assert.match(flow, /时间与地区口径/);
+  assert.match(flow, /本卦、动爻、之卦/);
+  assert.match(flow, /不重新起卦/);
+  assert.match(css, /min-height:\s*54px/);
+  assert.match(
+    css,
+    /\.oracle-tool-flow \.profile-archive-form \.reading-picker-meta button,[\s\S]*?\.profile-longitude \.reading-inline-action\s*\{\s*min-height:\s*44px/,
+  );
+  assert.match(css, /@media \(max-width: 640px\)/);
+});
+
+test("reading storage keeps usable local records and supports lookup", () => {
+  const values = new Map();
+  const storage = {
+    getItem: (key) => values.get(key) || null,
+    setItem: (key, value) => values.set(key, value),
+  };
+  assert.deepEqual(loadReadingRecords(storage), []);
+  const first = saveReadingRecord(
+    {
+      id: "first",
+      tool: "观星问卦",
+      reading: {
+        primary: { fullName: "乾为天" },
+        changed: { fullName: "坤为地" },
+        changingLines: [],
+      },
+    },
+    storage,
+  );
+  const second = saveReadingRecord(
+    {
+      id: "second",
+      tool: "云签解惑",
+      reading: {
+        primary: { fullName: "地水师" },
+        changed: { fullName: "山水蒙" },
+        changingLines: [5],
+      },
+    },
+    storage,
+  );
+  assert.equal(first.id, "first");
+  assert.equal(second.id, "second");
+  assert.equal(loadReadingRecords(storage).length, 2);
+  assert.equal(getReadingRecordById("first", storage)?.tool, "观星问卦");
+  assert.ok(values.get(READING_STORAGE_KEY));
+});
+
+test("main reading and annual oracle reuse one profile archive component", async () => {
+  const archive = await read("src/profile-archive-form.jsx");
+  const reading = await read("src/reading-flow.jsx");
+  const oracle = await read("src/oracle-tool-flow.jsx");
+
+  assert.match(reading, /from "\.\/profile-archive-form\.jsx"/);
+  assert.match(oracle, /from "\.\/profile-archive-form\.jsx"/);
+  assert.match(reading, /<ProfileArchiveForm/);
+  assert.match(oracle, /<ProfileArchiveForm/);
+  assert.match(archive, /saveProfileArchive/);
+  assert.match(archive, /广州现辖 11 区/);
+  assert.match(archive, /经度（自动）/);
+  assert.match(archive, /getGuangzhouLongitude\(current\.district/);
 });
 
 test("I Ching data and four-value casting algorithm remain complete", () => {
@@ -151,7 +302,10 @@ test("I Ching data and four-value casting algorithm remain complete", () => {
   assert.equal(HEXAGRAMS["888888"].name, "坤");
   assert.equal(HEXAGRAMS["787878"].name, "既济");
   assert.equal(HEXAGRAMS["878787"].name, "未济");
-  assert.deepEqual([1, 2, 6, 7, 13, 14, 16].map(lineValueFromRoll), [6, 7, 7, 8, 8, 9, 9]);
+  assert.deepEqual(
+    [1, 2, 6, 7, 13, 14, 16].map(lineValueFromRoll),
+    [6, 7, 7, 8, 8, 9, 9],
+  );
   const rolls = [1, 2, 7, 14, 6, 16];
   const reading = createIChingReading(() => rolls.shift());
   assert.deepEqual(reading.lines, [6, 7, 8, 9, 7, 9]);
@@ -166,14 +320,31 @@ test("I Ching data and four-value casting algorithm remain complete", () => {
   assert.equal(allOldYang.primary.name, "乾");
   assert.equal(allOldYang.changed.name, "坤");
   assert.match(allOldYang.primary.extra, /用九/);
+  const timed = createTimeIChingReading(new Date("2026-07-24T02:00:00Z"));
+  assert.equal(timed.primary.number, 7);
+  assert.equal(timed.changed.number, 4);
+  assert.deepEqual(timed.changingLines, [5]);
+  assert.equal(timed.context.yearName, "丙午");
+  assert.equal(timed.context.branchName, "巳时");
+  assert.equal(timed.context.yearBranchIndex, 7);
+  assert.equal(timed.context.timezone, "Asia/Shanghai");
+  assert.equal(createTimeIChingReading(new Date("invalid")), null);
+  assert.equal(createTimeIChingReading("2026-07-24"), null);
 });
 
 test("legacy compatibility bundles stay externalized and reviewable", async () => {
-  const app = await stat(new URL("../public/legacy/legacy-app.js", import.meta.url));
-  const styles = await stat(new URL("../public/legacy/legacy-styles.css", import.meta.url));
+  const app = await stat(
+    new URL("../public/legacy/legacy-app.js", import.meta.url),
+  );
+  const styles = await stat(
+    new URL("../public/legacy/legacy-styles.css", import.meta.url),
+  );
 
   assert.ok(app.size < 2_000_000, "legacy app bundle should remain below 2 MB");
-  assert.ok(styles.size < 500_000, "legacy stylesheet should remain below 500 KB");
+  assert.ok(
+    styles.size < 500_000,
+    "legacy stylesheet should remain below 500 KB",
+  );
 });
 
 test("runtime entry files do not contain local absolute paths", async () => {
@@ -186,6 +357,10 @@ test("runtime entry files do not contain local absolute paths", async () => {
   ];
 
   for (const path of paths) {
-    assert.doesNotMatch(await read(path), /\/Users\/|file:\/\//, `${path} contains a local path`);
+    assert.doesNotMatch(
+      await read(path),
+      /\/Users\/|file:\/\//,
+      `${path} contains a local path`,
+    );
   }
 });
