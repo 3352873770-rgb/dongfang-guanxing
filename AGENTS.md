@@ -8,6 +8,8 @@ When implementing from a selected generated mock, treat that image as the source
 
 The homepage supports two intentionally related atmosphere modes. Preserve the same centered editorial layout, navigation, slogans, and interactions in both. Night uses LiquidEther with deep ink and antique gold; day uses LightRays on a warm rice-paper field with sunlit old gold. Keep the mode difference concentrated in background motion and contrast tokens, and retain the visible day/night switch.
 
+昼夜主题必须共用同一套页面、路由、组件树、内容数据和交互逻辑；禁止为了主题复制页面或维护两套组件。首页选择的主题是全站唯一主题状态，进入问卦、灵签、日签、卦图或其他二级流程时必须继续呈现同一主题。主题差异通过根级 `data-dfgx-theme` 和共享 CSS 变量完成，优先切换背景氛围及保证可读性所需的前景对比，不在各页面建立独立主题状态。
+
 For the day-mode LightRays, prefer long volumetric beams entering from above, with slow movement, a broad natural spread, gentle noise, and heavily damped cursor influence. It should feel like sunlight passing through rice paper, not a concert spotlight or a sci-fi effect.
 
 Keep the antique-gold rays clearly visible but subordinate to the centered brand typography. The day effect should add depth and motion without reducing text contrast.

@@ -206,6 +206,45 @@ test("reading flow connects question, profile, and generated result", async () =
   );
 });
 
+test("shared reading flows inherit day and night theme tokens", async () => {
+  const readingCss = await read("src/reading-flow.css");
+  const oracleCss = await read("src/oracle-tool-flow.css");
+
+  assert.match(
+    readingCss,
+    /\.reading-flow \{[\s\S]*?--reading-page:\s*#eee8dc;[\s\S]*?--reading-paper:\s*#f2eee5;[\s\S]*?--reading-ink:\s*#282723;[\s\S]*?--reading-surface-strong:/,
+  );
+  assert.match(
+    readingCss,
+    /html\[data-dfgx-theme="night"\] \.reading-flow \{[\s\S]*?--reading-page:\s*#081112;[\s\S]*?--reading-paper:\s*#0d1717;[\s\S]*?--reading-ink:\s*#f2e8d5;[\s\S]*?--reading-surface-strong:\s*rgba\(24, 36, 34, 0\.88\);/,
+  );
+  assert.match(
+    readingCss,
+    /\.reading-paper \{[\s\S]*?background-color:\s*var\(--reading-paper\);[\s\S]*?--reading-paper-wash/,
+  );
+  assert.match(
+    readingCss,
+    /\.reading-topbar \{[\s\S]*?color:\s*var\(--reading-ink\);[\s\S]*?background:\s*var\(--reading-topbar\);/,
+  );
+  assert.match(
+    readingCss,
+    /\.reading-question-field textarea \{[\s\S]*?color:\s*var\(--reading-control\);[\s\S]*?background:\s*var\(--reading-surface-strong\);/,
+  );
+  assert.match(
+    readingCss,
+    /\.reading-select-card \{[\s\S]*?background:\s*var\(--reading-surface-strong\);[\s\S]*?border:\s*1px solid var\(--reading-border-strong\);/,
+  );
+  assert.match(
+    oracleCss,
+    /\.oracle-tool-flow input,[\s\S]*?color:\s*var\(--reading-control\);[\s\S]*?background:\s*var\(--reading-surface-strong\);/,
+  );
+  assert.match(
+    oracleCss,
+    /\.oracle-tool-flow \.oracle-result-panel \{[\s\S]*?color:\s*var\(--reading-copy\);[\s\S]*?background:\s*var\(--reading-surface\);/,
+  );
+  assert.doesNotMatch(oracleCss, /rgba\(255,\s*253,\s*248/);
+});
+
 test("long-term reading entries preselect a category in the same complete form", async () => {
   const entry = await read("src/upgrade-entry.jsx");
   const flow = await read("src/reading-flow.jsx");
