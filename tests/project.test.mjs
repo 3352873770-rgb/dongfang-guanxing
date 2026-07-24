@@ -6,7 +6,9 @@ import {
   createIChingReading,
   createTimeIChingReading,
   lineValueFromRoll,
+  getHexagramByNumber,
 } from "../src/iching.js";
+import { getDailyHexagram, getDailyHexagramNumber, getUtcDayNumber } from "../src/daily-hexagram.js";
 import {
   READING_STORAGE_KEY,
   getReadingRecordById,
@@ -108,11 +110,50 @@ test("daily hexagram CTA keeps its accessible label and 44px touch target", asyn
 
 test("daily hexagram date follows the visitor's local calendar date", async () => {
   const entry = await read("src/upgrade-entry.jsx");
+  const daily = await read("src/daily-hexagram.js");
 
-  assert.match(entry, /function formatDailyDate\(date\)/);
-  assert.match(entry, /new Intl\.DateTimeFormat\("zh-CN"/);
+  assert.match(daily, /new Intl\.DateTimeFormat\("zh-CN"/);
   assert.match(entry, /time\.dateTime = toLocalIsoDate\(now\)/);
   assert.match(entry, /nextMidnight/);
+});
+
+test("daily hexagram uses one DST-safe local-calendar rotation across the entry and detail page", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const page = await read("src/daily-hexagram-page.jsx");
+  const dailyCss = await read("src/daily-hexagram-page.css");
+  const chrome = await read("src/secondary-page-chrome.jsx");
+  const atlas = await read("src/hexagram-atlas.jsx");
+  const fixed = new Date(2026, 6, 24, 12);
+  assert.equal(getDailyHexagramNumber(fixed), 62);
+  assert.equal(getDailyHexagram(fixed)?.fullName, "雷山小过");
+  assert.equal(getDailyHexagramNumber(new Date(2026, 6, 25, 12)), 63);
+  assert.equal(getUtcDayNumber(new Date("invalid")), null);
+  assert.equal(getDailyHexagram(new Date("invalid")), null);
+  assert.equal(getHexagramByNumber(62)?.name, "小过");
+  assert.equal(getHexagramByNumber(65), null);
+  assert.match(entry, /#\/daily/);
+  assert.match(entry, /getDailyHexagram\(now\)/);
+  assert.match(entry, /event\.stopImmediatePropagation\(\)/);
+  assert.match(entry, /addEventListener\("click", openDailyHexagram, true\)/);
+  assert.match(entry, /\.daily-reading.*replaceChildren/s);
+  assert.match(entry, /\.daily-advice.*replaceChildren/s);
+  assert.match(entry, /\.daily-symbol span.*replaceChildren/s);
+  assert.match(page, /SecondaryPageHeader/);
+  assert.match(atlas, /SecondaryPageHeader/);
+  assert.match(chrome, /getStoredTheme/);
+  assert.match(page, /经典依据/);
+  assert.match(page, /现代辅助解释/);
+  assert.match(page, /理性边界/);
+  assert.doesNotMatch(page, /下一步|<form|LightRays|LiquidEther/);
+  assert.match(dailyCss, /min-height:4[46]px/);
+  assert.match(dailyCss, /@media\(max-width:340px\)/);
+});
+
+test("atlas footer return action retains a defined homepage handler", async () => {
+  const atlas = await read("src/hexagram-atlas.jsx");
+  assert.match(atlas, /function returnToAtlasHomepage\(\)/);
+  assert.match(atlas, /onClick=\{returnToAtlasHomepage\}/);
+  assert.doesNotMatch(atlas, /onClick=\{returnToHomepage\}/);
 });
 
 test("reading flow connects question, profile, and generated result", async () => {

@@ -3,12 +3,14 @@ import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
+import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";
 import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
 const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
 const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
+const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -55,7 +57,8 @@ const BORDER_GLOW_THEMES = {
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function getHexagramRoute() {
+function getAppRoute() {
+  if (window.location.hash === "#/daily") return { kind: "daily" };
   const match = window.location.hash.match(/^#\/hexagrams(?:\/(\d{1,2}))?$/);
   if (!match) return null;
 
@@ -440,28 +443,23 @@ function initializeSectionNavigation() {
   update();
 }
 
-function formatDailyDate(date) {
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
-
-function toLocalIsoDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 function updateDailyDate() {
   const time = document.querySelector("#root #daily time");
   if (!time) return false;
 
   const now = new Date();
+  const daily = getDailyHexagram(now);
   time.textContent = formatDailyDate(now);
   time.dateTime = toLocalIsoDate(now);
+  const card = document.querySelector("#root #daily");
+  if (daily && card) {
+    const copy = getDailyCardCopy(daily);
+    card.querySelector("h2")?.replaceChildren(daily.fullName);
+    card.querySelector(".daily-reading")?.replaceChildren(copy.reading);
+    const advice = card.querySelector(".daily-advice");
+    if (advice) advice.replaceChildren(...copy.advice.flatMap((line, index) => index ? [document.createElement("br"), document.createTextNode(line)] : [document.createTextNode(line)]));
+    card.querySelector(".daily-symbol span")?.replaceChildren(daily.symbol);
+  }
   return true;
 }
 
@@ -470,6 +468,13 @@ function scheduleDailyDateRefresh() {
   const now = new Date();
   const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   window.setTimeout(scheduleDailyDateRefresh, nextMidnight.getTime() - now.getTime() + 1000);
+}
+
+function openDailyHexagram(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  window.location.hash = "/daily";
 }
 
 function initializeDailySection() {
@@ -483,6 +488,7 @@ function initializeDailySection() {
     button.textContent = "今日卦象";
     button.setAttribute("aria-label", "查看今日卦象详细解析");
     button.setAttribute("title", "查看今日卦象详细解析");
+    button.addEventListener("click", openDailyHexagram, true);
   }
 
   if (root.dataset.dfgxDailyDateReady !== "true") {
@@ -537,10 +543,10 @@ function prepareOriginalContent() {
 }
 
 function UpgradeApp() {
-  const [route, setRoute] = useState(getHexagramRoute);
+  const [route, setRoute] = useState(getAppRoute);
 
   useEffect(() => {
-    const updateRoute = () => setRoute(getHexagramRoute());
+    const updateRoute = () => setRoute(getAppRoute());
     window.addEventListener("hashchange", updateRoute);
     window.addEventListener("popstate", updateRoute);
     window.addEventListener("resize", updateRoute);
@@ -552,14 +558,15 @@ function UpgradeApp() {
   }, []);
 
   useEffect(() => {
-    if (route?.kind === "hexagrams") {
-      document.documentElement.dataset.dfgxRoute = "hexagrams";
+    if (route?.kind === "hexagrams" || route?.kind === "daily") {
+      document.documentElement.dataset.dfgxRoute = route.kind;
       window.scrollTo({ top: 0, behavior: "auto" });
     } else {
       delete document.documentElement.dataset.dfgxRoute;
-      if (window.location.hash === "#atlas") {
+      const homeSection = window.location.hash === "#daily" ? "daily" : window.location.hash === "#atlas" ? "atlas" : null;
+      if (homeSection) {
         window.requestAnimationFrame(() => {
-          document.getElementById("atlas")?.scrollIntoView({
+          document.getElementById(homeSection)?.scrollIntoView({
             behavior: prefersReducedMotion ? "auto" : "smooth",
             block: "start",
           });
@@ -578,6 +585,9 @@ function UpgradeApp() {
         <HexagramAtlasPage initialHexagramNumber={route.number} />
       </Suspense>
     );
+  }
+  if (route?.kind === "daily") {
+    return <Suspense fallback={<div className="dfgx-route-loading">正在展开今日卦象…</div>}><DailyHexagramPage /></Suspense>;
   }
 
   return (

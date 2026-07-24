@@ -3,8 +3,13 @@
   display: none !important;
 }
 
-html[data-dfgx-route="hexagrams"] #root {
+html[data-dfgx-route="hexagrams"] #root,
+html[data-dfgx-route="daily"] #root {
   display: none;
+}
+
+html[data-dfgx-route="daily"] body {
+  min-width: 0;
 }
 
 .dfgx-route-loading {
