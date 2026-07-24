@@ -262,8 +262,8 @@ export default function ThreeCoinPage() {
       <SecondaryPageHeader
         theme={theme}
         onThemeChange={setTheme}
-        backHash="tools"
-        backLabel="返回工具"
+        backHash=""
+        backLabel="返回首页"
       />
 
       <main className="three-coin-main">

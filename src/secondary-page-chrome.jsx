@@ -55,6 +55,10 @@ export default function SecondaryPageHeader({
   backLabel = "返回首页",
 }) {
   const returnToHomepage = () => {
+    if (!backHash) {
+      window.location.assign(window.location.pathname);
+      return;
+    }
     window.location.hash = backHash;
   };
 

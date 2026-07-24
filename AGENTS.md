@@ -30,6 +30,8 @@ Mobile pages must never expose page-level horizontal dragging or rubber-band mot
 
 Keep the `#daily` primary action as a clearly clickable rounded-rectangle gold CTA labeled “今日卦象”. Maintain a minimum 44px touch height, dark ink text, a short arrow, and localized hover, focus-visible, and active feedback without adding glow to the whole daily card.
 
+The three-coin secondary page exits to the clean site root and the top of the homepage. Its shared header must not return to `#tools` or leave a fragment in the public URL.
+
 Keep the `#daily` date synchronized with the visitor's local calendar date, including a semantic `datetime` value and automatic refresh after local midnight; never hard-code a historical date into the visible daily card.
 
 The “今日卦象” journey uses exactly two page states: homepage daily entry -> one complete daily result page. Organize the result as continuous vertical sections on that single page; do not add steps, “下一步”, separate interpretation pages, or a profile/form gate.
