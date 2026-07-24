@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- 修复手机端页面可被整页横向拖动的问题：约束 `html`、`body` 与 React/Legacy 挂载根节点的横向溢出和回弹，同时保留顶部导航自身的局部横向滚动。
 - 将 GitHub 仓库和 Pages 子路径从 `dongfang-guanxing` 同步更名为 `mmeett-fate`，并修复品牌新公网地址的静态资源基础路径。
 - 将产品品牌重塑为 MMEETT Fate：引入共享单行英文品牌字标、自托管 Cormorant Garamond 必要字重、更新首页 Hero 文案和 CTA，并同步现役二级页标题、SEO 与品牌文案；保留原有布局、昼夜主题和业务流程。
 - 将首页六十四卦图谱改为无横向滚动的静态入口，并新增支持昼夜模式、搜索和 64 卦浏览的知识二级页。
