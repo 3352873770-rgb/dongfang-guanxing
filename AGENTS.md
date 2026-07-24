@@ -59,6 +59,16 @@ Use `docs/design/profile-archive-form-v2.png` as the current visual source of tr
 
 Keep the homepage `#atlas` preview as a static responsive grid with no horizontal scrolling, carousel arrows, or pagination dots. Every visible hexagram entry must be keyboard, mouse, and touch accessible and open the hash-routed six-four-hexagram knowledge page focused on that entry. The knowledge page must preserve the shared day/night structure and theme toggle, remain educational rather than predictive, and avoid horizontal overflow down to 320px.
 
+## 人格偏好探索二级页
+
+人格测试复用现有二级页的页眉、昼夜切换和单页连续阅读结构。页面大标题位于 Banner 中心；日间沿用暖米纸、顶部柔和日光与淡墨山水，夜间使用对应的深墨与旧金对比。动态氛围只存在于 Banner，表单和结果内容区使用静态主题背景。
+
+12 道题在同一页面内以语义化表单纵向排列并一次性提交。每道题固定使用两行结构：第一行只放题号与完整问题；第二行最左和最右分别放两端倾向文本，中间等距放置五个单选点。中间点代表中立，选择点越靠近某端文本，表示该端意愿越强。不得把倾向文本插入五个点之间；移动端也必须保留两端含义、中心中立语义、完整键盘焦点和至少 44px 的触控目标。
+
+提交后在同一路由、同一页面切换到结果状态。结果首先呈现一张独立人格卡片，包含当前类型倾向、四组偏好轴、边界维度提示和非确定性说明；卡片下方再用连续编辑式章节介绍该人格的思考方式、自然优势、可能盲区、关系倾向与成长建议。不得把类型包装成心理诊断、能力等级、职业定论或固定命运。
+
+`docs/design/personality-preference-flow-v1.png` 是当前人格偏好探索二级页的视觉源；实现时保持 Banner、表单、人格卡片和连续介绍的层级、密度和节奏。
+
 ## Long-term project workflow
 
 Treat `/Users/leon/Documents/算卦` as the only source of truth. Do not create or maintain a second nested project copy. Start each task by reading `PROJECT_STATE.md` and only the relevant files under `docs/`, then inspect `git status` before editing.

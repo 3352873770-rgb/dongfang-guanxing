@@ -19,6 +19,9 @@
 | 今日卦象日期数据 | `src/daily-hexagram.js` | 本地日期轮换、首页与结果页共享卦象及文案 |
 | 今日卦象结果页 | `src/daily-hexagram-page.jsx` | 卦象结构、经典依据、现代观察、理性边界与知识页入口 |
 | 今日卦象结果页样式 | `src/daily-hexagram-page.css` | 昼夜主题、连续阅读、响应式和可访问状态 |
+| 人格偏好探索页 | `src/personality-preference-page.jsx` | 12 题单页表单、五点量表、偏好印谱、核对题与人格介绍 |
+| 人格偏好数据 | `src/personality-preference-data.js` | 四轴定义、题目、16 类型简介、计分和结果章节组合 |
+| 人格偏好探索样式 | `src/personality-preference-page.css` | Banner 双主题、两行题目、结果卡和 320px 响应式 |
 | 二级页共享页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 今日卦象与六十四卦知识页共用返回、品牌和昼夜切换 |
 | Banner 动效生命周期 | `src/use-atmosphere-visibility.js` | 离开视口或页面后台时卸载 WebGL |
 | 日间体积光 | `src/components/LightRays/` | WebGL LightRays |

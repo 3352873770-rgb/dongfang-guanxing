@@ -11,6 +11,7 @@ const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
 const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
 const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
 const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
+const PersonalityPreferencePage = lazy(() => import("./personality-preference-page.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -59,6 +60,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 function getAppRoute() {
   if (window.location.hash === "#/daily") return { kind: "daily" };
+  if (window.location.hash === "#/personality") return { kind: "personality" };
   const match = window.location.hash.match(/^#\/hexagrams(?:\/(\d{1,2}))?$/);
   if (!match) return null;
 
@@ -71,6 +73,13 @@ function getAppRoute() {
 
 function openHexagramAtlas(number = 1) {
   window.location.hash = `/hexagrams/${number}`;
+}
+
+function openPersonalityPreference(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  window.location.hash = "/personality";
 }
 
 function getRenderProfile() {
@@ -532,10 +541,29 @@ function initializeReadingEntryPoints() {
   return true;
 }
 
+function initializePersonalityEntry() {
+  const root = document.getElementById("root");
+  const personalitySection = document.getElementById("personality");
+  if (!root || !personalitySection) return false;
+  if (root.dataset.dfgxPersonalityEntryReady === "true") return true;
+
+  const entries = personalitySection.querySelectorAll(
+    ".personality-test-card, .personality-guide",
+  );
+  if (!entries.length) return false;
+
+  entries.forEach((entry) => {
+    entry.addEventListener("click", openPersonalityPreference, true);
+  });
+  root.dataset.dfgxPersonalityEntryReady = "true";
+  return true;
+}
+
 function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
   if (!initializeDailySection()) return false;
   if (!initializeReadingEntryPoints()) return false;
+  if (!initializePersonalityEntry()) return false;
   if (!initializeAtlasSection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
@@ -558,12 +586,18 @@ function UpgradeApp() {
   }, []);
 
   useEffect(() => {
-    if (route?.kind === "hexagrams" || route?.kind === "daily") {
+    if (route?.kind === "hexagrams" || route?.kind === "daily" || route?.kind === "personality") {
       document.documentElement.dataset.dfgxRoute = route.kind;
       window.scrollTo({ top: 0, behavior: "auto" });
     } else {
       delete document.documentElement.dataset.dfgxRoute;
-      const homeSection = window.location.hash === "#daily" ? "daily" : window.location.hash === "#atlas" ? "atlas" : null;
+      const homeSection = window.location.hash === "#daily"
+        ? "daily"
+        : window.location.hash === "#atlas"
+          ? "atlas"
+          : window.location.hash === "#personality"
+            ? "personality"
+            : null;
       if (homeSection) {
         window.requestAnimationFrame(() => {
           document.getElementById(homeSection)?.scrollIntoView({
@@ -588,6 +622,13 @@ function UpgradeApp() {
   }
   if (route?.kind === "daily") {
     return <Suspense fallback={<div className="dfgx-route-loading">正在展开今日卦象…</div>}><DailyHexagramPage /></Suspense>;
+  }
+  if (route?.kind === "personality") {
+    return (
+      <Suspense fallback={<div className="dfgx-route-loading">正在展开人格偏好探索…</div>}>
+        <PersonalityPreferencePage />
+      </Suspense>
+    );
   }
 
   return (
