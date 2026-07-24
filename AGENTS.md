@@ -62,6 +62,8 @@ The homepage card and result page must derive from the same local-date daily-hex
 
 `docs/design/personality-preference-flow-v1.png` 是当前人格偏好探索二级页的视觉源；实现时保持 Banner、表单、人格卡片和连续介绍的层级、密度和节奏。
 
+首页人格入口使用 `public/media/legacy/personality-preference-v2.webp`。该预览固定呈现四组偏好轴、深靛墨纸与旧金线条，并使用“人格偏好探索”“12题 · 约3分钟”“开始探索”以及“偏好不是能力，类型不是固定标签”的语义；不得退回八卦八维雷达或诊断式表达。
+
 ## 档案与问卦前置流程
 
 各流程页眉统一使用“·观星问卦 ·”，不显示步骤或阶段说明。

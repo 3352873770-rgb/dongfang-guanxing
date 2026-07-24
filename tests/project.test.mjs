@@ -218,6 +218,9 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   const page = await read("src/personality-preference-page.jsx");
   const css = await read("src/personality-preference-page.css");
   const upgradeCss = await read("src/upgrade.css");
+  const preview = await stat(
+    new URL("../public/media/legacy/personality-preference-v2.webp", import.meta.url),
+  );
 
   assert.match(entry, /#\/personality/);
   assert.match(
@@ -228,6 +231,8 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
     entry,
     /entries\.forEach\([\s\S]*?addEventListener\("click", openPersonalityPreference/,
   );
+  assert.match(entry, /personality-preference-v2\.webp/);
+  assert.match(entry, /开始人格偏好探索，12题，约3分钟/);
   assert.match(entry, /<PersonalityPreferencePage \/>/);
   assert.match(page, /SecondaryPageHeader/);
   assert.match(page, /useAtmosphereVisibility\(bannerRef\)/);
@@ -244,6 +249,7 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   );
   assert.match(css, /contain:\s*layout paint/);
   assert.match(css, /@media \(max-width: 360px\)/);
+  assert.ok(preview.size < 180_000, "personality preview should remain lightweight");
 });
 
 test("personality questionnaire keeps twelve two-row questions and five accessible choices", async () => {
