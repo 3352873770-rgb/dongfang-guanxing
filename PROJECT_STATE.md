@@ -16,8 +16,8 @@
 
 - 当前产品品牌：MMEETT Fate；首页品牌说明为 “Fate”。
 - GitHub 仓库与 Pages 子路径已同步更名为 `mmeett-fate`，仓库地址为 `https://github.com/3352873770-rgb/mmeett-fate`。
-- 首页 Hero 使用独立的、占据桌面约四成可用宽度的 MMEETT 官方字标、`Fate`、`READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”，但保持原有昼夜氛围、导航与问卦业务流程。
-- 品牌字标由 `src/brand-lockup.jsx` 统一提供，使用用户提供 PDF 提取的官方 SVG 路径；首页、二级页和页面标题不再使用旧品牌名。
+- 首页 Hero 中央使用独立的、自托管 Bodoni Moda 子集渲染的单行 `MMEETT Fate`：`MMEETT` 正体大写、`Fate` 斜体，桌面约占可用视口 60–70%，保留 `READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”及原有昼夜氛围、导航和问卦业务流程。
+- 导航与二级页品牌字标继续由 `src/brand-lockup.jsx` 提供，使用用户提供 PDF 提取的官方 SVG 路径；首页 Hero 中央字标按 `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 单独实现，不含中文“东方观星”或重复品牌说明。
 
 ## 已完成
 

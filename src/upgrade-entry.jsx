@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
-import BrandLockup, { BRAND_DESCRIPTOR, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
+import BrandLockup, { DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
 import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";
@@ -255,11 +255,10 @@ function UpgradeHero() {
       </div>
 
       <div className="dfgx-editorial">
-        <div className="dfgx-brandline">
-          <span>{BRAND_DESCRIPTOR}</span>
-        </div>
-
-        <h1 aria-label="MMEETT Fate"><BrandLockup decorative showMark={false} /></h1>
+        <h1 className="dfgx-hero-wordmark" aria-label="MMEETT Fate">
+          <span className="dfgx-hero-wordmark__mmeett">MMEETT</span>
+          <span className="dfgx-hero-wordmark__fate">Fate</span>
+        </h1>
 
         <hr className="dfgx-wordmark-rule" aria-hidden="true" />
 

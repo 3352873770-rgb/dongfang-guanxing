@@ -1,64 +1,64 @@
-# MMEETT Fate 品牌字体设计 QA
+# 首页 Hero 中央字标 Design QA
 
-## 对照对象
+## 比较目标
 
-- source visual truth path: `docs/design/mmeett-fate-brand-home-v1.png`
-- implementation URL: `http://127.0.0.1:4176/`
-- implementation screenshot path: `docs/qa/mmeett-fate-brand-desktop-night-v1.jpg`
-- full-view comparison evidence: `docs/qa/mmeett-fate-brand-reference-comparison-v1.jpg`
-- responsive evidence:
-  - `docs/qa/mmeett-fate-brand-mobile-night-v1.jpg`
-  - `docs/qa/mmeett-fate-brand-mobile-day-v1.jpg`
-- source pixels: 1487 × 1058 PNG
-- implementation pixels: 1487 × 1058 JPEG
-- CSS viewport: 1487 × 1058
-- device density normalization: source and implementation use the same pixel dimensions and a 1× CSS viewport; no resampling was required before the full-view comparison
-- primary state: homepage, night theme, initial viewport
+- Source visual truth：`docs/design/hero-mmeett-fate-wordmark-reference-v2.png`
+- Source pixels：2094 × 334
+- Implementation：
+  - `docs/qa/hero-mmeett-fate-desktop-night-v2.png`
+  - `docs/qa/hero-mmeett-fate-desktop-day-v2.png`
+  - `docs/qa/hero-mmeett-fate-mobile-night-v2.png`
+- CSS viewports / screenshots：1440 × 1024、390 × 844，device scale factor 1
+- 补充窄屏检查：320 × 700，`documentElement.scrollWidth === clientWidth === 320`
+- 状态：首页首屏，昼间与夜间主题；首屏入场动画稳定后截图
+- 密度归一：所有实现截图均按 CSS viewport 1:1 输出。源图是字标局部参考，不按整页比例硬套；比较时以字形、正斜体关系、横向占幅、颜色和单行结构为准。
 
-## Required Fidelity Surfaces
+## Full-view comparison evidence
 
-- Fonts and typography: `Cormorant Garamond` 600 normal renders `MMEETT`; the matching 600 italic renders `Fate`. The single-line relationship, high-contrast strokes, optical hierarchy, letter spacing and mobile wrapping match the selected direction. Chinese display copy remains in the existing restrained Songti stack and utility text remains in the existing sans stack.
-- Spacing and layout rhythm: the centered editorial composition, floating navigation, wordmark scale, separator, copy stack and CTA rhythm remain aligned with the source while preserving the product's existing responsive structure. At 390 × 844 and 320 × 700, the wordmark does not wrap and the document has no horizontal overflow.
-- Colors and visual tokens: night uses antique gold on deep ink; day remaps the same components to tea brown on warm rice paper. Both themes use one component tree and shared token overrides.
-- Image quality and asset fidelity: the selected mock is preserved as the design source. No logo image was rasterized into the product; the wordmark is live, selectable type. Existing LightRays and LiquidEther backgrounds were deliberately retained, so the animated night capture can contain a moving light form that is absent from the static mock.
-- Copy and content: `EASTERN SYMBOLS · INNER CLARITY`, `READ THE SIGNS · MEET YOURSELF`, “观象知变，向内而行”, “以《周易》为根，循象观变” and “开始问卦” match the approved design.
+桌面夜间实现保留现有导航、经典书名、标语、哲思和两项操作，只替换中央字标。最终 `MMEETT Fate` 的实际边界为 928 × 137px，约占 1440px 视口宽度的 64.4%，与参考图的大幅横向占比一致。日间沿用同一结构，仅把旧金字标切换为深墨色；移动端保持单行，并保留原有信息顺序。
 
-## Full-view and Focused Comparison
+## Focused-region comparison evidence
 
-The native-size side-by-side image verifies the complete frame: navigation, small brand signature, descriptor, main wordmark, rule, English line, Chinese copy and both actions. A separate crop was not needed because all brand-critical typography is legible at the native 1487 × 1058 comparison size. DOM measurement additionally confirmed the final desktop wordmark is 708.4 px wide and the primary CTA remains 220 × 62 px.
+已在同一次视觉比较输入中并列打开源字标图与 1440 × 1024 夜间实现截图。重点核对结果：
 
-## Comparison History
+- `MMEETT` 使用直立高对比 Bodoni 衬线；
+- `Fate` 使用同家族斜体并略小；
+- 两者保持单行，字间关系和参考图一致；
+- 中央不包含中文“东方观星”或重复说明行；
+- 夜间为旧金色，日间为深墨色；
+- 导航继续使用原官方 MMEETT 图形标/字标。
 
-### Iteration 1
+源图不包含完整页面，因此没有把它误当作整页构图参考；完整页面的其他区域以现有产品设计系统为约束。
 
-- [P2] The first implementation rendered the main wordmark in ivory instead of antique gold.
-- [P2] The small `MMEETT Fate` signature above the descriptor and the rule below the main wordmark were missing.
-- [P2] Legacy nested-span rules reduced the navigation wordmark's intended type size.
-- Fixes: changed the night wordmark token to `#d8b568`, added the shared small lockup and semantic rule, and removed the obsolete nested-span overrides.
-- Post-fix evidence: `docs/qa/mmeett-fate-brand-reference-comparison-v1.jpg`.
+## Required fidelity surfaces
 
-### Iteration 2
+- Fonts and typography：通过。两份自托管 Bodoni Moda 子集分别覆盖正体和斜体，浏览器检查 `document.fonts` 状态为 `loaded`；标题 400 字重，不依赖合成粗体，不产生外部字体请求。
+- Spacing and layout rhythm：通过。桌面标题居中、横向占幅 64.4%，标题至分隔线、英文标语、哲思与 CTA 的既有节奏保留；390px 与 320px 均为单行且无横向溢出。
+- Colors and visual tokens：通过。夜间沿用旧金 `#d8b568`，日间沿用深墨 `#000000`；背景动效与标题对比关系保留。
+- Image quality and asset fidelity：通过。中央目标本质为可访问的文字字标，使用真实字体而非栅格截图；导航官方 SVG 品牌资产未替换。字体 WOFF2 资源已本地化并附 OFL。
+- Copy and content：通过。中央精确显示 `MMEETT Fate`，无中文标题；原英文标语、中文哲思、CTA 和导航文案未改。
 
-- [P2] The corrected desktop wordmark remained wider and slightly higher than the selected mock.
-- Fixes: reduced the desktop maximum from 132 px to 116 px, brought the measured width to 708.4 px, and shifted the desktop editorial group 24 px lower without changing the mobile layout.
-- Post-fix evidence: `docs/qa/mmeett-fate-brand-desktop-night-v1.jpg`.
+## Comparison history
+
+1. 首次实现截图 `v1`：桌面标题宽约 799px，仅占视口 55.5%，相较参考图的大幅字标略显保守，判定为 P2 尺度偏小。
+2. 修复：桌面标题字号从 `clamp(84px, 10.5vw, 164px)` 调整为 `clamp(92px, 12.2vw, 184px)`，并把字体声明和实际标题统一为 400 字重。
+3. 修复后截图 `v2`：桌面标题宽约 928px，占视口 64.4%；单行、正斜体比例和视觉中心与参考一致。390px、320px 规则不受桌面放大影响，320px 标题右边界 303.37px、页面总宽 320px。
+
+## Interaction and runtime checks
+
+- 昼夜切换：通过，标题结构不变，颜色正确切换。
+- “开始问卦”：通过，打开“观星问卦流程”对话框；关闭操作可返回首页。
+- Console：无 warning / error。
+- 字体加载：正体、斜体均通过 `document.fonts.check()`。
 
 ## Findings
 
-No actionable P0, P1 or P2 differences remain.
+没有剩余 P0、P1 或 P2 问题。
 
-- [P3] The source mock includes a tiny diamond at the center of the horizontal rule. The implementation keeps a clean hairline instead of introducing a fabricated ornamental asset.
-- [P3] LiquidEther produces a moving highlight in the night screenshot. This is an intentional retained product behavior rather than a second brand layout.
+## Follow-up polish
 
-## Interaction, Responsive and Runtime Checks
+- P3：LiquidEther 的亮部偶尔会经过字标局部，这是现有动态氛围的瞬时状态；没有破坏可读性，且不需要为本次字标任务改动背景算法。
 
-- Day/night toggle updates the same homepage component tree and preserves brand hierarchy.
-- “开始问卦” opens the existing full reading form and retains the selected theme.
-- The daily secondary route renders the shared `MMEETT Fate` header, has the title `小过｜今日卦象｜MMEETT Fate`, and has no horizontal overflow at 390 px or 320 px.
-- Homepage checks passed at 1487 × 1058, 390 × 844 and 320 × 700.
-- Browser logs contain no runtime error or warning. Development-only Vite connection and hot-update debug entries were observed during editing.
-- `npm run check` passes all 28 tests plus normal and GitHub Pages production builds.
-
-## Final Result
+## Final result
 
 final result: passed

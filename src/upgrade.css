@@ -42,6 +42,22 @@ html[data-dfgx-route="personality"] body {
   min-width: 0;
 }
 
+@font-face {
+  font-family: "MMEETT Fate Bodoni";
+  src: url("/media/fonts/bodoni-moda-mmeett-fate-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MMEETT Fate Bodoni";
+  src: url("/media/fonts/bodoni-moda-mmeett-fate-italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .dfgx-route-loading {
   min-height: 100svh;
   display: grid;
@@ -448,7 +464,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 .dfgx-editorial {
   position: relative;
   z-index: 2;
-  width: min(100% - 40px, 760px);
+  width: min(100% - 40px, 1120px);
   min-height: 100svh;
   margin-inline: auto;
   padding: clamp(112px, 13vh, 138px) 0 clamp(46px, 7vh, 76px);
@@ -460,23 +476,6 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   translate: 0 24px;
 }
 
-.dfgx-brandline {
-  margin: 0 0 clamp(34px, 5vh, 60px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dfgx-brandline > span {
-  color: rgba(226, 229, 224, 0.68);
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(12px, 1.05vw, 15px);
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  line-height: 1;
-}
-
-.dfgx-brandline,
 .dfgx-editorial h1,
 .dfgx-wordmark-rule,
 .dfgx-english,
@@ -488,31 +487,40 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   will-change: opacity, transform, filter;
 }
 
-.dfgx-brandline { animation-delay: 100ms; }
-.dfgx-editorial h1 { animation-delay: 320ms; }
-.dfgx-wordmark-rule { animation-delay: 470ms; }
-.dfgx-english { animation-delay: 570ms; }
-.dfgx-philosophy { animation-delay: 800ms; }
-.dfgx-actions { animation-delay: 1030ms; }
-.dfgx-explore { animation-delay: 1240ms; }
+.dfgx-editorial h1 { animation-delay: 180ms; }
+.dfgx-wordmark-rule { animation-delay: 360ms; }
+.dfgx-english { animation-delay: 460ms; }
+.dfgx-philosophy { animation-delay: 690ms; }
+.dfgx-actions { animation-delay: 920ms; }
+.dfgx-explore { animation-delay: 1130ms; }
 
 .dfgx-editorial h1 {
   margin: 0;
   color: #d8b568;
-  font-size: clamp(64px, 8.2vw, 116px);
-  line-height: 0.86;
+  font-family: "MMEETT Fate Bodoni", Didot, Bodoni MT, "Times New Roman", serif;
+  font-size: clamp(92px, 12.2vw, 184px);
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.035em;
   text-shadow: 0 2px 28px rgba(239, 218, 157, 0.08);
   white-space: nowrap;
 }
 
-.dfgx-editorial h1 .mmeett-brand-lockup {
-  display: inline-flex;
-  align-items: center;
+.dfgx-hero-wordmark__mmeett,
+.dfgx-hero-wordmark__fate {
+  display: inline-block;
 }
 
-.dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
-  --mmeett-wordmark-width: clamp(420px, 42vw, 860px);
-  gap: 0;
+.dfgx-hero-wordmark__mmeett {
+  font-style: normal;
+}
+
+.dfgx-hero-wordmark__fate {
+  margin-left: 0.13em;
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.06em;
 }
 
 .dfgx-wordmark-rule {
@@ -943,7 +951,6 @@ html[data-dfgx-theme="day"] .dfgx-editorial h1 {
   text-shadow: 0 2px 26px rgba(101, 76, 41, 0.1);
 }
 
-html[data-dfgx-theme="day"] .dfgx-brandline > span,
 html[data-dfgx-theme="day"] .dfgx-english,
 html[data-dfgx-theme="day"] .dfgx-philosophy {
   color: rgba(38, 38, 33, 0.78);
@@ -1322,22 +1329,14 @@ body,
   .dfgx-classics span:nth-child(11) { top: 54%; left: 27%; }
   .dfgx-classics span:nth-child(12) { top: 74%; right: 18%; }
 
-  .dfgx-brandline {
-    max-width: 320px;
-    margin-bottom: max(30px, 4.2vh);
-  }
-
-  .dfgx-brandline > span {
-    font-size: 13px;
-    letter-spacing: 0.18em;
-  }
-
   .dfgx-editorial h1 {
-    font-size: clamp(42px, 12vw, 66px);
+    font-size: clamp(48px, 17.4vw, 74px);
+    letter-spacing: -0.045em;
   }
 
-  .dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
-    --mmeett-wordmark-width: min(86vw, 360px);
+  .dfgx-hero-wordmark__fate {
+    margin-left: 0.1em;
+    font-size: 0.76em;
   }
 
   .dfgx-wordmark-rule {
@@ -1422,7 +1421,6 @@ body,
     transition-duration: 0.01ms !important;
   }
 
-  .dfgx-brandline,
   .dfgx-editorial h1,
   .dfgx-wordmark-rule,
   .dfgx-english,
