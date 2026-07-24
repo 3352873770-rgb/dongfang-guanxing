@@ -305,14 +305,24 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   assert.match(entry, /开始人格偏好探索，12题，约3分钟/);
   assert.match(entry, /<PersonalityPreferencePage \/>/);
   assert.match(page, /SecondaryPageHeader/);
-  assert.match(page, /useAtmosphereVisibility\(bannerRef\)/);
-  assert.match(page, /LightRays/);
-  assert.match(page, /LiquidEther/);
+  assert.doesNotMatch(page, /useAtmosphereVisibility|LightRays|LiquidEther|PersonalityAtmosphere/);
+  assert.match(page, /media\/personality\/personality-banner-ink-landscape-v1\.jpg/);
   assert.match(page, /<form[\s\S]*id="personality-questionnaire"/);
   assert.match(page, /提交并生成偏好印谱/);
   assert.match(page, /PersonalityResultCard/);
   assert.match(page, /人格介绍/);
   assert.match(css, /\.personality-banner-stage/);
+  assert.match(css, /--personality-page-base:\s*#071416/);
+  assert.match(css, /\.personality-banner-stage::after[\s\S]*?var\(--personality-stage-fade\)/);
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.personality-banner-stage \{[\s\S]*?min-height:\s*clamp\(350px, 50svh, 390px\)/,
+  );
+  assert.match(upgradeCss, /\.dfgx-upgrade \{[\s\S]*?background:\s*#071416/);
+  assert.match(
+    upgradeCss,
+    /html\[data-dfgx-theme="day"\] \.dfgx-upgrade \{[\s\S]*?linear-gradient\(135deg, #d1cabd 0%, #eee6d9 52%, #cec6b8 100%\)/,
+  );
   assert.match(
     upgradeCss,
     /#root \.personality-test-card \{[\s\S]*?aspect-ratio:\s*1132 \/ 696/,

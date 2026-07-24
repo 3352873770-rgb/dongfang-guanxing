@@ -1,6 +1,4 @@
 import React, {
-  lazy,
-  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -8,7 +6,6 @@ import React, {
 } from "react";
 import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
 import { BRAND_NAME, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
-import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import {
   PREFERENCE_DIMENSIONS,
   PERSONALITY_QUESTIONS,
@@ -18,70 +15,13 @@ import {
 } from "./personality-preference-data.js";
 import "./personality-preference-page.css";
 
-const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
-const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
-
 const POINTS = [-2, -1, 0, 1, 2];
-const NIGHT_ETHER_COLORS = ["#071012", "#76684a", "#d0ad58", "#f8eed6"];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function getPointLabel(question, value) {
   if (value === 0) return "中立";
   const direction = value < 0 ? question.leftLabel : question.rightLabel;
   return `${Math.abs(value) === 2 ? "强烈" : "较"}偏向${direction}`;
-}
-
-function PersonalityAtmosphere({ theme }) {
-  const isMobile = window.matchMedia("(max-width: 720px)").matches;
-
-  if (prefersReducedMotion) return null;
-
-  return (
-    <div className="personality-atmosphere" aria-hidden="true">
-      {theme === "night" ? (
-        <Suspense fallback={null}>
-          <LiquidEther
-            colors={NIGHT_ETHER_COLORS}
-            mouseForce={isMobile ? 6 : 9}
-            cursorSize={isMobile ? 88 : 112}
-            isViscous
-            viscous={54}
-            iterationsViscous={isMobile ? 14 : 24}
-            iterationsPoisson={isMobile ? 11 : 18}
-            dt={0.011}
-            resolution={isMobile ? 0.26 : 0.36}
-            maxDpr={isMobile ? 1 : 1.5}
-            targetFps={isMobile ? 24 : 40}
-            autoSpeed={0.13}
-            autoIntensity={1.05}
-            takeoverDuration={0.9}
-            autoResumeDelay={3200}
-            autoRampDuration={2}
-          />
-        </Suspense>
-      ) : (
-        <Suspense fallback={null}>
-          <LightRays
-            className="personality-rays"
-            raysOrigin="top-left"
-            raysColor="#c89642"
-            raysSpeed={0.28}
-            lightSpread={0.34}
-            rayLength={1.62}
-            pulsating={false}
-            fadeDistance={1.3}
-            saturation={1.05}
-            followMouse
-            mouseInfluence={0.045}
-            noiseAmount={0.06}
-            distortion={0.09}
-            maxDpr={isMobile ? 1 : 1.5}
-            targetFps={isMobile ? 24 : 40}
-          />
-        </Suspense>
-      )}
-    </div>
-  );
 }
 
 function PreferenceQuestion({
@@ -195,10 +135,8 @@ export default function PersonalityPreferencePage() {
   const [result, setResult] = useState(null);
   const [validationMessage, setValidationMessage] = useState("");
   const [showVerification, setShowVerification] = useState(false);
-  const bannerRef = useRef(null);
   const resultRef = useRef(null);
   const verificationRef = useRef(null);
-  const atmosphereActive = useAtmosphereVisibility(bannerRef);
   const answeredCount = PERSONALITY_QUESTIONS.reduce(
     (count, question) => count + (Number.isFinite(answers[question.id]) ? 1 : 0),
     0,
@@ -209,7 +147,7 @@ export default function PersonalityPreferencePage() {
   );
   const basePath = import.meta.env.BASE_URL;
   const pageStyle = {
-    "--personality-banner-image": `url("${basePath}media/legacy/scroll-paper.webp")`,
+    "--personality-banner-image": `url("${basePath}media/personality/personality-banner-ink-landscape-v1.jpg")`,
     "--personality-paper-image": `url("${basePath}media/reading/rice-paper-bagua-v1.jpg")`,
     "--personality-night-image": `url("${basePath}media/legacy/ink-paper-bg.webp")`,
   };
@@ -334,8 +272,7 @@ export default function PersonalityPreferencePage() {
         backHash="personality"
       />
 
-      <div className="personality-banner-stage" ref={bannerRef}>
-        {atmosphereActive ? <PersonalityAtmosphere theme={theme} /> : null}
+      <div className="personality-banner-stage">
         <div className="personality-banner-art" aria-hidden="true" />
 
         <section className="personality-banner" aria-labelledby="personality-title">

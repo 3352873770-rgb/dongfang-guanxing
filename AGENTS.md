@@ -58,7 +58,7 @@ The homepage card and result page must derive from the same local-date daily-hex
 
 ## 人格偏好探索二级页
 
-人格测试复用现有二级页的页眉、昼夜切换和单页连续阅读结构。页面大标题位于 Banner 中心；日间沿用暖米纸、顶部柔和日光与淡墨山水，夜间使用对应的深墨与旧金对比。动态氛围只存在于 Banner，表单和结果内容区使用静态主题背景。
+人格测试复用现有二级页的页眉、昼夜切换和单页连续阅读结构。页面大标题位于 Banner 中心；Banner 固定使用 `public/media/personality/personality-banner-ink-landscape-v1.jpg` 的静态水墨背景，日间呈暖米纸与淡墨山水，夜间通过主题滤镜呈深墨与旧金对比。人格页禁止挂载 LightRays、LiquidEther 或其他 WebGL 特效；表单和结果内容区继续使用静态主题背景。
 
 12 道题在同一页面内以语义化表单纵向排列并一次性提交。每道题固定使用两行结构：第一行只放题号与完整问题；第二行最左和最右分别放两端倾向文本，中间等距放置五个单选点。中间点代表中立，选择点越靠近某端文本，表示该端意愿越强。不得把倾向文本插入五个点之间；移动端也必须保留两端含义、中心中立语义、完整键盘焦点和至少 44px 的触控目标。
 
@@ -124,6 +124,11 @@ The default completion boundary for each task is local verification plus a draft
 ## Hero 中央字标视觉源
 
 - `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 是当前首页 Hero 中央字标的视觉源。中央仅使用单行 `MMEETT Fate`：设计稿原始的 Cormorant Garamond 600 高对比衬线，`MMEETT` 正体大写、`Fate` 600 斜体，不加入中文“东方观星”或额外品牌说明行；导航继续保留官方 MMEETT 图形标/字标。
+
+## 昼夜背景连续性
+
+- 首页 Hero、下方内容区与人格偏好二级页必须在各自昼夜主题内共享同一组底色家族；允许通过纹理、光照和透明度建立层级，但禁止用明显偏蓝、偏灰或亮度跳变的整块背景把相邻模块切成两套视觉。
+- 人格偏好页的 Banner 底部应自然淡入问卷背景，移动端首屏不保留大段无信息空白；问卷纹理必须低于文字层级，两端倾向、题目说明和中立标签需要保持稳定可读。
 
 ## Hero 背景入场指针轨迹
 

@@ -22,7 +22,8 @@
 | 今日卦象结果页样式 | `src/daily-hexagram-page.css` | 昼夜主题、连续阅读、响应式和可访问状态 |
 | 人格偏好探索页 | `src/personality-preference-page.jsx` | 12 题单页表单、五点量表、偏好印谱、核对题与人格介绍 |
 | 人格偏好数据 | `src/personality-preference-data.js` | 四轴定义、题目、16 类型简介、计分和结果章节组合 |
-| 人格偏好探索样式 | `src/personality-preference-page.css` | Banner 双主题、两行题目、结果卡和 320px 响应式 |
+| 人格偏好探索样式 | `src/personality-preference-page.css` | 静态 Banner 昼夜滤镜、两行题目、结果卡和 320px 响应式 |
+| 人格偏好 Banner 背景 | `public/media/personality/personality-banner-ink-landscape-v1.jpg` | 中央留白的低对比水墨山景；昼夜共用，不挂载 WebGL |
 | 首页人格偏好预览图 | `public/media/legacy/personality-preference-v2.webp` | 四轴偏好印谱、深靛墨纸、旧金 CTA 与非诊断边界 |
 | 二级页共享固定页眉 | `src/secondary-page-chrome.jsx`、`src/secondary-page-chrome.css` | 人格偏好、今日卦象、六十四卦知识和三枚铜钱共用固定导航、退出、品牌与昼夜切换 |
 | 三枚铜钱单页工具 | `src/three-coin-page.jsx` | 同页完成定问、六次三钱记录、结果生成与经典/现代分层解释 |
