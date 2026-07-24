@@ -48,17 +48,35 @@ export function ThemeToggle({ theme, onChange }) {
   );
 }
 
-export default function SecondaryPageHeader({ theme, onThemeChange, backHash, backLabel = "返回首页" }) {
+export default function SecondaryPageHeader({
+  theme,
+  onThemeChange,
+  backHash,
+  backLabel = "返回首页",
+}) {
   const returnToHomepage = () => {
     window.location.hash = backHash;
   };
 
   return (
-    <header className="dfgx-secondary-header">
-      <button className="dfgx-secondary-brand" type="button" onClick={returnToHomepage} aria-label="返回 MMEETT Fate 首页">
+    <header className="dfgx-secondary-header" aria-label="二级页面导航">
+      <button
+        className="dfgx-secondary-brand"
+        type="button"
+        onClick={returnToHomepage}
+        aria-label="退出当前页面，返回 MMEETT Fate 首页"
+      >
         <BrandLockup decorative />
       </button>
-      <button className="dfgx-secondary-back" type="button" onClick={returnToHomepage}>{backLabel}</button>
+      <button
+        className="dfgx-secondary-back"
+        type="button"
+        onClick={returnToHomepage}
+        aria-label={`${backLabel}，退出当前页面`}
+      >
+        <span aria-hidden="true">←</span>
+        <span>{backLabel}</span>
+      </button>
       <ThemeToggle
         theme={theme}
         onChange={() => onThemeChange((current) => (current === "night" ? "day" : "night"))}

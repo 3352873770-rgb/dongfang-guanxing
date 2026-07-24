@@ -104,10 +104,10 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
 
   return (
     <div className="dfgx-atlas-page">
+      <SecondaryPageHeader theme={theme} onThemeChange={setTheme} backHash="atlas" />
+
       <div className="dfgx-atlas-hero-stage" ref={heroStageRef}>
         {atmosphereActive ? <AtlasAtmosphere theme={theme} /> : null}
-
-        <SecondaryPageHeader theme={theme} onThemeChange={setTheme} backHash="atlas" />
 
         <section className="dfgx-atlas-intro" aria-labelledby="atlas-title">
           <p>MMEETT Fate · 易学知识</p>

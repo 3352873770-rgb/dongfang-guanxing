@@ -79,6 +79,30 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
 });
 
+test("long secondary pages keep one sticky exit navigation within reach", async () => {
+  const chrome = await read("src/secondary-page-chrome.jsx");
+  const chromeCss = await read("src/secondary-page-chrome.css");
+  const atlas = await read("src/hexagram-atlas.jsx");
+  const personality = await read("src/personality-preference-page.jsx");
+  const daily = await read("src/daily-hexagram-page.jsx");
+  const threeCoin = await read("src/three-coin-page.jsx");
+
+  assert.match(chrome, /aria-label="二级页面导航"/);
+  assert.match(chrome, /退出当前页面，返回 MMEETT Fate 首页/);
+  assert.match(chrome, /aria-label=\{`\$\{backLabel\}，退出当前页面`\}/);
+  assert.match(chromeCss, /\.dfgx-secondary-header\s*\{[\s\S]*?position:\s*sticky/);
+  assert.match(chromeCss, /top:\s*max\(8px,\s*env\(safe-area-inset-top\)\)/);
+  assert.match(chromeCss, /\.dfgx-secondary-back\s*\{[\s\S]*?min-height:\s*44px/);
+  assert.ok(
+    atlas.indexOf("<SecondaryPageHeader") < atlas.indexOf('className="dfgx-atlas-hero-stage"'),
+  );
+  assert.ok(
+    personality.indexOf("<SecondaryPageHeader") < personality.indexOf('className="personality-banner-stage"'),
+  );
+  assert.match(daily, /<SecondaryPageHeader[\s\S]*?backHash="daily"/);
+  assert.match(threeCoin, /<SecondaryPageHeader[\s\S]*?backHash="tools"[\s\S]*?backLabel="返回工具"/);
+});
+
 test("GitHub Pages build keeps the repository subpath", async () => {
   const config = await read("vite.config.mjs");
 
