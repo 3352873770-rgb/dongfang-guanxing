@@ -16,7 +16,7 @@
 
 - 当前产品品牌：MMEETT Fate；首页品牌说明为 “Fate”。
 - GitHub 仓库与 Pages 子路径已同步更名为 `mmeett-fate`，仓库地址为 `https://github.com/3352873770-rgb/mmeett-fate`。
-- 首页 Hero 中央使用独立的、自托管 Bodoni Moda 子集渲染的单行 `MMEETT Fate`：`MMEETT` 正体大写、`Fate` 斜体，桌面约占可用视口 60–70%，保留 `READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”及原有昼夜氛围、导航和问卦业务流程。
+- 首页 Hero 中央使用独立的、自托管 Cormorant Garamond 600 设计稿原始字体渲染的单行 `MMEETT Fate`：`MMEETT` 正体大写、`Fate` 600 斜体，桌面约占可用视口 60–70%，保留 `READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”及原有昼夜氛围、导航和问卦业务流程。
 - 导航与二级页品牌字标继续由 `src/brand-lockup.jsx` 提供，使用用户提供 PDF 提取的官方 SVG 路径；首页 Hero 中央字标按 `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 单独实现，不含中文“东方观星”或重复品牌说明。
 
 ## 已完成
@@ -43,7 +43,7 @@
 - 时辰运势使用可重算的农历年月日时起卦口径；AI 解读报告首期读取真实本地问卦记录，并明确标注为未连接外部模型的结构化解读原型
 - 首页六十四卦图谱使用无横向滚动的静态网格，并可进入昼夜双模式知识二级页
 - 首页与六十四卦知识页的 WebGL 氛围仅在 Banner 可见时挂载，滚出首屏或页面进入后台后自动卸载
-- 首页导航、Hero 与二级页页眉已统一使用用户提供 PDF 的 MMEETT 图形标与自定义字标路径，不再依赖 Cormorant Garamond 模拟品牌字
+- 首页导航与二级页页眉继续使用用户提供 PDF 的 MMEETT 图形标与自定义字标路径；Hero 中央则使用设计稿原始的 Cormorant Garamond 600 文字字标
 - 手机端根页面、问卦/工具按钮区及四个现役二级页已限制横向溢出与回弹；移动按钮的 SpecularButton 横向缓冲收进按钮内部，页面只做纵向滚动，同时保留顶部导航自身的局部横向滚动
 - GitHub Pages 公网发布
 - 根目录唯一源码、长期项目文档与自动质量检查基线

@@ -2,6 +2,8 @@ import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
 import BrandLockup, { DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
+import "@fontsource/cormorant-garamond/latin-600.css";
+import "@fontsource/cormorant-garamond/latin-600-italic.css";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
 import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";

@@ -123,4 +123,4 @@ The default completion boundary for each task is local verification plus a draft
 
 ## Hero 中央字标视觉源
 
-- `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 是当前首页 Hero 中央字标的视觉源。中央仅使用单行 `MMEETT Fate`：高对比衬线、`MMEETT` 正体大写、`Fate` 斜体，不加入中文“东方观星”或额外品牌说明行；导航继续保留官方 MMEETT 图形标/字标。
+- `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 是当前首页 Hero 中央字标的视觉源。中央仅使用单行 `MMEETT Fate`：设计稿原始的 Cormorant Garamond 600 高对比衬线，`MMEETT` 正体大写、`Fate` 600 斜体，不加入中文“东方观星”或额外品牌说明行；导航继续保留官方 MMEETT 图形标/字标。

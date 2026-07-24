@@ -21,8 +21,8 @@
 
 已在同一次视觉比较输入中并列打开源字标图与 1440 × 1024 夜间实现截图。重点核对结果：
 
-- `MMEETT` 使用直立高对比 Bodoni 衬线；
-- `Fate` 使用同家族斜体并略小；
+- `MMEETT` 使用设计稿原始的直立高对比 Cormorant Garamond 600 衬线；
+- `Fate` 使用同家族斜体，并与 `MMEETT` 保持相同字号；
 - 两者保持单行，字间关系和参考图一致；
 - 中央不包含中文“东方观星”或重复说明行；
 - 夜间为旧金色，日间为深墨色；
@@ -32,7 +32,7 @@
 
 ## Required fidelity surfaces
 
-- Fonts and typography：通过。两份自托管 Bodoni Moda 子集分别覆盖正体和斜体，浏览器检查 `document.fonts` 状态为 `loaded`；标题 400 字重，不依赖合成粗体，不产生外部字体请求。
+- Fonts and typography：通过。自托管 Cormorant Garamond 600 正体与 600 斜体覆盖标题，浏览器检查 `document.fonts` 状态为 `loaded`；不依赖合成粗体，不产生外部字体请求。
 - Spacing and layout rhythm：通过。桌面标题居中、横向占幅 64.4%，标题至分隔线、英文标语、哲思与 CTA 的既有节奏保留；390px 与 320px 均为单行且无横向溢出。
 - Colors and visual tokens：通过。夜间沿用旧金 `#d8b568`，日间沿用深墨 `#000000`；背景动效与标题对比关系保留。
 - Image quality and asset fidelity：通过。中央目标本质为可访问的文字字标，使用真实字体而非栅格截图；导航官方 SVG 品牌资产未替换。字体 WOFF2 资源已本地化并附 OFL。
@@ -41,7 +41,7 @@
 ## Comparison history
 
 1. 首次实现截图 `v1`：桌面标题宽约 799px，仅占视口 55.5%，相较参考图的大幅字标略显保守，判定为 P2 尺度偏小。
-2. 修复：桌面标题字号从 `clamp(84px, 10.5vw, 164px)` 调整为 `clamp(92px, 12.2vw, 184px)`，并把字体声明和实际标题统一为 400 字重。
+2. 修复：桌面标题字号从 `clamp(84px, 10.5vw, 164px)` 调整为 `clamp(92px, 12.2vw, 184px)`；当前实现保留该尺度，并统一使用设计稿原始的 Cormorant Garamond 600 正体与斜体。
 3. 修复后截图 `v2`：桌面标题宽约 928px，占视口 64.4%；单行、正斜体比例和视觉中心与参考一致。390px、320px 规则不受桌面放大影响，320px 标题右边界 303.37px、页面总宽 320px。
 
 ## Interaction and runtime checks

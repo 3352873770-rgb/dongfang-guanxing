@@ -71,6 +71,8 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.doesNotMatch(brand, /cormorant-garamond/);
   assert.match(brand, /showMark = true/);
   assert.match(entry, /<BrandLockup decorative \/>/);
+  assert.match(entry, /@fontsource\/cormorant-garamond\/latin-600\.css/);
+  assert.match(entry, /@fontsource\/cormorant-garamond\/latin-600-italic\.css/);
   assert.match(entry, /<h1 className="dfgx-hero-wordmark" aria-label="MMEETT Fate">/);
   assert.match(entry, /className="dfgx-hero-wordmark__mmeett">MMEETT<\/span>/);
   assert.match(entry, /className="dfgx-hero-wordmark__fate">Fate<\/span>/);
@@ -82,9 +84,10 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(chrome, /<BrandLockup decorative \/>/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
-  assert.match(css, /font-family:\s*"MMEETT Fate Bodoni", Didot, Bodoni MT/);
-  assert.match(css, /bodoni-moda-mmeett-fate-regular\.woff2/);
-  assert.match(css, /bodoni-moda-mmeett-fate-italic\.woff2/);
+  assert.match(css, /font-family:\s*"Cormorant Garamond", serif/);
+  assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?font-weight:\s*600/);
+  assert.match(css, /\.dfgx-hero-wordmark__fate\s*\{[\s\S]*?font-style:\s*italic[\s\S]*?font-weight:\s*600/);
+  assert.doesNotMatch(css, /MMEETT Fate Bodoni|bodoni-moda|-webkit-text-stroke/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-editorial h1\s*\{\s*color:\s*#000000/);
   assert.match(css, /html\[data-dfgx-theme="day"\] \.dfgx-nav-brand \.mmeett-brand-lockup\s*\{\s*color:\s*#000000/);
   assert.match(css, /\.dfgx-hero-wordmark__fate\s*\{[\s\S]*?font-style:\s*italic/);

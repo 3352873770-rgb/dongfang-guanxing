@@ -42,22 +42,6 @@ html[data-dfgx-route="personality"] body {
   min-width: 0;
 }
 
-@font-face {
-  font-family: "MMEETT Fate Bodoni";
-  src: url("/media/fonts/bodoni-moda-mmeett-fate-regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "MMEETT Fate Bodoni";
-  src: url("/media/fonts/bodoni-moda-mmeett-fate-italic.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-}
-
 .dfgx-route-loading {
   min-height: 100svh;
   display: grid;
@@ -497,12 +481,11 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 .dfgx-editorial h1 {
   margin: 0;
   color: #d8b568;
-  font-family: "MMEETT Fate Bodoni", Didot, Bodoni MT, "Times New Roman", serif;
+  font-family: "Cormorant Garamond", serif;
   font-size: clamp(92px, 12.2vw, 184px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 0.78;
   letter-spacing: -0.035em;
-  -webkit-text-stroke: 0.45px currentColor;
   text-shadow: 0 2px 28px rgba(239, 218, 157, 0.08);
   white-space: nowrap;
 }
@@ -518,9 +501,9 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 
 .dfgx-hero-wordmark__fate {
   margin-left: 0.13em;
-  font-size: 0.8em;
+  font-size: 1em;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -0.06em;
 }
 
@@ -1333,12 +1316,11 @@ body,
   .dfgx-editorial h1 {
     font-size: clamp(48px, 17.4vw, 74px);
     letter-spacing: -0.045em;
-    -webkit-text-stroke: 0.3px currentColor;
   }
 
   .dfgx-hero-wordmark__fate {
     margin-left: 0.1em;
-    font-size: 0.76em;
+    font-size: 1em;
   }
 
   .dfgx-wordmark-rule {
