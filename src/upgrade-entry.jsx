@@ -11,6 +11,7 @@ const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
 const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
 const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
 const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
+const ThreeCoinPage = lazy(() => import("./three-coin-page.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -59,6 +60,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 function getAppRoute() {
   if (window.location.hash === "#/daily") return { kind: "daily" };
+  if (window.location.hash === "#/tools/three-coins") return { kind: "three-coins" };
   const match = window.location.hash.match(/^#\/hexagrams(?:\/(\d{1,2}))?$/);
   if (!match) return null;
 
@@ -532,10 +534,33 @@ function initializeReadingEntryPoints() {
   return true;
 }
 
+function initializeToolEntryPoints() {
+  const root = document.getElementById("root");
+  const toolsSection = document.getElementById("tools");
+  if (!root || !toolsSection) return false;
+  if (root.dataset.dfgxToolEntryReady === "true") return true;
+
+  toolsSection.addEventListener(
+    "click",
+    (event) => {
+      const button = event.target.closest("button");
+      if (!button || !button.textContent?.includes("三枚铜钱")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.hash = "/tools/three-coins";
+    },
+    true,
+  );
+
+  root.dataset.dfgxToolEntryReady = "true";
+  return true;
+}
+
 function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
   if (!initializeDailySection()) return false;
   if (!initializeReadingEntryPoints()) return false;
+  if (!initializeToolEntryPoints()) return false;
   if (!initializeAtlasSection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
@@ -558,12 +583,19 @@ function UpgradeApp() {
   }, []);
 
   useEffect(() => {
-    if (route?.kind === "hexagrams" || route?.kind === "daily") {
+    if (route?.kind === "hexagrams" || route?.kind === "daily" || route?.kind === "three-coins") {
       document.documentElement.dataset.dfgxRoute = route.kind;
       window.scrollTo({ top: 0, behavior: "auto" });
     } else {
       delete document.documentElement.dataset.dfgxRoute;
-      const homeSection = window.location.hash === "#daily" ? "daily" : window.location.hash === "#atlas" ? "atlas" : null;
+      const homeSection =
+        window.location.hash === "#daily"
+          ? "daily"
+          : window.location.hash === "#atlas"
+            ? "atlas"
+            : window.location.hash === "#tools"
+              ? "tools"
+              : null;
       if (homeSection) {
         window.requestAnimationFrame(() => {
           document.getElementById(homeSection)?.scrollIntoView({
@@ -588,6 +620,9 @@ function UpgradeApp() {
   }
   if (route?.kind === "daily") {
     return <Suspense fallback={<div className="dfgx-route-loading">正在展开今日卦象…</div>}><DailyHexagramPage /></Suspense>;
+  }
+  if (route?.kind === "three-coins") {
+    return <Suspense fallback={<div className="dfgx-route-loading">正在展开三枚铜钱…</div>}><ThreeCoinPage /></Suspense>;
   }
 
   return (
