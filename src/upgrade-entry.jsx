@@ -1,12 +1,14 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
+import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
 const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
+const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -53,6 +55,21 @@ const BORDER_GLOW_THEMES = {
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function getHexagramRoute() {
+  const match = window.location.hash.match(/^#\/hexagrams(?:\/(\d{1,2}))?$/);
+  if (!match) return null;
+
+  const requestedNumber = Number(match[1] ?? 1);
+  return {
+    kind: "hexagrams",
+    number: Math.min(64, Math.max(1, Number.isFinite(requestedNumber) ? requestedNumber : 1)),
+  };
+}
+
+function openHexagramAtlas(number = 1) {
+  window.location.hash = `/hexagrams/${number}`;
+}
+
 function getRenderProfile() {
   const isMobile = window.matchMedia("(max-width: 720px)").matches;
   const saveData = navigator.connection?.saveData === true;
@@ -66,6 +83,7 @@ function getRenderProfile() {
 }
 
 function UpgradeHero() {
+  const heroRef = useRef(null);
   const [sloganIndex, setSloganIndex] = useState(0);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
@@ -77,6 +95,7 @@ function UpgradeHero() {
       return "day";
     }
   });
+  const atmosphereActive = useAtmosphereVisibility(heroRef);
   const borderGlowTheme = BORDER_GLOW_THEMES[theme];
 
   useEffect(() => {
@@ -174,8 +193,8 @@ function UpgradeHero() {
         </button>
       </header>
 
-      <section className="dfgx-upgrade" id="dfgx-top">
-      {theme === "night" && !prefersReducedMotion ? (
+      <section className="dfgx-upgrade" id="dfgx-top" ref={heroRef}>
+      {atmosphereActive && theme === "night" && !prefersReducedMotion ? (
         <div className="dfgx-ether" aria-hidden="true">
           <Suspense fallback={null}>
             <LiquidEther
@@ -200,7 +219,7 @@ function UpgradeHero() {
         </div>
       ) : null}
 
-      {theme === "day" ? (
+      {atmosphereActive && theme === "day" ? (
         <div className="dfgx-light-rays" aria-hidden="true">
           <Suspense fallback={null}>
             <LightRays
@@ -263,9 +282,9 @@ function UpgradeHero() {
               开始观星问卦
             </button>
           </BorderGlow>
-          <button className="dfgx-secondary" type="button" onClick={() => scrollToSection("#atlas")}>
+          <a className="dfgx-secondary" href="#/hexagrams/1">
             浏览六十四卦
-          </button>
+          </a>
         </div>
 
         <button className="dfgx-explore" type="button" onClick={() => scrollToSection("#ask")}>
@@ -338,6 +357,45 @@ function initializeLegacyReveal() {
   );
 
   revealItems.forEach((item) => observer.observe(item));
+}
+
+function initializeAtlasSection() {
+  const atlas = document.querySelector("#root #atlas");
+  const rail = atlas?.querySelector(".hexagram-rail");
+  if (!atlas || !rail || atlas.dataset.dfgxAtlasReady === "true") return Boolean(atlas && rail);
+
+  atlas.dataset.dfgxAtlasReady = "true";
+  rail.setAttribute("aria-label", "六十四卦知识入口");
+
+  Array.from(rail.children).forEach((entry, index) => {
+    const number = index + 1;
+    const label = entry.textContent?.trim().replace(/\s+/g, " ") || `第 ${number} 卦`;
+    entry.classList.add("dfgx-atlas-entry");
+    entry.dataset.hexagramNumber = String(number);
+
+    if (entry.tagName === "BUTTON") {
+      entry.setAttribute("type", "button");
+    } else {
+      entry.setAttribute("role", "link");
+      entry.setAttribute("tabindex", "0");
+    }
+
+    entry.setAttribute("aria-label", `了解第 ${number} 卦：${label}`);
+    entry.setAttribute("title", `进入六十四卦知识页：${label}`);
+
+    entry.addEventListener("click", (event) => {
+      event.preventDefault();
+      openHexagramAtlas(number);
+    });
+
+    entry.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openHexagramAtlas(number);
+    });
+  });
+
+  return true;
 }
 
 function initializeSectionNavigation() {
@@ -472,9 +530,63 @@ function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
   if (!initializeDailySection()) return false;
   if (!initializeReadingEntryPoints()) return false;
+  if (!initializeAtlasSection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
   return true;
+}
+
+function UpgradeApp() {
+  const [route, setRoute] = useState(getHexagramRoute);
+
+  useEffect(() => {
+    const updateRoute = () => setRoute(getHexagramRoute());
+    window.addEventListener("hashchange", updateRoute);
+    window.addEventListener("popstate", updateRoute);
+    window.addEventListener("resize", updateRoute);
+    return () => {
+      window.removeEventListener("hashchange", updateRoute);
+      window.removeEventListener("popstate", updateRoute);
+      window.removeEventListener("resize", updateRoute);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (route?.kind === "hexagrams") {
+      document.documentElement.dataset.dfgxRoute = "hexagrams";
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } else {
+      delete document.documentElement.dataset.dfgxRoute;
+      if (window.location.hash === "#atlas") {
+        window.requestAnimationFrame(() => {
+          document.getElementById("atlas")?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+          });
+        });
+      }
+    }
+
+    return () => {
+      delete document.documentElement.dataset.dfgxRoute;
+    };
+  }, [route]);
+
+  if (route?.kind === "hexagrams") {
+    return (
+      <Suspense fallback={<div className="dfgx-route-loading">正在展开六十四卦图谱…</div>}>
+        <HexagramAtlasPage initialHexagramNumber={route.number} />
+      </Suspense>
+    );
+  }
+
+  return (
+    <>
+      <UpgradeHero />
+      <ReadingFlow />
+      <OracleToolFlow />
+    </>
+  );
 }
 
 const upgradeRootContainer = document.getElementById("dfgx-upgrade-root");
@@ -484,9 +596,7 @@ const upgradeRoot = upgradeRootContainer.__dfgxUpgradeRoot
 upgradeRootContainer.__dfgxUpgradeRoot = upgradeRoot;
 upgradeRoot.render(
   <React.StrictMode>
-    <UpgradeHero />
-    <ReadingFlow />
-    <OracleToolFlow />
+    <UpgradeApp />
   </React.StrictMode>,
 );
 
