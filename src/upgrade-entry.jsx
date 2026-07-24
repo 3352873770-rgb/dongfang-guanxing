@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
+import BrandLockup, { BRAND_DESCRIPTOR, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import ReadingFlow from "./reading-flow.jsx";
 import OracleToolFlow from "./oracle-tool-flow.jsx";
 import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";
@@ -13,12 +14,6 @@ const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
 const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
 const ThreeCoinPage = lazy(() => import("./three-coin-page.jsx"));
 const PersonalityPreferencePage = lazy(() => import("./personality-preference-page.jsx"));
-
-const SLOGANS = [
-  "以星为镜，照见本心",
-  "一问天地，一见自己",
-  "顺时而观，向内而行",
-];
 
 const CLASSIC_TITLES = [
   "《周易》",
@@ -98,7 +93,6 @@ function getRenderProfile() {
 
 function UpgradeHero() {
   const heroRef = useRef(null);
-  const [sloganIndex, setSloganIndex] = useState(0);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
   const [theme, setTheme] = useState(() => {
@@ -113,6 +107,10 @@ function UpgradeHero() {
   const borderGlowTheme = BORDER_GLOW_THEMES[theme];
 
   useEffect(() => {
+    document.title = DEFAULT_DOCUMENT_TITLE;
+  }, []);
+
+  useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 720px)");
     const updateRenderProfile = () => setRenderProfile(getRenderProfile());
     mobileQuery.addEventListener("change", updateRenderProfile);
@@ -122,14 +120,6 @@ function UpgradeHero() {
       mobileQuery.removeEventListener("change", updateRenderProfile);
       navigator.connection?.removeEventListener?.("change", updateRenderProfile);
     };
-  }, []);
-
-  useEffect(() => {
-    if (prefersReducedMotion) return undefined;
-    const timer = window.setInterval(() => {
-      setSloganIndex((current) => (current + 1) % SLOGANS.length);
-    }, 4200);
-    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -173,10 +163,10 @@ function UpgradeHero() {
         <a
           className={`dfgx-nav-brand ${activeSection === "dfgx-top" ? "is-active" : ""}`}
           href="#dfgx-top"
+          aria-label="MMEETT Fate 首页"
           onClick={(event) => handleNavigation(event, "#dfgx-top")}
         >
-          <span>东方观星</span>
-          <small>ORIENTAL ASTROLOGY</small>
+          <BrandLockup decorative />
         </a>
 
         <nav className="dfgx-nav-links" aria-label="页面导航">
@@ -264,17 +254,19 @@ function UpgradeHero() {
       </div>
 
       <div className="dfgx-editorial">
-        <p className="dfgx-brandline">东方观星 · ORIENTAL ASTROLOGY</p>
+        <div className="dfgx-brandline">
+          <BrandLockup decorative />
+          <span>{BRAND_DESCRIPTOR}</span>
+        </div>
 
-        <h1 aria-label="东方观星">
-          <span>东方</span>
-          <span>观星</span>
-        </h1>
+        <h1 aria-label="MMEETT Fate"><BrandLockup decorative /></h1>
 
-        <p className="dfgx-english">READ THE HEAVENS · KNOW THYSELF</p>
+        <hr className="dfgx-wordmark-rule" aria-hidden="true" />
 
-        <div className="dfgx-philosophy" aria-live="polite">
-          <p key={sloganIndex}>{SLOGANS[sloganIndex]}</p>
+        <p className="dfgx-english">READ THE SIGNS · MEET YOURSELF</p>
+
+        <div className="dfgx-philosophy">
+          <p>观象知变，向内而行</p>
           <p>以《周易》为根，循象观变</p>
         </div>
 
@@ -293,7 +285,7 @@ function UpgradeHero() {
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
             <button className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
-              开始观星问卦
+              开始问卦
             </button>
           </BorderGlow>
           <a className="dfgx-secondary" href="#/hexagrams/1">

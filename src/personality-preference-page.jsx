@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
+import { BRAND_NAME, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import {
   PREFERENCE_DIMENSIONS,
@@ -214,9 +215,9 @@ export default function PersonalityPreferencePage() {
   };
 
   useEffect(() => {
-    document.title = "人格偏好探索｜东方观星";
+    document.title = `人格偏好探索｜${BRAND_NAME}`;
     return () => {
-      document.title = "东方观星｜观天象，问内心";
+      document.title = DEFAULT_DOCUMENT_TITLE;
     };
   }, []);
 
@@ -338,7 +339,7 @@ export default function PersonalityPreferencePage() {
         />
 
         <section className="personality-banner" aria-labelledby="personality-title">
-          <p>东方观星 · 自我探索</p>
+          <p>MMEETT Fate · 自我探索</p>
           <h1 id="personality-title">人格偏好探索</h1>
           <p>
             从日常选择中，看见你获取能量、理解信息、

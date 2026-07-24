@@ -3,6 +3,7 @@
 | 用户界面 | 主要文件 | 说明 |
 |---|---|---|
 | 页面入口 | `index.html` | 挂载新版 Hero 与 Legacy 内容 |
+| MMEETT Fate 品牌字标 | `src/brand-lockup.jsx` | 统一品牌名称、英文说明、默认页面标题与 `MMEETT` 正体 / `Fate` 斜体组合 |
 | 新版首页 Hero | `src/upgrade-entry.jsx` | 导航、主题切换、标语、书名、CTA |
 | Hero 与昼夜样式 | `src/upgrade.css` | 视觉 token、响应式和交互覆盖 |
 | 观星问卦单页流程 | `src/reading-flow.jsx` | 单页完成所问分类、问题与档案，提交后直接展示卦象结果 |

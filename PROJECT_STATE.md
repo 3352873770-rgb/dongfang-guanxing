@@ -1,4 +1,4 @@
-# 东方观星项目状态
+# MMEETT Fate 项目状态
 
 更新日期：2026-07-24
 
@@ -11,6 +11,12 @@
 - 当前版本：`1.0.0`
 - 技术栈：React 19、Vite 6、OGL、Three.js
 - 发布方式：任务默认停在本地验证与草稿 PR；用户逐次确认发布后才合并 `main`，再由 GitHub Actions 发布 GitHub Pages
+
+## 当前品牌
+
+- 当前产品品牌：MMEETT Fate；英文说明为 “EASTERN SYMBOLS · INNER CLARITY”。
+- 首页 Hero 使用单行 MMEETT Fate 字标、`READ THE SIGNS · MEET YOURSELF` 与“观象知变，向内而行”，但保持原有昼夜氛围、导航与问卦业务流程。
+- 品牌字标由 `src/brand-lockup.jsx` 统一提供，使用仅含所需字重的自托管 Cormorant Garamond；首页、二级页和页面标题不再使用旧品牌名。
 
 ## 已完成
 
@@ -41,6 +47,7 @@
 ## 当前架构边界
 
 - `src/upgrade-entry.jsx` 负责新版首页 Hero、主题切换和原页面增强。
+- `src/brand-lockup.jsx` 负责 MMEETT Fate 的共享英文品牌字标、说明与默认页面标题。
 - `public/legacy/legacy-app.js` 与 `legacy-styles.css` 提供下半页兼容内容。
 - `src/App.jsx` 与 `src/main.jsx` 当前不由 `index.html` 加载，保留为后续 Legacy 源码迁移参考，不应被误认为线上入口。
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDailyHexagram } from "./daily-hexagram.js";
+import { BRAND_NAME, DEFAULT_DOCUMENT_TITLE } from "./brand-lockup.jsx";
 import SecondaryPageHeader, { useDfgxTheme } from "./secondary-page-chrome.jsx";
 import "./daily-hexagram-page.css";
 
@@ -48,8 +49,8 @@ export default function DailyHexagramPage() {
 
   useEffect(() => {
     if (!daily) return undefined;
-    document.title = `${daily.name}｜今日卦象｜东方观星`;
-    return () => { document.title = "东方观星｜观天象，问内心"; };
+    document.title = `${daily.name}｜今日卦象｜${BRAND_NAME}`;
+    return () => { document.title = DEFAULT_DOCUMENT_TITLE; };
   }, [daily?.name]);
 
   if (!daily) return null;
