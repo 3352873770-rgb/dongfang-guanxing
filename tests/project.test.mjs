@@ -121,6 +121,27 @@ test("reading flow connects question, profile, and generated result", async () =
   assert.ok(paper.size < 500_000, "reading paper texture should remain lightweight");
 });
 
+test("long-term reading entries preselect a category in the same complete form", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const flow = await read("src/reading-flow.jsx");
+  const categories = [
+    ["relationship", "感情发展"],
+    ["career", "事业发展"],
+    ["study", "学业考试"],
+    ["wealth", "财富运势"],
+  ];
+
+  assert.match(entry, /new Set\(\["感情发展", "事业发展", "学业考试", "财富运势"\]\)/);
+  assert.match(entry, /new CustomEvent\("dfgx:reading-open", \{ detail: \{ category \} \}\)/);
+  assert.match(flow, /category\.id === incomingCategory \|\| category\.name === incomingCategory/);
+  assert.match(flow, /setCategoryId\(matchedCategory\?\.id \|\| ""\)/);
+  assert.match(flow, /setStep\(0\)/);
+
+  for (const [id, name] of categories) {
+    assert.match(flow, new RegExp(`id: "${id}",[\\s\\S]*?name: "${name}"`));
+  }
+});
+
 test("I Ching data and four-value casting algorithm remain complete", () => {
   const hexagrams = Object.values(HEXAGRAMS);
   assert.equal(hexagrams.length, 64);
