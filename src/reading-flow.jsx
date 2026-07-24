@@ -65,8 +65,6 @@ const EMPTY_PROFILE = {
   longitude: "113.27",
 };
 
-const STEP_LABELS = ["所问", "问题", "档案", "起卦"];
-
 function loadProfiles() {
   try {
     const saved = JSON.parse(window.localStorage.getItem(PROFILE_STORAGE_KEY) || "[]");
@@ -133,19 +131,6 @@ function ReadingTopbar({ step, onBack, onClose }) {
       <strong>观星问卦</strong>
       <button type="button" onClick={onClose}>退出</button>
     </header>
-  );
-}
-
-function Progress({ step }) {
-  return (
-    <ol className="reading-progress" aria-label="问卦进度">
-      {STEP_LABELS.map((label, index) => (
-        <li key={label} className={index === step ? "is-current" : index < step ? "is-complete" : ""}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <small>{label}</small>
-        </li>
-      ))}
-    </ol>
   );
 }
 
@@ -395,7 +380,6 @@ export default function ReadingFlow() {
           onBack={() => setStep((current) => Math.max(0, current - 1))}
           onClose={closeFlow}
         />
-        <Progress step={step} />
 
         <main className="reading-content">
           {step === 0 ? (

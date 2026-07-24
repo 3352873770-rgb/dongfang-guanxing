@@ -77,70 +77,6 @@
   outline-offset: 3px;
 }
 
-.reading-progress {
-  width: min(calc(100% - 36px), 680px);
-  margin: 0 auto;
-  padding: 22px 0 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  list-style: none;
-}
-
-.reading-progress li {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: 5px;
-  color: #9a9183;
-}
-
-.reading-progress li::before {
-  position: absolute;
-  z-index: 0;
-  top: 14px;
-  right: 50%;
-  left: -50%;
-  height: 1px;
-  content: "";
-  background: #d7cfc2;
-}
-
-.reading-progress li:first-child::before {
-  display: none;
-}
-
-.reading-progress span {
-  position: relative;
-  z-index: 1;
-  width: 29px;
-  height: 29px;
-  display: grid;
-  place-items: center;
-  background: #f2eee5;
-  border: 1px solid #cfc5b5;
-  border-radius: 50%;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-}
-
-.reading-progress small {
-  font-family: "Songti SC", "STSong", serif;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-}
-
-.reading-progress .is-current,
-.reading-progress .is-complete {
-  color: #95651a;
-}
-
-.reading-progress .is-current span,
-.reading-progress .is-complete span {
-  color: #fffaf0;
-  background: #9c6a1f;
-  border-color: #9c6a1f;
-}
-
 .reading-content {
   width: min(calc(100% - 36px), 840px);
   margin: 0 auto;
@@ -697,14 +633,6 @@
     font-size: 17px;
   }
 
-  .reading-progress {
-    padding-top: 16px;
-  }
-
-  .reading-progress small {
-    font-size: 11px;
-  }
-
   .reading-content {
     width: min(calc(100% - 32px), 840px);
     padding-top: 34px;
@@ -787,19 +715,6 @@
   .reading-summary-card p {
     grid-template-columns: 1fr;
     gap: 7px;
-  }
-
-  .reading-flow[data-step="2"] .reading-progress {
-    padding-top: 10px;
-  }
-
-  .reading-flow[data-step="2"] .reading-progress span {
-    width: 25px;
-    height: 25px;
-  }
-
-  .reading-flow[data-step="2"] .reading-progress li::before {
-    top: 12px;
   }
 
   .reading-flow[data-step="2"] .reading-content {
