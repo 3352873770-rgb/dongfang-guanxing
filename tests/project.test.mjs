@@ -16,6 +16,12 @@ import {
   loadReadingRecords,
   saveReadingRecord,
 } from "../src/reading-storage.js";
+import {
+  PERSONALITY_QUESTIONS,
+  TYPE_PROFILES,
+  buildPersonalitySections,
+  calculatePreferenceResult,
+} from "../src/personality-preference-data.js";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -155,6 +161,73 @@ test("atlas footer return action retains a defined homepage handler", async () =
   assert.match(atlas, /function returnToAtlasHomepage\(\)/);
   assert.match(atlas, /onClick=\{returnToAtlasHomepage\}/);
   assert.doesNotMatch(atlas, /onClick=\{returnToHomepage\}/);
+});
+
+test("personality entry opens one hash-routed single-page preference flow", async () => {
+  const entry = await read("src/upgrade-entry.jsx");
+  const page = await read("src/personality-preference-page.jsx");
+  const css = await read("src/personality-preference-page.css");
+
+  assert.match(entry, /#\/personality/);
+  assert.match(entry, /\.personality-test-card, \.personality-guide/);
+  assert.match(entry, /<PersonalityPreferencePage \/>/);
+  assert.match(page, /SecondaryPageHeader/);
+  assert.match(page, /useAtmosphereVisibility\(bannerRef\)/);
+  assert.match(page, /LightRays/);
+  assert.match(page, /LiquidEther/);
+  assert.match(page, /<form[\s\S]*id="personality-questionnaire"/);
+  assert.match(page, /提交并生成偏好印谱/);
+  assert.match(page, /PersonalityResultCard/);
+  assert.match(page, /人格介绍/);
+  assert.match(css, /\.personality-banner-stage/);
+  assert.match(css, /contain:\s*layout paint/);
+  assert.match(css, /@media \(max-width: 360px\)/);
+});
+
+test("personality questionnaire keeps twelve two-row questions and five accessible choices", async () => {
+  const page = await read("src/personality-preference-page.jsx");
+  const css = await read("src/personality-preference-page.css");
+
+  assert.equal(PERSONALITY_QUESTIONS.length, 12);
+  assert.deepEqual(
+    new Set(PERSONALITY_QUESTIONS.map((question) => question.dimension)),
+    new Set(["EI", "SN", "TF", "JP"]),
+  );
+  assert.match(page, /const POINTS = \[-2, -1, 0, 1, 2\]/);
+  assert.match(page, /<legend>[\s\S]*personality-scale-row/);
+  assert.match(page, /personality-endpoint-left/);
+  assert.match(page, /personality-endpoint-right/);
+  assert.match(page, /point === 0 \? <small>中立<\/small>/);
+  assert.match(page, /type="radio"/);
+  assert.match(css, /\.personality-point \{[\s\S]*min-width:\s*44px/);
+  assert.match(css, /\.personality-point \{[\s\S]*min-height:\s*44px/);
+});
+
+test("personality scoring resolves all axes and preserves a non-diagnostic introduction", () => {
+  const leftAnswers = Object.fromEntries(
+    PERSONALITY_QUESTIONS.map((question) => [question.id, -2]),
+  );
+  const rightAnswers = Object.fromEntries(
+    PERSONALITY_QUESTIONS.map((question) => [question.id, 2]),
+  );
+  const neutralAnswers = Object.fromEntries(
+    PERSONALITY_QUESTIONS.map((question) => [question.id, 0]),
+  );
+
+  const leftResult = calculatePreferenceResult(leftAnswers);
+  const rightResult = calculatePreferenceResult(rightAnswers);
+  const neutralResult = calculatePreferenceResult(neutralAnswers);
+
+  assert.equal(leftResult.type, "ESTJ");
+  assert.equal(rightResult.type, "INFP");
+  assert.equal(neutralResult.type, "INFJ");
+  assert.equal(leftResult.axes.length, 4);
+  assert.equal(neutralResult.boundaries.length, 4);
+  assert.equal(TYPE_PROFILES[leftResult.type].name, "秩序推进者");
+  assert.deepEqual(
+    buildPersonalitySections(rightResult).map((section) => section.id),
+    ["world", "strengths", "blindspots", "relationships", "actions"],
+  );
 });
 
 test("reading flow connects question, profile, and generated result", async () => {

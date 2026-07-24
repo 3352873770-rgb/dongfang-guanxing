@@ -54,6 +54,8 @@ The homepage card and result page must derive from the same local-date daily-hex
 
 提交后在同一路由、同一页面切换到结果状态。结果首先呈现一张独立人格卡片，包含当前类型倾向、四组偏好轴、边界维度提示和非确定性说明；卡片下方再用连续编辑式章节介绍该人格的思考方式、自然优势、可能盲区、关系倾向与成长建议。不得把类型包装成心理诊断、能力等级、职业定论或固定命运。
 
+`docs/design/personality-preference-flow-v1.png` 是当前人格偏好探索二级页的视觉源；实现时保持 Banner、表单、人格卡片和连续介绍的层级、密度和节奏。
+
 ## 档案与问卦前置流程
 
 各流程页眉统一使用“·观星问卦 ·”，不显示步骤或阶段说明。
