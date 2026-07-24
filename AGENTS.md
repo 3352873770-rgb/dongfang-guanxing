@@ -125,6 +125,11 @@ The default completion boundary for each task is local verification plus a draft
 
 - `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 是当前首页 Hero 中央字标的视觉源。中央仅使用单行 `MMEETT Fate`：设计稿原始的 Cormorant Garamond 600 高对比衬线，`MMEETT` 正体大写、`Fate` 600 斜体，不加入中文“东方观星”或额外品牌说明行；导航继续保留官方 MMEETT 图形标/字标。
 
+## 昼夜背景连续性
+
+- 首页 Hero、下方内容区与人格偏好二级页必须在各自昼夜主题内共享同一组底色家族；允许通过纹理、光照和透明度建立层级，但禁止用明显偏蓝、偏灰或亮度跳变的整块背景把相邻模块切成两套视觉。
+- 人格偏好页的 Banner 底部应自然淡入问卷背景，移动端首屏不保留大段无信息空白；问卷纹理必须低于文字层级，两端倾向、题目说明和中立标签需要保持稳定可读。
+
 ## Hero 背景入场指针轨迹
 
 - 桌面端首页首次进入时，可沿“开始问卦”按钮中心所在的水平线派发一次短促的虚拟鼠标往返，用于唤起当前昼间 LightRays 或夜间 LiquidEther 对指针的背景响应。轨迹只作用于 Banner 背景，不移动 CTA、不改造 CTA 的 BorderGlow，也不显示虚拟光标；滑动本身须在 1 秒内完成且不循环。移动端、粗指针设备和 `prefers-reduced-motion` 下不执行。

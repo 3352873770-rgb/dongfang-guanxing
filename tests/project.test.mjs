@@ -313,6 +313,17 @@ test("personality entry opens one hash-routed single-page preference flow", asyn
   assert.match(page, /PersonalityResultCard/);
   assert.match(page, /人格介绍/);
   assert.match(css, /\.personality-banner-stage/);
+  assert.match(css, /--personality-page-base:\s*#071416/);
+  assert.match(css, /\.personality-banner-stage::after[\s\S]*?var\(--personality-stage-fade\)/);
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.personality-banner-stage \{[\s\S]*?min-height:\s*clamp\(350px, 50svh, 390px\)/,
+  );
+  assert.match(upgradeCss, /\.dfgx-upgrade \{[\s\S]*?background:\s*#071416/);
+  assert.match(
+    upgradeCss,
+    /html\[data-dfgx-theme="day"\] \.dfgx-upgrade \{[\s\S]*?linear-gradient\(135deg, #d1cabd 0%, #eee6d9 52%, #cec6b8 100%\)/,
+  );
   assert.match(
     upgradeCss,
     /#root \.personality-test-card \{[\s\S]*?aspect-ratio:\s*1132 \/ 696/,
