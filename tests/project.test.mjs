@@ -100,6 +100,7 @@ test("long secondary pages keep one sticky exit navigation within reach", async 
   assert.match(chrome, /aria-label="二级页面导航"/);
   assert.match(chrome, /退出当前页面，返回 MMEETT Fate 首页/);
   assert.match(chrome, /aria-label=\{`\$\{backLabel\}，退出当前页面`\}/);
+  assert.match(chrome, /if \(!backHash\)[\s\S]*?window\.location\.assign\(window\.location\.pathname\)/);
   assert.match(chromeCss, /\.dfgx-secondary-header\s*\{[\s\S]*?position:\s*sticky/);
   assert.match(chromeCss, /top:\s*max\(8px,\s*env\(safe-area-inset-top\)\)/);
   assert.match(chromeCss, /\.dfgx-secondary-back\s*\{[\s\S]*?min-height:\s*44px/);
@@ -110,7 +111,8 @@ test("long secondary pages keep one sticky exit navigation within reach", async 
     personality.indexOf("<SecondaryPageHeader") < personality.indexOf('className="personality-banner-stage"'),
   );
   assert.match(daily, /<SecondaryPageHeader[\s\S]*?backHash="daily"/);
-  assert.match(threeCoin, /<SecondaryPageHeader[\s\S]*?backHash="tools"[\s\S]*?backLabel="返回工具"/);
+  assert.match(threeCoin, /<SecondaryPageHeader[\s\S]*?backHash=""[\s\S]*?backLabel="返回首页"/);
+  assert.doesNotMatch(threeCoin, /backHash="tools"/);
 });
 
 test("GitHub Pages build keeps the repository subpath", async () => {
