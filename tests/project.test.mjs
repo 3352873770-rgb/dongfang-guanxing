@@ -83,7 +83,7 @@ test("GitHub Pages build keeps the repository subpath", async () => {
   const config = await read("vite.config.mjs");
 
   assert.match(config, /GITHUB_PAGES/);
-  assert.match(config, /\/dongfang-guanxing\//);
+  assert.match(config, /\/mmeett-fate\//);
 });
 
 test("day and night atmosphere components remain wired", async () => {

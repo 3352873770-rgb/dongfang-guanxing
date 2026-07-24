@@ -23,7 +23,7 @@ index.html
 
 - Vite 负责生产构建，输出到 `dist/`。
 - 本地基础路径为 `/`。
-- GitHub Pages 构建使用 `GITHUB_PAGES=true`，基础路径为 `/dongfang-guanxing/`。
+- GitHub Pages 构建使用 `GITHUB_PAGES=true`，基础路径为 `/mmeett-fate/`。
 - `.github/workflows/pages.yml` 在 `main` 更新后自动部署。
 
 ## 状态与存储
