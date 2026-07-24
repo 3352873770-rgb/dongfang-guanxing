@@ -281,4 +281,3 @@ export default function HexagramAtlasPage({ initialHexagramNumber = 1 }) {
     </div>
   );
 }
-

@@ -138,4 +138,3 @@ export const HEXAGRAMS = HEXAGRAM_NAMES.map((name, index) => ({
   name,
   theme: HEXAGRAM_THEMES[index],
 }));
-
