@@ -124,3 +124,7 @@ The default completion boundary for each task is local verification plus a draft
 ## Hero 中央字标视觉源
 
 - `docs/design/hero-mmeett-fate-wordmark-reference-v2.png` 是当前首页 Hero 中央字标的视觉源。中央仅使用单行 `MMEETT Fate`：设计稿原始的 Cormorant Garamond 600 高对比衬线，`MMEETT` 正体大写、`Fate` 600 斜体，不加入中文“东方观星”或额外品牌说明行；导航继续保留官方 MMEETT 图形标/字标。
+
+## Hero 背景入场指针轨迹
+
+- 桌面端首页首次进入时，可沿“开始问卦”按钮中心所在的水平线派发一次短促的虚拟鼠标往返，用于唤起当前昼间 LightRays 或夜间 LiquidEther 对指针的背景响应。轨迹只作用于 Banner 背景，不移动 CTA、不改造 CTA 的 BorderGlow，也不显示虚拟光标；滑动本身须在 1 秒内完成且不循环。移动端、粗指针设备和 `prefers-reduced-motion` 下不执行。

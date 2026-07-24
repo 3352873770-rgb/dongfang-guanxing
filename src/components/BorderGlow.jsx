@@ -40,6 +40,39 @@ function buildGradientVars(colors) {
   return variables;
 }
 
+function easeOutCubic(value) {
+  return 1 - (1 - value) ** 3;
+}
+
+function easeInCubic(value) {
+  return value ** 3;
+}
+
+function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd }) {
+  let frameId = 0;
+  let cancelled = false;
+  const startTime = performance.now() + delay;
+
+  const tick = (time) => {
+    if (cancelled) return;
+    const progress = Math.min(Math.max((time - startTime) / duration, 0), 1);
+    onUpdate(start + (end - start) * ease(progress));
+
+    if (progress < 1) frameId = requestAnimationFrame(tick);
+    else onEnd?.();
+  };
+
+  const timeoutId = window.setTimeout(() => {
+    frameId = requestAnimationFrame(tick);
+  }, delay);
+
+  return () => {
+    cancelled = true;
+    window.clearTimeout(timeoutId);
+    cancelAnimationFrame(frameId);
+  };
+}
+
 function getPointerMetrics(element, clientX, clientY) {
   const rect = element.getBoundingClientRect();
   const centerX = rect.width / 2;
@@ -57,53 +90,46 @@ function getPointerMetrics(element, clientX, clientY) {
   return { angle, proximity };
 }
 
-export function runBorderGlowSweep(element, { delay = 0, duration = 900 } = {}) {
+export function runBorderGlowSweep(element, delay = 0) {
   if (!element) return () => {};
-  let frameId = 0;
-  let timeoutId = 0;
-  let cancelled = false;
+  const cancellations = [];
+  const angleStart = 110;
+  const angleEnd = 465;
+  element.classList.add("sweep-active");
+  element.style.setProperty("--cursor-angle", `${angleStart}deg`);
 
-  const reset = () => {
-    element.style.setProperty("--edge-proximity", 0);
-    element.classList.remove("sweep-active");
-  };
-
-  const updatePointerPass = (progress) => {
-    const rect = element.getBoundingClientRect();
-    const horizontalProgress = progress <= 0.5 ? progress * 2 : (1 - progress) * 2;
-    const clientX = rect.left + rect.width * horizontalProgress;
-    const clientY = rect.top + rect.height / 2;
-    const { angle, proximity } = getPointerMetrics(element, clientX, clientY);
-    element.style.setProperty("--edge-proximity", (proximity * 100).toFixed(3));
-    element.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
-  };
-
-  const start = () => {
-    if (cancelled) return;
-    element.classList.add("sweep-active");
-    const startTime = performance.now();
-    const tick = (time) => {
-      if (cancelled) return;
-      const progress = Math.min((time - startTime) / duration, 1);
-      updatePointerPass(progress);
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(tick);
-      } else {
-        reset();
-      }
-    };
-
-    frameId = requestAnimationFrame(tick);
-  };
-
-  timeoutId = window.setTimeout(start, delay);
+  cancellations.push(animateValue({
+    delay,
+    duration: 480,
+    onUpdate: (value) => element.style.setProperty("--edge-proximity", value),
+  }));
+  cancellations.push(animateValue({
+    delay,
+    duration: 1350,
+    end: 55,
+    ease: easeInCubic,
+    onUpdate: (value) => element.style.setProperty("--cursor-angle", `${(angleEnd - angleStart) * (value / 100) + angleStart}deg`),
+  }));
+  cancellations.push(animateValue({
+    delay: delay + 1350,
+    duration: 1850,
+    start: 55,
+    end: 100,
+    onUpdate: (value) => element.style.setProperty("--cursor-angle", `${(angleEnd - angleStart) * (value / 100) + angleStart}deg`),
+  }));
+  cancellations.push(animateValue({
+    delay: delay + 2200,
+    duration: 1150,
+    start: 100,
+    end: 0,
+    ease: easeInCubic,
+    onUpdate: (value) => element.style.setProperty("--edge-proximity", value),
+    onEnd: () => element.classList.remove("sweep-active"),
+  }));
 
   return () => {
-    cancelled = true;
-    window.clearTimeout(timeoutId);
-    cancelAnimationFrame(frameId);
-    reset();
+    cancellations.forEach((cancel) => cancel());
+    element.classList.remove("sweep-active");
   };
 }
 
@@ -154,8 +180,6 @@ export default function BorderGlow({
   glowIntensity = 1,
   coneSpread = 25,
   animated = false,
-  sweepDelay = 0,
-  sweepDuration = 900,
   colors = DEFAULT_COLORS,
   fillOpacity = 0.5,
 }) {
@@ -182,8 +206,8 @@ export default function BorderGlow({
 
   useEffect(() => {
     if (!animated || !cardRef.current) return undefined;
-    return runBorderGlowSweep(cardRef.current, { delay: sweepDelay, duration: sweepDuration });
-  }, [animated, sweepDelay, sweepDuration]);
+    return runBorderGlowSweep(cardRef.current);
+  }, [animated]);
 
   return (
     <div

@@ -96,6 +96,8 @@ function getRenderProfile() {
 
 function UpgradeHero() {
   const heroRef = useRef(null);
+  const primaryCtaRef = useRef(null);
+  const backgroundPointerPassPlayed = useRef(false);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
   const [theme, setTheme] = useState(() => {
@@ -143,6 +145,52 @@ function UpgradeHero() {
       // The theme still works when storage is unavailable.
     }
   }, [theme]);
+
+  useEffect(() => {
+    const canRunBackgroundPointerPass = (
+      atmosphereActive
+      && !renderProfile.isMobile
+      && !prefersReducedMotion
+      && window.matchMedia("(pointer: fine)").matches
+    );
+    if (!canRunBackgroundPointerPass || backgroundPointerPassPlayed.current) return undefined;
+
+    let frameId = 0;
+    let timeoutId = 0;
+    let cancelled = false;
+    const duration = 900;
+
+    const start = () => {
+      if (cancelled || backgroundPointerPassPlayed.current) return;
+      backgroundPointerPassPlayed.current = true;
+      const startTime = performance.now();
+
+      const tick = (time) => {
+        if (cancelled) return;
+        const heroRect = heroRef.current?.getBoundingClientRect();
+        const ctaRect = primaryCtaRef.current?.getBoundingClientRect();
+        if (!heroRect || !ctaRect) return;
+
+        const progress = Math.min((time - startTime) / duration, 1);
+        const horizontalProgress = progress <= 0.5 ? progress * 2 : (1 - progress) * 2;
+        const clientX = heroRect.left + heroRect.width * (0.08 + horizontalProgress * 0.84);
+        const clientY = ctaRect.top + ctaRect.height / 2;
+        window.dispatchEvent(new MouseEvent("mousemove", { clientX, clientY, bubbles: true }));
+
+        if (progress < 1) frameId = requestAnimationFrame(tick);
+      };
+
+      frameId = requestAnimationFrame(tick);
+    };
+
+    timeoutId = window.setTimeout(start, 920);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+      cancelAnimationFrame(frameId);
+    };
+  }, [atmosphereActive, renderProfile.isMobile]);
 
   function scrollToSection(selector, block = "center") {
     document.querySelector(selector)?.scrollIntoView({
@@ -281,13 +329,11 @@ function UpgradeHero() {
             glowRadius={10}
             glowIntensity={theme === "day" ? 0.3 : 0.42}
             coneSpread={18}
-            animated={!prefersReducedMotion && !renderProfile.isMobile}
-            sweepDelay={920}
-            sweepDuration={900}
+            animated={!prefersReducedMotion}
             colors={borderGlowTheme.colors}
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
-            <button className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
+            <button ref={primaryCtaRef} className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
               开始问卦
             </button>
           </BorderGlow>

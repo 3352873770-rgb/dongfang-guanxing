@@ -96,18 +96,21 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });
 
-test("desktop hero CTA performs one delayed horizontal BorderGlow pass", async () => {
+test("desktop hero performs one CTA-aligned background mouse pass", async () => {
   const entry = await read("src/upgrade-entry.jsx");
-  const glow = await read("src/components/BorderGlow.jsx");
 
-  assert.match(entry, /animated=\{!prefersReducedMotion && !renderProfile\.isMobile\}/);
-  assert.match(entry, /sweepDelay=\{920\}/);
-  assert.match(entry, /sweepDuration=\{900\}/);
-  assert.match(glow, /\{ delay = 0, duration = 900 \} = \{\}/);
-  assert.match(glow, /progress <= 0\.5 \? progress \* 2 : \(1 - progress\) \* 2/);
-  assert.match(glow, /getPointerMetrics\(element, clientX, clientY\)/);
-  assert.match(glow, /window\.clearTimeout\(timeoutId\)/);
-  assert.match(glow, /cancelAnimationFrame\(frameId\)/);
+  assert.match(entry, /atmosphereActive[\s\S]*?!renderProfile\.isMobile[\s\S]*?!prefersReducedMotion[\s\S]*?window\.matchMedia\("\(pointer: fine\)"\)\.matches/);
+  assert.match(entry, /const duration = 900/);
+  assert.match(entry, /window\.setTimeout\(start, 920\)/);
+  assert.match(entry, /progress <= 0\.5 \? progress \* 2 : \(1 - progress\) \* 2/);
+  assert.match(entry, /heroRect\.left \+ heroRect\.width \* \(0\.08 \+ horizontalProgress \* 0\.84\)/);
+  assert.match(entry, /ctaRect\.top \+ ctaRect\.height \/ 2/);
+  assert.match(entry, /new MouseEvent\("mousemove", \{ clientX, clientY, bubbles: true \}\)/);
+  assert.match(entry, /backgroundPointerPassPlayed\.current = true/);
+  assert.match(entry, /window\.clearTimeout\(timeoutId\)/);
+  assert.match(entry, /cancelAnimationFrame\(frameId\)/);
+  assert.match(entry, /animated=\{!prefersReducedMotion\}/);
+  assert.doesNotMatch(entry, /sweepDelay|sweepDuration/);
 });
 
 test("long secondary pages keep one sticky exit navigation within reach", async () => {
