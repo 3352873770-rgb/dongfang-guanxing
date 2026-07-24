@@ -1,10 +1,18 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import BorderGlow from "./components/BorderGlow.jsx";
+import ReadingFlow from "./reading-flow.jsx";
+import OracleToolFlow from "./oracle-tool-flow.jsx";
+import { getDailyCardCopy, getDailyHexagram, formatDailyDate, toLocalIsoDate } from "./daily-hexagram.js";
+import useAtmosphereVisibility from "./use-atmosphere-visibility.js";
 import "./upgrade.css";
 
 const LightRays = lazy(() => import("./components/LightRays/LightRays.jsx"));
 const LiquidEther = lazy(() => import("./components/LiquidEther.jsx"));
+const HexagramAtlasPage = lazy(() => import("./hexagram-atlas.jsx"));
+const DailyHexagramPage = lazy(() => import("./daily-hexagram-page.jsx"));
+const ThreeCoinPage = lazy(() => import("./three-coin-page.jsx"));
+const PersonalityPreferencePage = lazy(() => import("./personality-preference-page.jsx"));
 
 const SLOGANS = [
   "以星为镜，照见本心",
@@ -51,6 +59,31 @@ const BORDER_GLOW_THEMES = {
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function getAppRoute() {
+  if (window.location.hash === "#/daily") return { kind: "daily" };
+  if (window.location.hash === "#/tools/three-coins") return { kind: "three-coins" };
+  if (window.location.hash === "#/personality") return { kind: "personality" };
+  const match = window.location.hash.match(/^#\/hexagrams(?:\/(\d{1,2}))?$/);
+  if (!match) return null;
+
+  const requestedNumber = Number(match[1] ?? 1);
+  return {
+    kind: "hexagrams",
+    number: Math.min(64, Math.max(1, Number.isFinite(requestedNumber) ? requestedNumber : 1)),
+  };
+}
+
+function openHexagramAtlas(number = 1) {
+  window.location.hash = `/hexagrams/${number}`;
+}
+
+function openPersonalityPreference(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  window.location.hash = "/personality";
+}
+
 function getRenderProfile() {
   const isMobile = window.matchMedia("(max-width: 720px)").matches;
   const saveData = navigator.connection?.saveData === true;
@@ -64,6 +97,7 @@ function getRenderProfile() {
 }
 
 function UpgradeHero() {
+  const heroRef = useRef(null);
   const [sloganIndex, setSloganIndex] = useState(0);
   const [activeSection, setActiveSection] = useState("dfgx-top");
   const [renderProfile, setRenderProfile] = useState(getRenderProfile);
@@ -75,6 +109,7 @@ function UpgradeHero() {
       return "day";
     }
   });
+  const atmosphereActive = useAtmosphereVisibility(heroRef);
   const borderGlowTheme = BORDER_GLOW_THEMES[theme];
 
   useEffect(() => {
@@ -128,6 +163,10 @@ function UpgradeHero() {
     scrollToSection(selector, "start");
   }
 
+  function openReadingFlow(category = "") {
+    window.dispatchEvent(new CustomEvent("dfgx:reading-open", { detail: { category } }));
+  }
+
   return (
     <>
       <header className="dfgx-floating-nav">
@@ -168,8 +207,8 @@ function UpgradeHero() {
         </button>
       </header>
 
-      <section className="dfgx-upgrade" id="dfgx-top">
-      {theme === "night" && !prefersReducedMotion ? (
+      <section className="dfgx-upgrade" id="dfgx-top" ref={heroRef}>
+      {atmosphereActive && theme === "night" && !prefersReducedMotion ? (
         <div className="dfgx-ether" aria-hidden="true">
           <Suspense fallback={null}>
             <LiquidEther
@@ -194,7 +233,7 @@ function UpgradeHero() {
         </div>
       ) : null}
 
-      {theme === "day" ? (
+      {atmosphereActive && theme === "day" ? (
         <div className="dfgx-light-rays" aria-hidden="true">
           <Suspense fallback={null}>
             <LightRays
@@ -253,13 +292,13 @@ function UpgradeHero() {
             colors={borderGlowTheme.colors}
             fillOpacity={theme === "day" ? 0.035 : 0.06}
           >
-            <button className="dfgx-primary" type="button" onClick={() => scrollToSection("#ask")}>
+            <button className="dfgx-primary" type="button" onClick={() => openReadingFlow()}>
               开始观星问卦
             </button>
           </BorderGlow>
-          <button className="dfgx-secondary" type="button" onClick={() => scrollToSection("#atlas")}>
+          <a className="dfgx-secondary" href="#/hexagrams/1">
             浏览六十四卦
-          </button>
+          </a>
         </div>
 
         <button className="dfgx-explore" type="button" onClick={() => scrollToSection("#ask")}>
@@ -334,6 +373,45 @@ function initializeLegacyReveal() {
   revealItems.forEach((item) => observer.observe(item));
 }
 
+function initializeAtlasSection() {
+  const atlas = document.querySelector("#root #atlas");
+  const rail = atlas?.querySelector(".hexagram-rail");
+  if (!atlas || !rail || atlas.dataset.dfgxAtlasReady === "true") return Boolean(atlas && rail);
+
+  atlas.dataset.dfgxAtlasReady = "true";
+  rail.setAttribute("aria-label", "六十四卦知识入口");
+
+  Array.from(rail.children).forEach((entry, index) => {
+    const number = index + 1;
+    const label = entry.textContent?.trim().replace(/\s+/g, " ") || `第 ${number} 卦`;
+    entry.classList.add("dfgx-atlas-entry");
+    entry.dataset.hexagramNumber = String(number);
+
+    if (entry.tagName === "BUTTON") {
+      entry.setAttribute("type", "button");
+    } else {
+      entry.setAttribute("role", "link");
+      entry.setAttribute("tabindex", "0");
+    }
+
+    entry.setAttribute("aria-label", `了解第 ${number} 卦：${label}`);
+    entry.setAttribute("title", `进入六十四卦知识页：${label}`);
+
+    entry.addEventListener("click", (event) => {
+      event.preventDefault();
+      openHexagramAtlas(number);
+    });
+
+    entry.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openHexagramAtlas(number);
+    });
+  });
+
+  return true;
+}
+
 function initializeSectionNavigation() {
   const root = document.getElementById("root");
   if (!root || root.dataset.dfgxNavReady === "true") return;
@@ -376,28 +454,23 @@ function initializeSectionNavigation() {
   update();
 }
 
-function formatDailyDate(date) {
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
-
-function toLocalIsoDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 function updateDailyDate() {
   const time = document.querySelector("#root #daily time");
   if (!time) return false;
 
   const now = new Date();
+  const daily = getDailyHexagram(now);
   time.textContent = formatDailyDate(now);
   time.dateTime = toLocalIsoDate(now);
+  const card = document.querySelector("#root #daily");
+  if (daily && card) {
+    const copy = getDailyCardCopy(daily);
+    card.querySelector("h2")?.replaceChildren(daily.fullName);
+    card.querySelector(".daily-reading")?.replaceChildren(copy.reading);
+    const advice = card.querySelector(".daily-advice");
+    if (advice) advice.replaceChildren(...copy.advice.flatMap((line, index) => index ? [document.createElement("br"), document.createTextNode(line)] : [document.createTextNode(line)]));
+    card.querySelector(".daily-symbol span")?.replaceChildren(daily.symbol);
+  }
   return true;
 }
 
@@ -406,6 +479,13 @@ function scheduleDailyDateRefresh() {
   const now = new Date();
   const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   window.setTimeout(scheduleDailyDateRefresh, nextMidnight.getTime() - now.getTime() + 1000);
+}
+
+function openDailyHexagram(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  window.location.hash = "/daily";
 }
 
 function initializeDailySection() {
@@ -419,6 +499,7 @@ function initializeDailySection() {
     button.textContent = "今日卦象";
     button.setAttribute("aria-label", "查看今日卦象详细解析");
     button.setAttribute("title", "查看今日卦象详细解析");
+    button.addEventListener("click", openDailyHexagram, true);
   }
 
   if (root.dataset.dfgxDailyDateReady !== "true") {
@@ -430,17 +511,174 @@ function initializeDailySection() {
   return true;
 }
 
+function initializeReadingEntryPoints() {
+  const root = document.getElementById("root");
+  const askSection = document.getElementById("ask");
+  if (!root || !askSection) return false;
+  if (root.dataset.dfgxReadingEntryReady === "true") return true;
+
+  const supportedCategories = new Set(["感情发展", "事业发展", "学业考试", "财富运势"]);
+  const supportedTools = new Set(["云签解惑", "事业灵签", "流年运势", "时辰运势", "AI解读报告"]);
+  askSection.addEventListener(
+    "click",
+    (event) => {
+      const button = event.target.closest("button");
+      const category = button?.querySelector("strong")?.textContent?.trim();
+      if (!button) return;
+      if (supportedTools.has(category)) {
+        event.preventDefault();
+        event.stopPropagation();
+        window.dispatchEvent(new CustomEvent("dfgx:oracle-tool-open", { detail: { tool: category } }));
+        return;
+      }
+      if (!supportedCategories.has(category)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      window.dispatchEvent(new CustomEvent("dfgx:reading-open", { detail: { category } }));
+    },
+    true,
+  );
+  root.dataset.dfgxReadingEntryReady = "true";
+  return true;
+}
+
+function initializeToolEntryPoints() {
+  const root = document.getElementById("root");
+  const toolsSection = document.getElementById("tools");
+  if (!root || !toolsSection) return false;
+  if (root.dataset.dfgxToolEntryReady === "true") return true;
+
+  toolsSection.addEventListener(
+    "click",
+    (event) => {
+      const button = event.target.closest("button");
+      if (!button || !button.textContent?.includes("三枚铜钱")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.hash = "/tools/three-coins";
+    },
+    true,
+  );
+
+  root.dataset.dfgxToolEntryReady = "true";
+  return true;
+}
+
+function initializePersonalityEntry() {
+  const root = document.getElementById("root");
+  const personalitySection = document.getElementById("personality");
+  if (!root || !personalitySection) return false;
+  if (root.dataset.dfgxPersonalityEntryReady === "true") return true;
+
+  root.addEventListener(
+    "click",
+    (event) => {
+      const entry = event.target.closest(
+        "#personality .personality-test-card, #personality .personality-guide",
+      );
+      if (!entry) return;
+      openPersonalityPreference(event);
+    },
+    true,
+  );
+  root.dataset.dfgxPersonalityEntryReady = "true";
+  return true;
+}
+
 function prepareOriginalContent() {
   if (!disableOriginalHero()) return false;
   if (!initializeDailySection()) return false;
+  if (!initializeReadingEntryPoints()) return false;
+  if (!initializePersonalityEntry()) return false;
+  if (!initializeToolEntryPoints()) return false;
+  if (!initializeAtlasSection()) return false;
   initializeLegacyReveal();
   initializeSectionNavigation();
   return true;
 }
 
-createRoot(document.getElementById("dfgx-upgrade-root")).render(
+function UpgradeApp() {
+  const [route, setRoute] = useState(getAppRoute);
+
+  useEffect(() => {
+    const updateRoute = () => setRoute(getAppRoute());
+    window.addEventListener("hashchange", updateRoute);
+    return () => {
+      window.removeEventListener("hashchange", updateRoute);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (route?.kind === "hexagrams" || route?.kind === "daily" || route?.kind === "three-coins" || route?.kind === "personality") {
+      document.documentElement.dataset.dfgxRoute = route.kind;
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } else {
+      delete document.documentElement.dataset.dfgxRoute;
+      const homeSection =
+        window.location.hash === "#daily"
+          ? "daily"
+          : window.location.hash === "#atlas"
+            ? "atlas"
+            : window.location.hash === "#tools"
+              ? "tools"
+              : window.location.hash === "#personality"
+                ? "personality"
+                : null;
+      if (homeSection) {
+        window.requestAnimationFrame(() => {
+          document.getElementById(homeSection)?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+          });
+        });
+      }
+    }
+
+    return () => {
+      delete document.documentElement.dataset.dfgxRoute;
+    };
+  }, [route]);
+
+  if (route?.kind === "hexagrams") {
+    return (
+      <Suspense fallback={<div className="dfgx-route-loading">正在展开六十四卦图谱…</div>}>
+        <HexagramAtlasPage initialHexagramNumber={route.number} />
+      </Suspense>
+    );
+  }
+  if (route?.kind === "daily") {
+    return <Suspense fallback={<div className="dfgx-route-loading">正在展开今日卦象…</div>}><DailyHexagramPage /></Suspense>;
+  }
+  if (route?.kind === "three-coins") {
+    return <Suspense fallback={<div className="dfgx-route-loading">正在展开三枚铜钱…</div>}><ThreeCoinPage /></Suspense>;
+  }
+
+  if (route?.kind === "personality") {
+    return (
+      <Suspense fallback={<div className="dfgx-route-loading">正在展开人格偏好探索…</div>}>
+        <PersonalityPreferencePage />
+      </Suspense>
+    );
+  }
+
+  return (
+    <>
+      <UpgradeHero />
+      <ReadingFlow />
+      <OracleToolFlow />
+    </>
+  );
+}
+
+const upgradeRootContainer = document.getElementById("dfgx-upgrade-root");
+const upgradeRoot = upgradeRootContainer.__dfgxUpgradeRoot
+  || createRoot(upgradeRootContainer);
+
+upgradeRootContainer.__dfgxUpgradeRoot = upgradeRoot;
+upgradeRoot.render(
   <React.StrictMode>
-    <UpgradeHero />
+    <UpgradeApp />
   </React.StrictMode>,
 );
 

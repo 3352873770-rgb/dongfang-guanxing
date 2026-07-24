@@ -1,0 +1,42 @@
+.dfgx-secondary-header {
+  position: relative;
+  z-index: 3;
+  width: min(calc(100% - 40px), 1160px);
+  min-height: 72px;
+  margin: 18px auto 0;
+  padding: 10px 12px 10px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid rgba(224, 190, 119, 0.2);
+  border-radius: 16px;
+  background: rgba(6, 17, 18, 0.76);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.04), 0 20px 50px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(22px) saturate(122%);
+  backdrop-filter: blur(22px) saturate(122%);
+}
+
+.dfgx-secondary-brand,
+.dfgx-secondary-back { appearance: none; border: 0; color: inherit; background: transparent; cursor: pointer; }
+.dfgx-secondary-brand { width: max-content; min-height: 44px; padding: 8px 0; display: flex; align-items: baseline; gap: 12px; text-align: left; }
+.dfgx-secondary-brand span { color: #e0bc77; font-family: "Songti SC", "STSong", serif; font-size: 16px; letter-spacing: .18em; }
+.dfgx-secondary-brand small { color: rgba(225, 224, 216, .4); font-size: 8px; font-weight: 500; letter-spacing: .2em; }
+.dfgx-secondary-back { min-height: 44px; padding: 0 4px; border-bottom: 1px solid rgba(226, 190, 112, .34); font-family: "Songti SC", "STSong", serif; font-size: 13px; letter-spacing: .12em; transition: color 220ms ease, border-color 220ms ease, translate 220ms ease; }
+.dfgx-secondary-header .dfgx-theme-toggle { min-height: 44px; height: 44px; }
+.dfgx-secondary-back:hover { color: #f0dfad; border-color: #d3aa45; translate: -3px 0; }
+.dfgx-secondary-header button:focus-visible { outline: 2px solid #e0bb7d; outline-offset: 4px; }
+
+html[data-dfgx-theme="day"] .dfgx-secondary-header { background: rgba(255, 252, 245, .82); border-color: rgba(107, 75, 38, .26); box-shadow: inset 0 1px rgba(255,255,255,.76), 0 20px 50px rgba(91,68,38,.1); }
+html[data-dfgx-theme="day"] .dfgx-secondary-brand span { color: #795a31; }
+html[data-dfgx-theme="day"] .dfgx-secondary-brand small { color: rgba(40,37,32,.52); }
+html[data-dfgx-theme="day"] .dfgx-secondary-back { color: #604622; border-color: rgba(121,90,49,.4); }
+
+@media (max-width: 560px) {
+  .dfgx-secondary-header { width: calc(100% - 20px); min-height: 112px; margin-top: 10px; padding: 10px; grid-template-columns: minmax(0,1fr) auto; grid-template-rows: 44px 44px; gap: 6px 12px; }
+  .dfgx-secondary-brand { min-width: 0; overflow: hidden; }
+  .dfgx-secondary-brand span { flex: 0 0 auto; font-size: 14px; }
+  .dfgx-secondary-brand small { overflow: hidden; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
+  .dfgx-secondary-back { grid-row: 2; justify-self: start; min-height: 44px; font-size: 12px; }
+  .dfgx-secondary-header .dfgx-theme-toggle { grid-column: 2; grid-row: 1 / -1; }
+}

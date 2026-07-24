@@ -1,0 +1,720 @@
+.three-coin-page,
+.three-coin-page * {
+  box-sizing: border-box;
+}
+
+.three-coin-page {
+  min-height: 100svh;
+  overflow: hidden;
+  color: #e8e1d1;
+  background: #071416;
+  font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+}
+
+.three-coin-main {
+  position: relative;
+  width: min(calc(100% - 40px), 820px);
+  margin: 0 auto;
+  padding: 62px 0 88px;
+}
+
+.three-coin-chapter,
+.three-coin-result {
+  padding-bottom: 52px;
+  border-bottom: 1px solid rgba(224, 188, 119, 0.22);
+}
+
+.three-coin-chapter + .three-coin-chapter {
+  padding-top: 50px;
+}
+
+.three-coin-chapter-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 22px;
+}
+
+.three-coin-chapter-heading > span,
+.three-coin-result-placeholder > span {
+  color: #d7b16a;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 30px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.three-coin-chapter-heading h1,
+.three-coin-chapter-heading h2,
+.three-coin-result-placeholder h2 {
+  margin: -6px 0 8px;
+  color: #f0dfbd;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+}
+
+.three-coin-chapter-heading p,
+.three-coin-result-placeholder p {
+  margin: 0;
+  color: rgba(229, 225, 213, 0.62);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+
+.three-coin-categories {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.three-coin-categories button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 10px;
+  color: rgba(229, 225, 213, 0.7);
+  background: transparent;
+  border: 1px solid rgba(224, 188, 119, 0.26);
+  border-radius: 9px;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    translate 180ms ease;
+}
+
+.three-coin-categories button:hover {
+  color: #f0dfbd;
+  border-color: rgba(224, 188, 119, 0.5);
+  translate: 0 -1px;
+}
+
+.three-coin-categories button.is-selected {
+  color: #17201f;
+  background: #c49a50;
+  border-color: #d7b16a;
+}
+
+.three-coin-question {
+  position: relative;
+  margin-top: 30px;
+  display: grid;
+  gap: 12px;
+}
+
+.three-coin-question > span {
+  color: #dfbd76;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+
+.three-coin-question textarea {
+  width: 100%;
+  min-height: 126px;
+  padding: 18px 20px 34px;
+  resize: vertical;
+  color: #eee6d6;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(224, 188, 119, 0.25);
+  border-radius: 12px;
+  font: inherit;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 16px;
+  line-height: 1.8;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.three-coin-question textarea::placeholder {
+  color: rgba(229, 225, 213, 0.36);
+}
+
+.three-coin-question textarea:focus {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(224, 188, 119, 0.58);
+}
+
+.three-coin-question small {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  color: rgba(229, 225, 213, 0.42);
+  font-size: 11px;
+}
+
+.three-coin-method {
+  margin: 24px 0 0 52px;
+  color: rgba(229, 225, 213, 0.52);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.three-coin-cast-list {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(224, 188, 119, 0.2);
+}
+
+.three-coin-cast-list li {
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: 120px 210px minmax(160px, 1fr);
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid rgba(224, 188, 119, 0.18);
+}
+
+.three-coin-line-name {
+  display: grid;
+  gap: 5px;
+}
+
+.three-coin-line-name strong {
+  color: #e4c585;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.three-coin-line-name small,
+.three-coin-line-result small {
+  color: rgba(229, 225, 213, 0.43);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.three-coin-faces {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.three-coin-faces > span {
+  color: rgba(229, 225, 213, 0.38);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.three-coin-faces button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #e3c17a;
+  background: transparent;
+  border: 1px solid rgba(224, 188, 119, 0.44);
+  border-radius: 50%;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    translate 180ms ease;
+}
+
+.three-coin-faces button:hover {
+  color: #17201f;
+  background: #d2ad68;
+  border-color: #dfbd76;
+  translate: 0 -1px;
+}
+
+.three-coin-line-result {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.three-coin-line-result > strong {
+  color: #dfbd76;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: 0;
+}
+
+.three-coin-primary {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 30px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #18201f;
+  background: #c89e52;
+  border: 1px solid #d9b66d;
+  border-radius: 10px;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 17px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    translate 180ms ease;
+}
+
+.three-coin-primary:hover {
+  background: #d6ae63;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+  translate: 0 -2px;
+}
+
+.three-coin-primary:active {
+  translate: 0 1px;
+}
+
+.three-coin-result-placeholder {
+  margin-top: 48px;
+  padding-bottom: 52px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  border-bottom: 1px solid rgba(224, 188, 119, 0.22);
+}
+
+.three-coin-result {
+  padding-top: 50px;
+}
+
+.three-coin-hexagrams {
+  width: min(100%, 560px);
+  margin: 38px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.three-coin-hexagrams article {
+  min-width: 0;
+}
+
+.three-coin-hexagrams article > span {
+  color: rgba(229, 225, 213, 0.5);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+.three-coin-hexagrams article > strong {
+  margin: 12px 0 8px;
+  display: block;
+  color: #dfbd76;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 92px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.three-coin-hexagrams h3 {
+  margin: 0;
+  color: #f0dfbd;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.three-coin-hexagrams small {
+  margin-top: 7px;
+  display: block;
+  color: rgba(229, 225, 213, 0.48);
+}
+
+.three-coin-hexagrams > i {
+  color: #cda55b;
+  font-size: 22px;
+  font-style: normal;
+}
+
+.three-coin-result-summary {
+  max-width: 640px;
+  margin: 30px auto 0;
+  color: rgba(229, 225, 213, 0.72);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 15px;
+  line-height: 2;
+  text-align: center;
+}
+
+.three-coin-result-sections {
+  margin-top: 38px;
+  border-top: 1px solid rgba(224, 188, 119, 0.2);
+}
+
+.three-coin-result-sections section {
+  padding: 25px 0;
+  border-bottom: 1px solid rgba(224, 188, 119, 0.18);
+}
+
+.three-coin-result-sections h3 {
+  margin: 0;
+  color: #d7b16a;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.three-coin-result-sections p {
+  margin: 11px 0 0;
+  color: rgba(229, 225, 213, 0.72);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  line-height: 1.95;
+}
+
+.three-coin-result-sections strong {
+  color: #e9d6ad;
+  font-weight: 500;
+}
+
+.three-coin-reset {
+  min-height: 44px;
+  margin: 24px auto 0;
+  padding: 0 18px;
+  display: block;
+  color: #d7b16a;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(224, 188, 119, 0.36);
+  font: inherit;
+  font-family: "Songti SC", "STSong", serif;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.three-coin-notice {
+  position: fixed;
+  z-index: 10;
+  right: 18px;
+  bottom: 18px;
+  max-width: min(320px, calc(100% - 36px));
+  padding: 13px 16px;
+  color: #1c2422;
+  background: #d8b66f;
+  border: 1px solid #edcf91;
+  border-radius: 10px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+}
+
+.three-coin-page button:focus-visible,
+.three-coin-page textarea:focus-visible {
+  outline: 2px solid #e0bb7d;
+  outline-offset: 3px;
+}
+
+html[data-dfgx-theme="day"] .three-coin-page {
+  color: #302b24;
+  background: #f4efe6;
+}
+
+html[data-dfgx-theme="day"] .three-coin-chapter,
+html[data-dfgx-theme="day"] .three-coin-result,
+html[data-dfgx-theme="day"] .three-coin-result-placeholder,
+html[data-dfgx-theme="day"] .three-coin-cast-list,
+html[data-dfgx-theme="day"] .three-coin-cast-list li,
+html[data-dfgx-theme="day"] .three-coin-result-sections,
+html[data-dfgx-theme="day"] .three-coin-result-sections section {
+  border-color: rgba(112, 75, 35, 0.2);
+}
+
+html[data-dfgx-theme="day"] .three-coin-chapter-heading > span,
+html[data-dfgx-theme="day"] .three-coin-result-placeholder > span,
+html[data-dfgx-theme="day"] .three-coin-chapter-heading h1,
+html[data-dfgx-theme="day"] .three-coin-chapter-heading h2,
+html[data-dfgx-theme="day"] .three-coin-result-placeholder h2,
+html[data-dfgx-theme="day"] .three-coin-question > span,
+html[data-dfgx-theme="day"] .three-coin-line-name strong,
+html[data-dfgx-theme="day"] .three-coin-result-sections h3 {
+  color: #6e4a23;
+}
+
+html[data-dfgx-theme="day"] .three-coin-chapter-heading p,
+html[data-dfgx-theme="day"] .three-coin-result-placeholder p,
+html[data-dfgx-theme="day"] .three-coin-method,
+html[data-dfgx-theme="day"] .three-coin-line-name small,
+html[data-dfgx-theme="day"] .three-coin-line-result small,
+html[data-dfgx-theme="day"] .three-coin-result-summary,
+html[data-dfgx-theme="day"] .three-coin-result-sections p {
+  color: rgba(59, 48, 35, 0.68);
+}
+
+html[data-dfgx-theme="day"] .three-coin-categories button {
+  color: #6a5133;
+  border-color: rgba(112, 75, 35, 0.22);
+}
+
+html[data-dfgx-theme="day"] .three-coin-categories button:hover {
+  color: #4e351d;
+  border-color: rgba(112, 75, 35, 0.48);
+}
+
+html[data-dfgx-theme="day"] .three-coin-categories button.is-selected {
+  color: #fffaf0;
+  background: #9b6b2c;
+  border-color: #9b6b2c;
+}
+
+html[data-dfgx-theme="day"] .three-coin-question textarea {
+  color: #3c3328;
+  background: rgba(255, 252, 245, 0.68);
+  border-color: rgba(112, 75, 35, 0.24);
+}
+
+html[data-dfgx-theme="day"] .three-coin-question textarea::placeholder,
+html[data-dfgx-theme="day"] .three-coin-question small,
+html[data-dfgx-theme="day"] .three-coin-faces > span {
+  color: rgba(59, 48, 35, 0.44);
+}
+
+html[data-dfgx-theme="day"] .three-coin-faces button {
+  color: #79572f;
+  border-color: rgba(112, 75, 35, 0.38);
+}
+
+html[data-dfgx-theme="day"] .three-coin-faces button:hover {
+  color: #fffaf0;
+  background: #9b6b2c;
+  border-color: #9b6b2c;
+}
+
+html[data-dfgx-theme="day"] .three-coin-line-result > strong,
+html[data-dfgx-theme="day"] .three-coin-hexagrams article > strong,
+html[data-dfgx-theme="day"] .three-coin-hexagrams > i {
+  color: #95692f;
+}
+
+html[data-dfgx-theme="day"] .three-coin-primary {
+  color: #fffaf0;
+  background: #9b6b2c;
+  border-color: #a97b3e;
+}
+
+html[data-dfgx-theme="day"] .three-coin-primary:hover {
+  background: #86591f;
+  box-shadow: 0 14px 30px rgba(112, 75, 35, 0.14);
+}
+
+html[data-dfgx-theme="day"] .three-coin-hexagrams article > span,
+html[data-dfgx-theme="day"] .three-coin-hexagrams small {
+  color: rgba(59, 48, 35, 0.52);
+}
+
+html[data-dfgx-theme="day"] .three-coin-hexagrams h3,
+html[data-dfgx-theme="day"] .three-coin-result-sections strong {
+  color: #4f351d;
+}
+
+html[data-dfgx-theme="day"] .three-coin-reset {
+  color: #79572f;
+  border-color: rgba(112, 75, 35, 0.36);
+}
+
+html[data-dfgx-theme="day"] .three-coin-notice {
+  color: #fffaf0;
+  background: #8d5d24;
+  border-color: #a6783e;
+}
+
+@media (max-width: 760px) {
+  .three-coin-categories {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .three-coin-cast-list li {
+    grid-template-columns: 82px 164px minmax(110px, 1fr);
+    gap: 14px;
+  }
+
+  .three-coin-line-result {
+    grid-template-columns: minmax(72px, auto) 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 560px) {
+  .three-coin-main {
+    width: calc(100% - 28px);
+    padding: 30px 0 48px;
+  }
+
+  .three-coin-chapter,
+  .three-coin-result {
+    padding-bottom: 30px;
+  }
+
+  .three-coin-chapter + .three-coin-chapter,
+  .three-coin-result {
+    padding-top: 30px;
+  }
+
+  .three-coin-chapter-heading,
+  .three-coin-result-placeholder {
+    gap: 14px;
+  }
+
+  .three-coin-chapter-heading > span,
+  .three-coin-result-placeholder > span {
+    font-size: 25px;
+  }
+
+  .three-coin-chapter-heading h1,
+  .three-coin-chapter-heading h2,
+  .three-coin-result-placeholder h2 {
+    font-size: 28px;
+  }
+
+  .three-coin-categories {
+    margin-top: 20px;
+  }
+
+  .three-coin-question {
+    margin-top: 22px;
+    gap: 9px;
+  }
+
+  .three-coin-question textarea {
+    height: 112px;
+    min-height: 112px;
+    padding: 14px 16px 28px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .three-coin-method {
+    margin-top: 16px;
+    margin-left: 0;
+  }
+
+  .three-coin-cast-list {
+    margin-top: 20px;
+  }
+
+  .three-coin-cast-list li {
+    min-height: 76px;
+    grid-template-columns: 68px minmax(0, 1fr) 92px;
+    gap: 10px;
+  }
+
+  .three-coin-faces {
+    gap: 6px;
+  }
+
+  .three-coin-faces button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 9px;
+  }
+
+  .three-coin-line-result {
+    grid-template-columns: 1fr;
+    gap: 3px;
+    text-align: right;
+  }
+
+  .three-coin-line-result > strong {
+    font-size: 36px;
+  }
+
+  .three-coin-primary {
+    margin-top: 22px;
+  }
+
+  .three-coin-hexagrams {
+    margin-top: 26px;
+    grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .three-coin-hexagrams article > strong {
+    margin: 8px 0 6px;
+    font-size: 66px;
+  }
+
+  .three-coin-hexagrams h3 {
+    font-size: 20px;
+  }
+
+  .three-coin-result-summary {
+    margin-top: 22px;
+    line-height: 1.8;
+    text-align: left;
+  }
+
+  .three-coin-result-sections {
+    margin-top: 28px;
+  }
+
+  .three-coin-result-sections section {
+    padding: 18px 0;
+  }
+
+  .three-coin-result-sections p {
+    margin-top: 8px;
+    line-height: 1.8;
+  }
+
+  .three-coin-reset {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .three-coin-main {
+    width: calc(100% - 20px);
+  }
+
+  .three-coin-categories {
+    gap: 7px;
+  }
+
+  .three-coin-categories button {
+    padding: 0 6px;
+    font-size: 13px;
+  }
+
+  .three-coin-cast-list li {
+    grid-template-columns: 62px minmax(0, 1fr) 74px;
+    gap: 7px;
+  }
+
+  .three-coin-line-result > strong {
+    font-size: 34px;
+  }
+
+  .three-coin-line-result small {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-coin-page *,
+  .three-coin-page *::before,
+  .three-coin-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

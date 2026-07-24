@@ -3,6 +3,29 @@
   display: none !important;
 }
 
+html[data-dfgx-route="hexagrams"] #root,
+html[data-dfgx-route="daily"] #root,
+html[data-dfgx-route="three-coins"] #root,
+html[data-dfgx-route="personality"] #root {
+  display: none;
+}
+
+html[data-dfgx-route="daily"] body,
+html[data-dfgx-route="three-coins"] body,
+html[data-dfgx-route="personality"] body {
+  min-width: 0;
+}
+
+.dfgx-route-loading {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  color: #d8b46d;
+  background: #071416;
+  font-family: "Songti SC", "STSong", serif;
+  letter-spacing: 0.16em;
+}
+
 #dfgx-upgrade-root,
 #dfgx-upgrade-root * {
   box-sizing: border-box;
@@ -189,6 +212,7 @@
   isolation: isolate;
   min-height: 100svh;
   overflow: hidden;
+  contain: layout paint;
   color: #e8e8e4;
   background: #0b1112;
   font-family: "PingFang SC", "Noto Sans SC", sans-serif;
@@ -200,6 +224,8 @@
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
+  contain: strict;
   pointer-events: none;
 }
 
@@ -510,6 +536,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-actions button,
+.dfgx-actions a,
 .dfgx-explore {
   font: inherit;
   cursor: pointer;
@@ -537,6 +564,8 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-secondary {
+  display: inline-flex;
+  align-items: center;
   padding: 12px 0;
   border: 0;
   border-bottom: 1px solid rgba(229, 230, 224, 0.42);
@@ -545,6 +574,7 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   font-family: "Songti SC", "STSong", serif !important;
   font-size: 15px;
   letter-spacing: 0.14em;
+  text-decoration: none;
   transition: color 220ms ease, border-color 220ms ease, transform 220ms ease;
 }
 
@@ -564,7 +594,8 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   letter-spacing: 0.36em;
 }
 
-.dfgx-upgrade button:focus-visible {
+.dfgx-upgrade button:focus-visible,
+.dfgx-upgrade a:focus-visible {
   outline: 1px solid #f0dfad;
   outline-offset: 5px;
 }
@@ -608,6 +639,55 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
   border-color: rgba(222, 190, 107, 0.42);
   background: linear-gradient(145deg, rgba(36, 46, 40, 0.94), rgba(17, 32, 32, 0.9));
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.06), 0 10px 24px rgba(1, 8, 9, 0.14);
+}
+
+#root #atlas .hexagram-rail {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: row !important;
+  grid-auto-columns: auto !important;
+  grid-template-rows: none !important;
+  gap: 12px;
+  overflow: visible !important;
+  scroll-snap-type: none !important;
+  overscroll-behavior-inline: auto;
+}
+
+#root #atlas .hexagram-rail > .dfgx-atlas-entry {
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 128px;
+  cursor: pointer;
+  scroll-snap-align: none;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+#root #atlas .hexagram-rail > .dfgx-atlas-entry:hover,
+#root #atlas .hexagram-rail > .dfgx-atlas-entry:focus-visible {
+  color: #f0d9a5;
+  border-color: rgba(224, 188, 119, 0.46) !important;
+  background: rgba(29, 43, 39, 0.94) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 12px 28px rgba(0, 0, 0, 0.14);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+#root #atlas .hexagram-rail > .dfgx-atlas-entry:focus-visible {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.05),
+    0 0 0 2px rgba(224, 188, 119, 0.34),
+    0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+#root #atlas .atlas-next,
+#root #atlas .atlas-dots,
+#root #atlas .atlas-pagination {
+  display: none !important;
 }
 
 #ask,
@@ -828,6 +908,10 @@ html[data-dfgx-theme="day"] #root .reflection-panel {
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.78), 0 18px 50px rgba(96, 72, 40, 0.07);
 }
 
+#root .personality-test-card {
+  aspect-ratio: 1132 / 696;
+}
+
 html[data-dfgx-theme="day"] #root .question-panel {
   background: rgba(250, 246, 237, 0.94);
   border-color: rgba(116, 82, 43, 0.2);
@@ -940,6 +1024,14 @@ html[data-dfgx-theme="day"] #root .hexagram-rail > * {
   background: rgba(255, 251, 243, 0.92) !important;
   border-color: rgba(112, 75, 35, 0.22) !important;
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.78), 0 10px 24px rgba(82, 60, 32, 0.08);
+}
+
+html[data-dfgx-theme="day"] #root #atlas .hexagram-rail > .dfgx-atlas-entry:hover,
+html[data-dfgx-theme="day"] #root #atlas .hexagram-rail > .dfgx-atlas-entry:focus-visible {
+  color: #4f3217;
+  border-color: rgba(112, 75, 35, 0.42) !important;
+  background: #fffaf0 !important;
+  box-shadow: inset 0 1px #fff, 0 12px 28px rgba(82, 60, 32, 0.11);
 }
 
 html[data-dfgx-theme="day"] #root .atlas-next {
@@ -1225,6 +1317,15 @@ body,
     translate: 0 0;
   }
 
+  #root #atlas .hexagram-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #root #atlas .hexagram-rail > .dfgx-atlas-entry {
+    min-height: 116px;
+  }
+
   #ask,
   #daily,
   #personality,
@@ -1232,6 +1333,10 @@ body,
   #tools,
   #record {
     scroll-margin-top: 112px;
+  }
+
+  #atlas {
+    scroll-margin-top: 146px;
   }
 }
 
