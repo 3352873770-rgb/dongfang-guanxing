@@ -461,31 +461,19 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-brandline {
-  margin: 0 0 clamp(46px, 7vh, 74px);
+  margin: 0 0 clamp(34px, 5vh, 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-}
-
-.dfgx-brandline .mmeett-brand-lockup {
-  --mmeett-mark-width: 19px;
-  --mmeett-wordmark-width: 72px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #d8b568;
-  line-height: 1;
-  white-space: nowrap;
 }
 
 .dfgx-brandline > span {
   color: rgba(226, 229, 224, 0.68);
   font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(9px, 0.78vw, 11px);
-  font-weight: 500;
-  letter-spacing: 0.38em;
-  line-height: 1.5;
+  font-size: clamp(12px, 1.05vw, 15px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1;
 }
 
 .dfgx-brandline,
@@ -518,11 +506,13 @@ html[data-dfgx-theme="day"] .dfgx-classics span {
 }
 
 .dfgx-editorial h1 .mmeett-brand-lockup {
-  --mmeett-mark-width: clamp(62px, 5vw, 84px);
-  --mmeett-wordmark-width: clamp(204px, 17vw, 292px);
   display: inline-flex;
   align-items: center;
-  gap: clamp(13px, 1.2vw, 18px);
+}
+
+.dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
+  --mmeett-wordmark-width: clamp(320px, 27vw, 430px);
+  gap: 0;
 }
 
 .dfgx-wordmark-rule {
@@ -939,10 +929,6 @@ html[data-dfgx-theme="day"] .dfgx-philosophy {
   color: rgba(38, 38, 33, 0.78);
 }
 
-html[data-dfgx-theme="day"] .dfgx-brandline .mmeett-brand-lockup {
-  color: #795a31;
-}
-
 html[data-dfgx-theme="day"] .dfgx-wordmark-rule {
   background: linear-gradient(90deg, transparent, rgba(121, 90, 49, 0.58), transparent);
 }
@@ -1345,28 +1331,20 @@ body,
 
   .dfgx-brandline {
     max-width: 320px;
-    margin-bottom: max(38px, 5.4vh);
-    gap: 9px;
-  }
-
-  .dfgx-brandline .mmeett-brand-lockup {
-    --mmeett-mark-width: 17px;
-    --mmeett-wordmark-width: 64px;
+    margin-bottom: max(30px, 4.2vh);
   }
 
   .dfgx-brandline > span {
-    font-size: 8px;
-    letter-spacing: 0.28em;
+    font-size: 13px;
+    letter-spacing: 0.18em;
   }
 
   .dfgx-editorial h1 {
     font-size: clamp(42px, 12vw, 66px);
   }
 
-  .dfgx-editorial h1 .mmeett-brand-lockup {
-    --mmeett-mark-width: clamp(50px, 16vw, 64px);
-    --mmeett-wordmark-width: clamp(172px, 55vw, 220px);
-    gap: clamp(10px, 3vw, 14px);
+  .dfgx-editorial h1 .mmeett-brand-lockup--wordmark-only {
+    --mmeett-wordmark-width: min(84vw, 300px);
   }
 
   .dfgx-wordmark-rule {

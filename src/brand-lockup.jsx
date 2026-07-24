@@ -1,5 +1,5 @@
 export const BRAND_NAME = "MMEETT Fate";
-export const BRAND_DESCRIPTOR = "EASTERN SYMBOLS · INNER CLARITY";
+export const BRAND_DESCRIPTOR = "Fate";
 export const DEFAULT_DOCUMENT_TITLE = "MMEETT Fate｜观象知变，向内而行";
 
 function BrandMark() {
@@ -44,10 +44,13 @@ function BrandWordmark() {
   );
 }
 
-export default function BrandLockup({ className = "", decorative = false }) {
+export default function BrandLockup({ className = "", decorative = false, showMark = true }) {
   return (
-    <span className={`mmeett-brand-lockup ${className}`.trim()} aria-hidden={decorative || undefined}>
-      <BrandMark />
+    <span
+      className={`mmeett-brand-lockup ${showMark ? "" : "mmeett-brand-lockup--wordmark-only"} ${className}`.trim()}
+      aria-hidden={decorative || undefined}
+    >
+      {showMark ? <BrandMark /> : null}
       <BrandWordmark />
     </span>
   );

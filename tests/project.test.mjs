@@ -69,8 +69,11 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(brand, /viewBox="78 44 77 38"/);
   assert.match(brand, /viewBox="66 300 101 20"/);
   assert.doesNotMatch(brand, /cormorant-garamond/);
+  assert.match(brand, /showMark = true/);
   assert.match(entry, /<BrandLockup decorative \/>/);
-  assert.match(brand, /EASTERN SYMBOLS · INNER CLARITY/);
+  assert.match(brand, /BRAND_DESCRIPTOR = "Fate"/);
+  assert.match(entry, /<div className="dfgx-brandline">\s*<span>\{BRAND_DESCRIPTOR\}<\/span>/);
+  assert.match(entry, /<BrandLockup decorative showMark=\{false\} \/>/);
   assert.match(entry, /dfgx-wordmark-rule/);
   assert.match(entry, /READ THE SIGNS · MEET YOURSELF/);
   assert.match(entry, /观象知变，向内而行/);
@@ -78,6 +81,7 @@ test("MMEETT Fate brand system is shared across the active page chrome", async (
   assert.match(chrome, /<BrandLockup decorative \/>/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?white-space:\s*nowrap/);
   assert.match(css, /\.dfgx-editorial h1 \{[\s\S]*?color:\s*#d8b568/);
+  assert.match(css, /\.mmeett-brand-lockup--wordmark-only\s*\{[\s\S]*?--mmeett-wordmark-width:\s*clamp\(320px,\s*27vw,\s*430px\)/);
   assert.match(css, /\.mmeett-brand-lockup__mark[\s\S]*?width:\s*var\(--mmeett-mark-width/);
   assert.match(css, /\.mmeett-brand-lockup__wordmark[\s\S]*?width:\s*var\(--mmeett-wordmark-width/);
 });
